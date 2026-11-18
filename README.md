@@ -114,3 +114,5 @@ Windows에서는 Python 경로만 `.\.venv\Scripts\python.exe`로 바꿉니다. 
 대화 화면은 로컬 서버의 `/demo`에서 열 수 있습니다. [화면 사용법·현장 확인표 준비](docs/DEMO_PAGE_AND_FIELD_REVIEW.md)를 참고하세요. 실제 지도 길찾기 없이 합성 위치만 사용합니다.
 
 시설 자료는 [정리 결과와 처리 규칙](docs/FACILITY_CLEANUP.md), 추천 방식은 [기준 후보 비교](docs/RECOMMENDATION_CRITERIA_CANDIDATES.md)를 참고하세요. 기준 후보는 아직 기본 순위에 적용하지 않았습니다.
+
+[세 계산식과 4인30문항 시험](docs/THREE_ROUTE_FORMULAS_AND_USER_STUDY.md)을 준비했습니다. 임시 가중치 비교이며 기본 서비스 순위를 변경하지 않았습니다.
