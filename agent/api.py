@@ -50,7 +50,7 @@ def routes(body: RouteBody):
 
 @app.get('/health')
 def health():
-    return {'status':'ok','synthetic':True,'level':'L0','review_api':'제공 안 함; 시연용 SQLite 대역에서만 검증'}
+    return {'status':'ok','synthetic':getattr(agent.engine,'synthetic',True) is not False,'level':'L0','review_api':'제공 안 함; 시연용 SQLite 대역에서만 검증'}
 
 
 class ReportPreviewBody(BaseModel):
@@ -84,7 +84,7 @@ def conversation(body: ConversationBody,response: Response):
             calculated=agent.route(result['request'])
             return {'kind':'route',**calculated,'comparison_table':comparison_table(calculated['analysis']),
                     'state':result['state'],'page_location_stored':False,
-                    'message':'현재 결과는 합성 시설·경로 시연입니다. 입력한 실제 위치의 길찾기가 아닙니다.'}
+                    'message':('현재 결과는 합성 시설·경로 시연입니다. 입력한 실제 위치의 길찾기가 아닙니다.' if calculated['synthetic'] else '등록된 파일 경로를 계산했습니다. 현재 시설 상태를 보증하지 않습니다.')}
         if result['kind']=='delegate':
             # 시간과 무관한 요청은 기존 응답을 바로 돌려준다. 페이지 위치는 전달하지 않는다.
             return {**agent.run(body.text),'state':{},'page_location_stored':False}

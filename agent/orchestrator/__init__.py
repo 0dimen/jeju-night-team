@@ -25,7 +25,7 @@ class NightAgent:
         radius=self.config.get('radius',50) if radius is None else radius
         result = self.engine(request, radius=radius, events=self.store.published_changes())
         return {'analysis': result, 'explanation': explain(result, self.provider, mode, self.config.get('explain','E1')),
-                'synthetic': True}
+                'synthetic': getattr(self.engine,'synthetic',True) is not False}
 
     def report(self, text, lat=None, lng=None, user_choice=None):
         if emergency_check(text):

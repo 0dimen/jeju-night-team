@@ -89,7 +89,7 @@ Windows에서는 Python 경로만 `.\.venv\Scripts\python.exe`로 바꿉니다. 
 .venv/bin/python -m pytest -q
 ```
 
-현재 Linux 검사 211개가 통과했습니다. 선택 모델·벡터·외부 뉴스의 추가 기능은 전체 의존성과 파일 준비가 별도이며 공유본의 내부 목록 탐색은 사용할 수 없습니다.
+현재 기본 기능과 파일 엔진 검사를 수행했습니다. 최신 수치는 PROJECT_STATUS.md를 따릅니다. 선택 모델·벡터·외부 뉴스의 추가 기능은 전체 의존성과 파일 준비가 별도이며 공유본의 내부 목록 탐색은 사용할 수 없습니다.
 
 ## 5. 팀 참고 문서
 
@@ -106,3 +106,5 @@ Windows에서는 Python 경로만 `.\.venv\Scripts\python.exe`로 바꿉니다. 
 커밋 전 점검 도구: `python -m pip install -r requirements-share-check.txt` 후 `git config core.hooksPath .githooks`. 자세한 변경·검토 규칙은 [SHARING_POLICY.md](SHARING_POLICY.md)를 따릅니다.
 
 페이지 연결 모듈: [사용 방법](docs/PAGE_CLIENT_INTEGRATION.md). 실제 화면은 아직 없으며, 지도·페이지 이동 연결 후 브라우저에서 통합 확인해야 합니다.
+
+경로·CCTV 파일 계산기: [설치와 연결](docs/FILE_ROUTE_ENGINE.md). 선택 의존성을 설치한 뒤 합성 파일로 먼저 확인하며, 실제 자료 채택을 대신하지 않습니다.
