@@ -1,0 +1,30 @@
+{
+  "provider": "gemini",
+  "requested_model": "gemini-3.5-flash",
+  "data": "SYNTHETIC",
+  "measured_at": "2026-11-18T02:37:24.665105+09:00",
+  "output": {
+    "kind": "route",
+    "preferences": [
+      "cctv",
+      "streetlight"
+    ],
+    "origin_name": "제주시청",
+    "destination_name": "탑동광장",
+    "departure": "2026-11-18T22:00"
+  },
+  "status": "ok",
+  "records": [
+    {
+      "provider": "gemini",
+      "model": "gemini-3.5-flash",
+      "task": "intent",
+      "cache_hit": false,
+      "elapsed_seconds": 57.15840629299055,
+      "input_tokens": 130,
+      "output_tokens": 49,
+      "thinking_tokens": 382,
+      "quota_retries": 0
+    }
+  ]
+}

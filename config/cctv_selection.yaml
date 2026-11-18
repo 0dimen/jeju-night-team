@@ -1,0 +1,9 @@
+# 사용자 선택: 2026-11-18 생활방범 우선. 기타 목적은 자동 추가하지 않는다.
+version: cctv-purpose-v1
+include_purposes:
+  - 생활방범
+source_url: https://jejudatahub.net/data/view/data/846
+# 자료 선택과 사용 조건·실제 서비스 공개는 별도다.
+rights_confirmed: false
+coordinate_system_confirmed: false
+automatic_deduplication: false

@@ -1,0 +1,7 @@
+# Linux 기본 합성 시연·agent.api용 직접 의존성. 전체 실험은 requirements.lock.txt.
+# 아래는 현재 .venv에서 확인한 버전이며 전이 의존성 전체 잠금은 아님.
+PyYAML==6.0.3
+jsonschema==4.26.0
+httpx==0.28.1
+fastapi==0.163.1
+uvicorn==0.54.0

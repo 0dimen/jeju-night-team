@@ -1,0 +1,43 @@
+name: 10_local_0_qwen3_0.6b
+structure: S1
+intent: I3
+explain: E2
+provider: ollama
+data_scope: synthetic
+repeats: 1
+group: local
+cutoff: 04:55
+model: qwen3:0.6b
+select:
+  intent:
+  - 0
+  - 2
+  - 4
+  - 8
+  - 18
+  - 20
+  - 23
+  - 39
+  report:
+  - 0
+  - 3
+  - 9
+  - 16
+  - 18
+  - 19
+  - 28
+  - 31
+  explain:
+  - 0
+  - 1
+  - 4
+  flow:
+  - 0
+  - 1
+  - 5
+  - 6
+repeat_cases:
+  intent: 2
+  report: 1
+timeout: 75
+max_wall_seconds: 1500

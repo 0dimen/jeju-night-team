@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jeju-night:explanation:v1",
+  "type": "object",
+  "properties": {
+    "summary": {
+      "type": "string"
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "tradeoff": {
+      "type": "string"
+    },
+    "not_checked": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "generated_by": {
+      "enum": [
+        "llm",
+        "template",
+        "hybrid"
+      ]
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "passed": {
+          "type": "boolean"
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "passed",
+        "issues"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "summary",
+    "routes",
+    "tradeoff",
+    "not_checked",
+    "limitations",
+    "generated_by",
+    "validation"
+  ],
+  "additionalProperties": false
+}

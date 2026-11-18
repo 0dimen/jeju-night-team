@@ -1,0 +1,62 @@
+{
+  "data": "SYNTHETIC 32건",
+  "candidates": 64,
+  "methods": [
+    {
+      "enum": "cctv",
+      "pmi_top": [
+        "검증",
+        "게시한다",
+        "고장",
+        "구간과",
+        "구별해야"
+      ],
+      "embedding_top": [
+        "검증",
+        "게시한다",
+        "인접",
+        "점검",
+        "촬영"
+      ],
+      "top5_overlap": 0.25
+    },
+    {
+      "enum": "streetlight",
+      "pmi_top": [
+        "골목이",
+        "귀갓길에서",
+        "길과",
+        "깜박이는",
+        "보행로에"
+      ],
+      "embedding_top": [
+        "보행로에",
+        "불빛이",
+        "자료가",
+        "컴컴한",
+        "컴컴해"
+      ],
+      "top5_overlap": 0.1111111111111111
+    },
+    {
+      "enum": "activity",
+      "pmi_top": [
+        "귀갓길에서",
+        "귀갓길의",
+        "길과",
+        "다니는",
+        "방문"
+      ],
+      "embedding_top": [
+        "귀갓길에서",
+        "길과",
+        "보행로",
+        "사람들이",
+        "자료가"
+      ],
+      "top5_overlap": 0.25
+    }
+  ],
+  "approved": false,
+  "actual_recent_news_collected": false
+}

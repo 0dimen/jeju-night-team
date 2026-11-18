@@ -1,0 +1,139 @@
+{
+  "candidate_m": 50,
+  "approved": false,
+  "reason": "기획서의 비교 출발값 유지 제안. 합성 실험은 반경에 따른 순위 변화 가능성만 보임",
+  "rows": [
+    {
+      "scenario": "SYNTHETIC_default",
+      "radius_m": 30,
+      "route": "B",
+      "cctv_ratio": 0.269608,
+      "rank": 1,
+      "distance": "1100m",
+      "duration": "14분",
+      "meaning": "합성 선분 인접 비율. 촬영 범위·실제 밝기·위험 판정 아님",
+      "approve": ""
+    },
+    {
+      "scenario": "SYNTHETIC_default",
+      "radius_m": 30,
+      "route": "A",
+      "cctv_ratio": 0.110233,
+      "rank": 2,
+      "distance": "950m",
+      "duration": "12분",
+      "meaning": "합성 선분 인접 비율. 촬영 범위·실제 밝기·위험 판정 아님",
+      "approve": ""
+    },
+    {
+      "scenario": "SYNTHETIC_default",
+      "radius_m": 50,
+      "route": "B",
+      "cctv_ratio": 0.452709,
+      "rank": 1,
+      "distance": "1100m",
+      "duration": "14분",
+      "meaning": "합성 선분 인접 비율. 촬영 범위·실제 밝기·위험 판정 아님",
+      "approve": ""
+    },
+    {
+      "scenario": "SYNTHETIC_default",
+      "radius_m": 50,
+      "route": "A",
+      "cctv_ratio": 0.201738,
+      "rank": 2,
+      "distance": "950m",
+      "duration": "12분",
+      "meaning": "합성 선분 인접 비율. 촬영 범위·실제 밝기·위험 판정 아님",
+      "approve": ""
+    },
+    {
+      "scenario": "SYNTHETIC_default",
+      "radius_m": 80,
+      "route": "B",
+      "cctv_ratio": 0.726132,
+      "rank": 1,
+      "distance": "1100m",
+      "duration": "14분",
+      "meaning": "합성 선분 인접 비율. 촬영 범위·실제 밝기·위험 판정 아님",
+      "approve": ""
+    },
+    {
+      "scenario": "SYNTHETIC_default",
+      "radius_m": 80,
+      "route": "A",
+      "cctv_ratio": 0.331494,
+      "rank": 2,
+      "distance": "950m",
+      "duration": "12분",
+      "meaning": "합성 선분 인접 비율. 촬영 범위·실제 밝기·위험 판정 아님",
+      "approve": ""
+    },
+    {
+      "scenario": "SYNTHETIC_boundary",
+      "radius_m": 30,
+      "route": "B",
+      "cctv_ratio": 0.12,
+      "rank": 1,
+      "distance": "1000m",
+      "duration": "14분",
+      "meaning": "합성 선분 인접 비율. 촬영 범위·실제 밝기·위험 판정 아님",
+      "approve": ""
+    },
+    {
+      "scenario": "SYNTHETIC_boundary",
+      "radius_m": 30,
+      "route": "A",
+      "cctv_ratio": 0.0,
+      "rank": 2,
+      "distance": "1000m",
+      "duration": "12분",
+      "meaning": "합성 선분 인접 비율. 촬영 범위·실제 밝기·위험 판정 아님",
+      "approve": ""
+    },
+    {
+      "scenario": "SYNTHETIC_boundary",
+      "radius_m": 50,
+      "route": "A",
+      "cctv_ratio": 0.3,
+      "rank": 1,
+      "distance": "1000m",
+      "duration": "12분",
+      "meaning": "합성 선분 인접 비율. 촬영 범위·실제 밝기·위험 판정 아님",
+      "approve": ""
+    },
+    {
+      "scenario": "SYNTHETIC_boundary",
+      "radius_m": 50,
+      "route": "B",
+      "cctv_ratio": 0.18,
+      "rank": 2,
+      "distance": "1000m",
+      "duration": "14분",
+      "meaning": "합성 선분 인접 비율. 촬영 범위·실제 밝기·위험 판정 아님",
+      "approve": ""
+    },
+    {
+      "scenario": "SYNTHETIC_boundary",
+      "radius_m": 80,
+      "route": "A",
+      "cctv_ratio": 0.69282,
+      "rank": 1,
+      "distance": "1000m",
+      "duration": "12분",
+      "meaning": "합성 선분 인접 비율. 촬영 범위·실제 밝기·위험 판정 아님",
+      "approve": ""
+    },
+    {
+      "scenario": "SYNTHETIC_boundary",
+      "radius_m": 80,
+      "route": "B",
+      "cctv_ratio": 0.24,
+      "rank": 2,
+      "distance": "1000m",
+      "duration": "14분",
+      "meaning": "합성 선분 인접 비율. 촬영 범위·실제 밝기·위험 판정 아님",
+      "approve": ""
+    }
+  ]
+}

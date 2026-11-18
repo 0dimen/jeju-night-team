@@ -1,0 +1,72 @@
+{
+  "checked_at": "2026-11-18T05:28:45.498518+09:00",
+  "saved_selected": 6,
+  "combined_items": 23,
+  "selected_dates": [
+    "2026-05-27",
+    "2026-06-12",
+    "2026-08-04",
+    "2026-08-05",
+    "2026-09-03",
+    "2026-11-09"
+  ],
+  "checks": [
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=126437",
+      "kogl_type_1": true,
+      "date": "2026-05-27",
+      "within_183_days": true,
+      "saved_word_count": 5,
+      "http_status": 200,
+      "robots_allowed": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=126820",
+      "kogl_type_1": true,
+      "date": "2026-06-12",
+      "within_183_days": true,
+      "saved_word_count": 8,
+      "http_status": 200,
+      "robots_allowed": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=128442",
+      "kogl_type_1": true,
+      "date": "2026-08-04",
+      "within_183_days": true,
+      "saved_word_count": 9,
+      "http_status": 200,
+      "robots_allowed": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=128476",
+      "kogl_type_1": true,
+      "date": "2026-08-05",
+      "within_183_days": true,
+      "saved_word_count": 8,
+      "http_status": 200,
+      "robots_allowed": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=129231",
+      "kogl_type_1": true,
+      "date": "2026-09-03",
+      "within_183_days": true,
+      "saved_word_count": 6,
+      "http_status": 200,
+      "robots_allowed": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130820",
+      "kogl_type_1": true,
+      "date": "2026-11-09",
+      "within_183_days": true,
+      "saved_word_count": 5,
+      "http_status": 200,
+      "robots_allowed": true
+    }
+  ],
+  "article_body_saved": false,
+  "selection": "CCTV·보행·도로 주제 검색에서 고른6개 원문. 검색 편향이 있으며6개월 전체 아카이브가 아님",
+  "rights": "robots와각원문의공공누리제1유형을확인. 출처·날짜·허용조건과제목/짧은발췌만저장"
+}

@@ -1,0 +1,5 @@
+# 보고서 PDF 변환·미리보기용 추가 의존성. Chromium과 NanumGothic 글꼴은 별도 필요.
+Markdown==3.11.3
+pypdf==7.1.0
+pypdfium2==5.15.2
+Pillow==13.0.0

@@ -1,0 +1,23 @@
+.env
+*.env
+__pycache__/
+.venv/
+*.pyc
+models/
+data/raw/
+experiments/results/**/cache/
+dist/
+.pytest_cache/
+*.sqlite
+*.sqlite3
+*.db
+experiments/results/gemini_rate.json
+experiments/results/gemini_quota_*.json
+
+# 팀 공유에서 제외할 입력·개인 자료
+*_INTERNAL*
+*secrets*
+*.xlsx
+runtime-check.json
+data/raw/
+artifacts/

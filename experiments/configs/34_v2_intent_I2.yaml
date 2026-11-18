@@ -1,0 +1,27 @@
+name: 34_v2_intent_I2
+structure: S1
+intent: I2
+explain: E3
+provider: ollama
+model: qwen3:0.6b
+data_scope: synthetic
+repeats: 1
+select:
+  intent:
+  - 0
+  - 2
+  - 4
+  - 8
+  - 18
+  - 20
+  - 23
+  - 39
+  report: []
+  explain: []
+  flow: []
+group: v2
+phase: hardened_v2
+cutoff: 04:55
+timeout: 75
+max_wall_seconds: 1200
+seed: 42

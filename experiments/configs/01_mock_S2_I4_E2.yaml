@@ -1,0 +1,44 @@
+name: 01_mock_S2_I4_E2
+structure: S2
+intent: I4
+explain: E2
+provider: mock
+data_scope: synthetic
+repeats: 3
+group: offline
+cutoff: 04:55
+expanded_examples:
+  activity:
+  - 귀갓길에서
+  - 귀갓길의
+  - 길과
+  - 다니는
+  - 방문
+  - 보행량이
+  - 보행로
+  - 보행로에
+  - 사람들이
+  - 상태
+  cctv:
+  - 검증
+  - 게시한다
+  - 고장
+  - 구간과
+  - 구별해야
+  - 범위는
+  - 실제
+  - 인접
+  - 제보는
+  - 촬영
+  streetlight:
+  - 골목이
+  - 귀갓길에서
+  - 길과
+  - 깜박이는
+  - 보행로에
+  - 불빛이
+  - 상태
+  - 상태를
+  - 시설의
+  - 약한
+lexicon_scope: SYNTHETIC 후보만 실험; 운영 사전 승인 아님

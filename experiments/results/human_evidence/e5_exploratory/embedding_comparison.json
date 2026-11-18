@@ -1,0 +1,36 @@
+{
+  "model": "intfloat/multilingual-e5-small",
+  "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+  "backend": "ONNX float32 ARM CPU 2 threads; query prefix",
+  "load_seconds": 3.043220980995102,
+  "analysis_seconds": 3.4529079140047543,
+  "rss_bytes": 930938880,
+  "p3_candidate": {
+    "threshold": 0.875,
+    "calibration_n": 12,
+    "calibration_accuracy": 0.16666666666666666,
+    "calibration_unclassified": 0.75,
+    "evaluation_n": 23,
+    "evaluation_accuracy": 0.043478260869565216,
+    "evaluation_unclassified": 0.9130434782608695
+  },
+  "p4_candidate": {
+    "threshold": 0.8,
+    "calibration_n": 24,
+    "calibration_tp": 10,
+    "calibration_fp": 2,
+    "calibration_fn": 0,
+    "calibration_precision": 0.8333333333333334,
+    "calibration_recall": 1.0,
+    "calibration_f1": 0.9090909090909091,
+    "evaluation_n": 40,
+    "evaluation_tp": 8,
+    "evaluation_fp": 12,
+    "evaluation_fn": 0,
+    "evaluation_precision": 0.4,
+    "evaluation_recall": 1.0,
+    "evaluation_f1": 0.5714285714285715
+  },
+  "approved": false,
+  "caveat": "초기 평가 결과를 본 뒤 추가한 탐색 비교. 양자화와 모델이 함께 바뀌므로 엄밀한 모델 단독 효과가 아님"
+}

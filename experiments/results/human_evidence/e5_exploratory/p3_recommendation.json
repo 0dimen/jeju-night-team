@@ -1,0 +1,14 @@
+{
+  "candidate": {
+    "threshold": 0.875,
+    "calibration_n": 12,
+    "calibration_accuracy": 0.16666666666666666,
+    "calibration_unclassified": 0.75,
+    "evaluation_n": 23,
+    "evaluation_accuracy": 0.043478260869565216,
+    "evaluation_unclassified": 0.9130434782608695
+  },
+  "approved": false,
+  "selection": "보정 세트의 완전 일치율 우선. 평가 세트로 기준값을 고르지 않음",
+  "model": "intfloat/multilingual-e5-small"
+}

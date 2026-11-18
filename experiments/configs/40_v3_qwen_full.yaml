@@ -1,0 +1,18 @@
+name: 40_v3_qwen_full
+structure: S1
+intent: I3
+explain: E3
+provider: ollama
+model: qwen3.5:0.8b
+data_scope: synthetic
+repeats: 1
+limits:
+  explain: 3
+group: validation_v3
+phase: integration_v3
+cutoff: 04:55
+timeout: 75
+max_wall_seconds: 1600
+seed: 42
+repeat_cases:
+  intent: 2

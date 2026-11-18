@@ -1,0 +1,17 @@
+{
+  "provider": "gemini",
+  "requested_model": "gemini-2.5-flash",
+  "data": "SYNTHETIC",
+  "measured_at": "2026-11-18T02:38:22.350135+09:00",
+  "status": "failed",
+  "error_type": "ProviderError",
+  "error": "http_status_404",
+  "records": [
+    {
+      "task": "intent",
+      "cache_hit": false,
+      "elapsed_seconds": 6.998879391991068,
+      "error": "ProviderError"
+    }
+  ]
+}

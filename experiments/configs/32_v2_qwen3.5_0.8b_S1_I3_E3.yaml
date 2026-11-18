@@ -1,0 +1,45 @@
+name: 32_v2_qwen3.5_0.8b_S1_I3_E3
+structure: S1
+intent: I3
+explain: E3
+provider: ollama
+model: qwen3.5:0.8b
+data_scope: synthetic
+repeats: 1
+select:
+  intent:
+  - 0
+  - 2
+  - 4
+  - 8
+  - 18
+  - 20
+  - 23
+  - 39
+  report:
+  - 0
+  - 3
+  - 9
+  - 16
+  - 18
+  - 19
+  - 28
+  - 31
+  explain:
+  - 0
+  - 1
+  - 4
+  flow:
+  - 0
+  - 1
+  - 5
+  - 6
+group: v2
+phase: hardened_v2
+cutoff: 04:55
+timeout: 75
+max_wall_seconds: 1200
+seed: 42
+repeat_cases:
+  intent: 2
+  report: 1

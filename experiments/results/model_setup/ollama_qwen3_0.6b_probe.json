@@ -1,0 +1,29 @@
+{
+  "provider": "ollama",
+  "requested_model": "qwen3:0.6b",
+  "data": "SYNTHETIC",
+  "measured_at": "2026-11-18T02:37:30.359635+09:00",
+  "output": {
+    "kind": "route",
+    "preferences": [
+      "none"
+    ],
+    "origin_name": "제주시청",
+    "destination_name": "탑dong-gang",
+    "departure": "2026-11-18T22:00"
+  },
+  "status": "ok",
+  "records": [
+    {
+      "provider": "ollama",
+      "model": "qwen3:0.6b",
+      "task": "intent",
+      "cache_hit": false,
+      "elapsed_seconds": 6.099572841019835,
+      "input_tokens": 156,
+      "output_tokens": 56,
+      "eval_seconds": 2.628045,
+      "load_seconds": 1.947731707
+    }
+  ]
+}

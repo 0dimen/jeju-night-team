@@ -1,0 +1,19 @@
+name: 52_post_llama_full
+structure: S1
+intent: I3
+explain: E3
+provider: ollama
+model: llama3.2:1b
+data_scope: synthetic
+repeats: 1
+repeat_cases:
+  intent: 2
+limits:
+  explain: 3
+group: post_report_local
+phase: post_report_v7
+cutoff: 06:45
+timeout: 75
+max_wall_seconds: 1800
+seed: 42
+schedule: round_robin

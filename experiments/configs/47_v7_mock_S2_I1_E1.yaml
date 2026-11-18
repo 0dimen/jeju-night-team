@@ -1,0 +1,13 @@
+name: 47_v7_mock_S2_I1_E1
+structure: S2
+intent: I1
+explain: E1
+provider: mock
+model: protocol-mock
+data_scope: synthetic
+repeats: 3
+group: offline
+phase: post_report_v7
+cutoff: 06:45
+max_wall_seconds: 180
+seed: 42

@@ -1,0 +1,22 @@
+name: 35_v2_explain_E1
+structure: S1
+intent: I3
+explain: E1
+provider: ollama
+model: qwen3:0.6b
+data_scope: synthetic
+repeats: 1
+select:
+  intent: []
+  report: []
+  explain:
+  - 0
+  - 1
+  - 4
+  flow: []
+group: v2
+phase: hardened_v2
+cutoff: 04:55
+timeout: 75
+max_wall_seconds: 1200
+seed: 42

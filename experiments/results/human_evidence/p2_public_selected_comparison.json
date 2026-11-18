@@ -1,0 +1,21 @@
+{
+  "source": "PUBLIC_mois_selected_6m.jsonl",
+  "documents": 23,
+  "candidate_rows": 115,
+  "enum_counts": {
+    "cctv": 37,
+    "streetlight": 18,
+    "activity": 60
+  },
+  "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+  "backend": "ARM int8 ONNX CPU2threads; batch24",
+  "elapsed_seconds": 2.3062140490219463,
+  "rss_bytes": 502923264,
+  "approved": false,
+  "caveat": "주제검색으로고른6건과최근RSS17건의선택표본. 동시출현·벡터근접성은동의어정답이나성능개선증거가아님",
+  "unique_terms": 111,
+  "figure": "experiments/results/human_evidence/p2_public_methods.png",
+  "source_sha256": "c90007857de6e982819e8702a001f2aeaa9ca65310308c354d6caa6cc22e3932",
+  "comparison_sha256": "c89dde22bf2a48f5e7066bd90657d44a785b02e040beaa9569452287eb75cddf"
+}

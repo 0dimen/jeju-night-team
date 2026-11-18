@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jeju-night:analysis_result:v1",
+  "type": "object",
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "data_version": {
+      "type": "string"
+    },
+    "logic_version": {
+      "type": "string"
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "rank": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "distance": {
+            "type": "string",
+            "pattern": "^\\d+(\\.\\d+)?m$"
+          },
+          "duration": {
+            "type": "string",
+            "pattern": "^\\d+(\\.\\d+)?분$"
+          },
+          "indicators": {
+            "type": "object",
+            "properties": {
+              "cctv": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "verified",
+                      "historical",
+                      "unavailable",
+                      "pending",
+                      "confirmed"
+                    ]
+                  },
+                  "value": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "display": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "status"
+                ],
+                "additionalProperties": false,
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "status": {
+                          "const": "unavailable"
+                        }
+                      }
+                    },
+                    "then": {
+                      "not": {
+                        "required": [
+                          "value"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              },
+              "streetlight": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "verified",
+                      "historical",
+                      "unavailable",
+                      "pending",
+                      "confirmed"
+                    ]
+                  },
+                  "value": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "display": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "status"
+                ],
+                "additionalProperties": false,
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "status": {
+                          "const": "unavailable"
+                        }
+                      }
+                    },
+                    "then": {
+                      "not": {
+                        "required": [
+                          "value"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              },
+              "activity": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "verified",
+                      "historical",
+                      "unavailable",
+                      "pending",
+                      "confirmed"
+                    ]
+                  },
+                  "value": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "display": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "status"
+                ],
+                "additionalProperties": false,
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "status": {
+                          "const": "unavailable"
+                        }
+                      }
+                    },
+                    "then": {
+                      "not": {
+                        "required": [
+                          "value"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "required": [
+              "cctv",
+              "streetlight",
+              "activity"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "rank",
+          "distance",
+          "duration",
+          "indicators"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "properties": {
+        "detour": {
+          "type": "string"
+        },
+        "rank_reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "detour",
+        "rank_reason"
+      ],
+      "additionalProperties": false
+    },
+    "unavailable_preferences": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "cctv",
+          "streetlight",
+          "activity",
+          "none"
+        ]
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "observed_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "observed_at"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "run_id",
+    "data_version",
+    "logic_version",
+    "routes",
+    "comparison",
+    "unavailable_preferences",
+    "limitations",
+    "sources"
+  ],
+  "additionalProperties": false
+}

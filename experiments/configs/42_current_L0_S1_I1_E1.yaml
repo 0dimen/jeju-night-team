@@ -1,0 +1,10 @@
+name: 42_current_L0_S1_I1_E1
+structure: S1
+intent: I1
+explain: E1
+provider: none
+repeats: 3
+group: current_baseline
+phase: direction_hardened_v4
+cutoff: 04:55
+max_wall_seconds: 120

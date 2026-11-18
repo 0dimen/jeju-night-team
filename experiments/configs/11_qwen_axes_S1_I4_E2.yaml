@@ -1,0 +1,77 @@
+name: 11_qwen_axes_S1_I4_E2
+structure: S1
+intent: I4
+explain: E2
+provider: ollama
+data_scope: synthetic
+repeats: 1
+group: axes
+cutoff: 04:55
+model: qwen3:0.6b
+select:
+  intent:
+  - 0
+  - 2
+  - 4
+  - 8
+  - 18
+  - 20
+  - 23
+  - 39
+  report:
+  - 0
+  - 3
+  - 9
+  - 16
+  - 18
+  - 19
+  - 28
+  - 31
+  explain:
+  - 0
+  - 1
+  - 4
+  flow:
+  - 0
+  - 1
+  - 5
+  - 6
+repeat_cases:
+  intent: 1
+timeout: 75
+max_wall_seconds: 1200
+expanded_examples:
+  activity:
+  - 귀갓길에서
+  - 귀갓길의
+  - 길과
+  - 다니는
+  - 방문
+  - 보행량이
+  - 보행로
+  - 보행로에
+  - 사람들이
+  - 상태
+  cctv:
+  - 검증
+  - 게시한다
+  - 고장
+  - 구간과
+  - 구별해야
+  - 범위는
+  - 실제
+  - 인접
+  - 제보는
+  - 촬영
+  streetlight:
+  - 골목이
+  - 귀갓길에서
+  - 길과
+  - 깜박이는
+  - 보행로에
+  - 불빛이
+  - 상태
+  - 상태를
+  - 시설의
+  - 약한
+lexicon_scope: SYNTHETIC 후보만 실험; 운영 사전 승인 아님

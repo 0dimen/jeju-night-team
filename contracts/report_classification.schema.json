@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:jeju-night:report_classification:v1",
+  "type": "object",
+  "properties": {
+    "facility": {
+      "enum": [
+        "streetlight",
+        "cctv",
+        "walkway",
+        "other"
+      ]
+    },
+    "problem": {
+      "enum": [
+        "not_working",
+        "flickering",
+        "too_dark",
+        "damaged",
+        "obstructed",
+        "other"
+      ]
+    },
+    "summary": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "conflict_with_user_choice": {
+      "type": "boolean"
+    },
+    "personal_info_masked": {
+      "type": "boolean"
+    },
+    "emergency": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "facility",
+    "problem",
+    "summary",
+    "confidence",
+    "conflict_with_user_choice",
+    "personal_info_masked",
+    "emergency"
+  ],
+  "additionalProperties": false
+}

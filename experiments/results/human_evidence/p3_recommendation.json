@@ -1,0 +1,14 @@
+{
+  "candidate": {
+    "threshold": 0.675,
+    "calibration_n": 12,
+    "calibration_accuracy": 0.25,
+    "calibration_unclassified": 0.08333333333333333,
+    "evaluation_n": 23,
+    "evaluation_accuracy": 0.043478260869565216,
+    "evaluation_unclassified": 0.21739130434782608
+  },
+  "approved": false,
+  "selection": "보정 세트의 완전 일치율 우선. 평가 세트로 기준값을 고르지 않음",
+  "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+}

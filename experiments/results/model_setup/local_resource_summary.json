@@ -1,0 +1,8 @@
+{
+  "samples": 4268,
+  "errors": 0,
+  "max_loaded_models": 1,
+  "max_loaded_model_bytes": 2030168963,
+  "note": "Ollama 보고 적재 크기. 전체 서버 RSS나 작업 전체 메모리 실측과 다름. 프로세스 공간의 Python RSS는 각 실험 manifest에 별도 기록.",
+  "observed_at": "2026-11-18T06:49:59.847863+09:00"
+}

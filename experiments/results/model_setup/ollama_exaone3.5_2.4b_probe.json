@@ -1,0 +1,29 @@
+{
+  "provider": "ollama",
+  "requested_model": "exaone3.5:2.4b",
+  "data": "SYNTHETIC",
+  "measured_at": "2026-11-18T02:45:03.621287+09:00",
+  "output": {
+    "kind": "route",
+    "preferences": [
+      "none"
+    ],
+    "origin_name": "제주시청",
+    "destination_name": "탑동광장",
+    "departure": "2026-11-18T22:00"
+  },
+  "status": "ok",
+  "records": [
+    {
+      "provider": "ollama",
+      "model": "exaone3.5:2.4b",
+      "task": "intent",
+      "cache_hit": false,
+      "elapsed_seconds": 21.185065122001106,
+      "input_tokens": 151,
+      "output_tokens": 72,
+      "eval_seconds": 9.703596,
+      "load_seconds": 5.165118277
+    }
+  ]
+}

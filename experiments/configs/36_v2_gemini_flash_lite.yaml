@@ -1,0 +1,31 @@
+name: 36_v2_gemini_flash_lite
+structure: S1
+intent: I3
+explain: E3
+provider: gemini
+model: gemini-3.5-flash-lite
+data_scope: synthetic
+repeats: 1
+select:
+  intent:
+  - 0
+  - 2
+  - 8
+  - 18
+  report:
+  - 0
+  - 16
+  - 18
+  explain:
+  - 0
+  flow:
+  - 0
+  - 5
+group: v2
+phase: hardened_v2
+cutoff: 04:55
+timeout: 75
+max_wall_seconds: 1200
+seed: 42
+repeat_cases:
+  intent: 2

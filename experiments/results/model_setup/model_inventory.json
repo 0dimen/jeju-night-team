@@ -1,0 +1,84 @@
+[
+  {
+    "name": "llama3.2:1b",
+    "digest": "baf6a787fdffd633537aa2eb51cfd54cb93ff08e28040095462bb63daf552878",
+    "bytes": 1321098329,
+    "details": {
+      "parent_model": "",
+      "format": "gguf",
+      "family": "llama",
+      "families": [
+        "llama"
+      ],
+      "parameter_size": "1.2B",
+      "quantization_level": "Q8_0"
+    },
+    "license_title": "LLAMA 3.2 COMMUNITY LICENSE AGREEMENT"
+  },
+  {
+    "name": "exaone3.5:2.4b",
+    "digest": "13644fc3d28eaaff502f903406496cad15df31e367cb7be988c132def104ba42",
+    "bytes": 1644933401,
+    "details": {
+      "parent_model": "",
+      "format": "gguf",
+      "family": "exaone",
+      "families": [
+        "exaone"
+      ],
+      "parameter_size": "2.7B",
+      "quantization_level": "Q4_K_M"
+    },
+    "license_title": "EXAONE AI Model License Agreement 1.1 - NC"
+  },
+  {
+    "name": "gemma3:1b",
+    "digest": "97558784bdc9175075a72655bf360b15da17df6b3b9e5182af9f8c0c8e58ba7c",
+    "bytes": 806067407,
+    "details": {
+      "parent_model": "dhiltgen/gemma3:1b-it-q4_K_M-llamacpp",
+      "format": "gguf",
+      "family": "gemma3",
+      "families": [
+        "gemma3"
+      ],
+      "parameter_size": "999.89M",
+      "quantization_level": "Q4_K_M",
+      "runner": "llamacpp"
+    },
+    "license_title": "Gemma Terms of Use "
+  },
+  {
+    "name": "qwen3:0.6b",
+    "digest": "7df6b6e09427a769808717c0a93cadc4ae99ed4eb8bf5ca557c90846becea435",
+    "bytes": 522653767,
+    "details": {
+      "parent_model": "",
+      "format": "gguf",
+      "family": "qwen3",
+      "families": [
+        "qwen3"
+      ],
+      "parameter_size": "751.63M",
+      "quantization_level": "Q4_K_M"
+    },
+    "license_title": "                                 Apache License"
+  },
+  {
+    "name": "qwen3.5:0.8b",
+    "digest": "de63045f29755d4721c09d54c9b45c2dadb644f4fd7d604d4cac90d96049971c",
+    "bytes": 1322069277,
+    "details": {
+      "parent_model": "qwen35-validation-20260930:0.8b-stock-q8_0-q8draft2",
+      "format": "gguf",
+      "family": "qwen35",
+      "families": [
+        "qwen35"
+      ],
+      "parameter_size": "752.39M",
+      "quantization_level": "Q8_0",
+      "runner": "llamacpp"
+    },
+    "license_title": ""
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "origin": {
+    "name": "제주시청",
+    "lat": 33.4996,
+    "lng": 126.5312
+  },
+  "destination": {
+    "name": "탑동광장",
+    "lat": 33.517,
+    "lng": 126.525
+  },
+  "departure": "2026-11-18T22:00",
+  "preferences": [
+    "cctv",
+    "streetlight"
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "checked_at": "2026-11-18T02:58:34.732136+09:00",
+  "feed": "https://www.mois.go.kr/gpms/view/jsp/rss/rss.jsp?ctxCd=1012",
+  "copyright_policy": "https://www.mois.go.kr/frt/sub/a08/copyrightPolicy/screen.do",
+  "window_days": 183,
+  "period_coverage": "피드가 현재 제공한 날짜만; 과거 6개월 전체 아카이브 아님",
+  "article_body_saved": false,
+  "license_rule": "각 원문 페이지의 공공누리 제1유형 표시를 확인한 항목만 보존",
+  "items": [
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130993",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=131002",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130987",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130933",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130952",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130945",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130944",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130922",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130923",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130915",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130901",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130903",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130882",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130884",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130883",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130872",
+      "http_status": 200,
+      "kogl_type_1": true
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type010/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000008&nttId=130871",
+      "http_status": 200,
+      "kogl_type_1": true
+    }
+  ],
+  "robots_sha256": "eaeaa8d3511d1622227d89707d995b8b1f0902f5b86fdbe58882d1cef260d4d7",
+  "saved_items": 17,
+  "saved_dates": [
+    "2026-11-11",
+    "2026-11-12",
+    "2026-11-13",
+    "2026-11-16",
+    "2026-11-17"
+  ]
+}

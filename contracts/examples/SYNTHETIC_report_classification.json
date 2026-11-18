@@ -1,0 +1,9 @@
+{
+  "facility": "streetlight",
+  "problem": "flickering",
+  "summary": "가로등이 깜빡임",
+  "confidence": 0.85,
+  "conflict_with_user_choice": false,
+  "personal_info_masked": false,
+  "emergency": false
+}

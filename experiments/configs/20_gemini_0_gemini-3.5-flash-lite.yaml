@@ -1,0 +1,33 @@
+name: 20_gemini_0_gemini-3.5-flash-lite
+structure: S1
+intent: I3
+explain: E2
+provider: gemini
+data_scope: synthetic
+repeats: 1
+group: gemini
+cutoff: 04:55
+model: gemini-3.5-flash-lite
+select:
+  intent:
+  - 0
+  - 2
+  - 4
+  - 8
+  - 18
+  - 39
+  report:
+  - 0
+  - 16
+  - 18
+  - 28
+  explain:
+  - 0
+  - 1
+  flow:
+  - 0
+  - 5
+repeat_cases:
+  intent: 2
+timeout: 90
+max_wall_seconds: 1800

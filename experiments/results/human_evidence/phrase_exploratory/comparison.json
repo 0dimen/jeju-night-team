@@ -1,0 +1,46 @@
+{
+  "observed_at": "2026-11-18T04:34:33.345452+09:00",
+  "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+  "cases": 35,
+  "dataset_sha256": "6774f834e1e8285c9a4211c1e684e80becd770cee3c4010ec35ac33927289f8a",
+  "script_sha256": "371a12c815b3ed3a6388a0a0ac3a63d7aa622316cc05215cc80f141aad0b5ddf",
+  "conditions": "모델·기준 문장·분할 고정. 장소/시각 제거, 추가 경로 문구 제거만 변화. 부정 표현은 보존",
+  "selection": "각 변형의 보정 정확도·미분류·기준값 순서로 선택. 평가 결과로 기준값 변경하지 않음",
+  "candidates": [
+    {
+      "variant": "raw",
+      "threshold": 0.5,
+      "calibration_n": 12,
+      "calibration_accuracy": 0.25,
+      "calibration_unclassified": 0.0,
+      "evaluation_n": 23,
+      "evaluation_accuracy": 0.043478260869565216,
+      "evaluation_unclassified": 0.0
+    },
+    {
+      "variant": "without_places_time",
+      "threshold": 0.65,
+      "calibration_n": 12,
+      "calibration_accuracy": 0.25,
+      "calibration_unclassified": 0.0,
+      "evaluation_n": 23,
+      "evaluation_accuracy": 0.08695652173913043,
+      "evaluation_unclassified": 0.0
+    },
+    {
+      "variant": "without_route_scaffold",
+      "threshold": 0.675,
+      "calibration_n": 12,
+      "calibration_accuracy": 0.3333333333333333,
+      "calibration_unclassified": 0.08333333333333333,
+      "evaluation_n": 23,
+      "evaluation_accuracy": 0.13043478260869565,
+      "evaluation_unclassified": 0.043478260869565216
+    }
+  ],
+  "elapsed_seconds": 2.4688170930021442,
+  "rss_bytes": 513703936,
+  "approved": false,
+  "caveat": "기존 평가 결과를 본 뒤 만든 탐색 비교. 새 독립 검증이 아니며 운영 분류기·사전·설정을 바꾸지 않음"
+}

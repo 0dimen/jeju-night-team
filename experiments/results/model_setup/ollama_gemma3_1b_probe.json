@@ -1,0 +1,30 @@
+{
+  "provider": "ollama",
+  "requested_model": "gemma3:1b",
+  "data": "SYNTHETIC",
+  "measured_at": "2026-11-18T02:40:53.723876+09:00",
+  "output": {
+    "kind": "route",
+    "preferences": [
+      "cctv",
+      "streetlight"
+    ],
+    "origin_name": "제주시청",
+    "destination_name": "탑동광장",
+    "departure": "2026-11-18T22:00"
+  },
+  "status": "ok",
+  "records": [
+    {
+      "provider": "ollama",
+      "model": "gemma3:1b",
+      "task": "intent",
+      "cache_hit": false,
+      "elapsed_seconds": 15.568167974008247,
+      "input_tokens": 138,
+      "output_tokens": 65,
+      "eval_seconds": 8.428217,
+      "load_seconds": 2.144342569
+    }
+  ]
+}

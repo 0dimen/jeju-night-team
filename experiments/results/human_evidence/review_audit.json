@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-11-18T04:01:41.389684+09:00",
+  "review_csv_rows": {
+    "review/p1_local_llm_comparison_INTERNAL.csv": 12,
+    "review/lexicon_output_candidates.csv": 64,
+    "review/p1_catalog_top_INTERNAL.csv": 40,
+    "review/p1_focused_candidates_INTERNAL.csv": 4,
+    "review/p2_lexicon_method_comparison_SYNTHETIC.csv": 64,
+    "review/p7_model_disagreement_SYNTHETIC.csv": 11,
+    "review/p3_threshold_cases_SYNTHETIC.csv": 875,
+    "review/p4_pairs_SYNTHETIC.csv": 64,
+    "review/p5_radius_SYNTHETIC.csv": 12,
+    "review/p7_ambiguous_SYNTHETIC.csv": 11,
+    "review/p3_threshold_curve_SYNTHETIC.csv": 25,
+    "review/p1_catalog_all_INTERNAL.csv": 1259,
+    "review/p4_duplicate_curve_SYNTHETIC.csv": 27,
+    "review/p6_model_matched_cases_SYNTHETIC.csv": 28,
+    "review/decision_options.csv": 16,
+    "review/lexicon_candidates.csv": 64,
+    "review/public_news/lexicon_candidates.csv": 0,
+    "review/e5_exploratory/p3_threshold_cases_SYNTHETIC.csv": 875,
+    "review/e5_exploratory/p4_pairs_SYNTHETIC.csv": 64,
+    "review/e5_exploratory/p3_threshold_curve_SYNTHETIC.csv": 25,
+    "review/e5_exploratory/p4_duplicate_curve_SYNTHETIC.csv": 27
+  },
+  "approval_columns_blank": true,
+  "registry_unchanged": true,
+  "adopted": false,
+  "meaning": "근거 파일·승인 경계만 자동 확인. 답안의 의미 정확도와 사람 결정은 확인하지 않음"
+}

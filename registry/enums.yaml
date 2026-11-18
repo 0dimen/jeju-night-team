@@ -1,0 +1,17 @@
+preferences:
+  cctv: [CCTV, 씨씨티비, 폐쇄회로, 카메라]
+  streetlight: [가로등, 보안등, 밝은, 어둡지, 컴컴, 어두운, 불빛]
+  activity: [인적, 사람, 북적, 방문객]
+  none: [상관없, 아무거나, 선호 없음]
+facility:
+  streetlight: [가로등, 보안등, 불빛, 불 꺼, 불이 꺼]
+  cctv: [CCTV, 씨씨티비, 카메라]
+  walkway: [보도, 보행로, 인도, 길바닥, 통행]
+  other: []
+problem:
+  flickering: [깜빡, 깜박, 반짝]
+  not_working: [꺼짐, 꺼져, 꺼졌, 작동 안, 안 켜, 고장, 불 꺼, 불이 꺼]
+  too_dark: [어두, 어둡, 컴컴, 캄캄]
+  damaged: [파손, 깨졌, 부서, 깨짐]
+  obstructed: [막혀, 막혔, 막힘, 가려, 적치]
+  other: []

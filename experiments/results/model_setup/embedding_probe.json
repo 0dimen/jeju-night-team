@@ -1,0 +1,79 @@
+{
+  "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+  "data": "SYNTHETIC",
+  "backend": "ONNX int8 ARM64 CPU 2 threads",
+  "load_seconds": 1.1016235389979556,
+  "batch_seconds": 0.02277919399784878,
+  "rss_bytes": 499777536,
+  "shape": [
+    4,
+    384
+  ],
+  "norms": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "classifications": [
+    {
+      "preferences": [
+        "cctv",
+        "streetlight",
+        "activity"
+      ],
+      "scores": {
+        "activity": 0.7477593421936035,
+        "cctv": 0.8072655200958252,
+        "none": 0.822872519493103,
+        "streetlight": 0.9364767670631409
+      },
+      "threshold": 0.62,
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    },
+    {
+      "preferences": [
+        "cctv"
+      ],
+      "scores": {
+        "activity": 0.512913167476654,
+        "cctv": 0.9162014722824097,
+        "none": 0.381364643573761,
+        "streetlight": 0.40762701630592346
+      },
+      "threshold": 0.62,
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    },
+    {
+      "preferences": [
+        "cctv",
+        "streetlight",
+        "activity"
+      ],
+      "scores": {
+        "activity": 0.9844609498977661,
+        "cctv": 0.7461380958557129,
+        "none": 0.7262354493141174,
+        "streetlight": 0.7021030783653259
+      },
+      "threshold": 0.62,
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    },
+    {
+      "preferences": [
+        "cctv",
+        "streetlight",
+        "activity"
+      ],
+      "scores": {
+        "activity": 0.730942964553833,
+        "cctv": 0.8041360378265381,
+        "none": 0.8367035388946533,
+        "streetlight": 0.8046377897262573
+      },
+      "threshold": 0.62,
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    }
+  ]
+}

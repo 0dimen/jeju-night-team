@@ -1,0 +1,9 @@
+{
+  "note": "요청이름과실제응답모델구분. 마지막생성의429세번뒤차단. 이후해당모델실제호출없음",
+  "requested_model": "gemini-3.5-flash",
+  "actual_models_before_quota": [],
+  "failures": 3,
+  "status": "무료 한도 도달",
+  "at": 1794946111.4417863,
+  "source_path": "experiments/results/gemini_quota_6dea9c51798a7675.json"
+}

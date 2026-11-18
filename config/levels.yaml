@@ -1,0 +1,6 @@
+default: L0
+levels:
+  L0: {structure: S1, intent: I1, explain: E1, provider: none, embedding: false, lexicon: false, discovery: false}
+  L1: {structure: S1, intent: I3, explain: E2, provider: mock, embedding: false, lexicon: false, discovery: false}
+  L2: {structure: S1, intent: I2, explain: E3, provider: ollama, model: 'qwen3:0.6b', embedding: true, lexicon: true, discovery: false}
+  L3: {structure: S3, intent: I3, explain: E2, provider: mock, embedding: false, lexicon: true, discovery: true}

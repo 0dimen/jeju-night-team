@@ -1,0 +1,62 @@
+name: 34_v2_intent_I4
+structure: S1
+intent: I4
+explain: E3
+provider: ollama
+model: qwen3:0.6b
+data_scope: synthetic
+repeats: 1
+select:
+  intent:
+  - 0
+  - 2
+  - 4
+  - 8
+  - 18
+  - 20
+  - 23
+  - 39
+  report: []
+  explain: []
+  flow: []
+group: v2
+phase: hardened_v2
+cutoff: 04:55
+timeout: 75
+max_wall_seconds: 1200
+seed: 42
+expanded_examples:
+  activity:
+  - 귀갓길에서
+  - 귀갓길의
+  - 길과
+  - 다니는
+  - 방문
+  - 보행량이
+  - 보행로
+  - 보행로에
+  - 사람들이
+  - 상태
+  cctv:
+  - 검증
+  - 게시한다
+  - 고장
+  - 구간과
+  - 구별해야
+  - 범위는
+  - 실제
+  - 인접
+  - 제보는
+  - 촬영
+  streetlight:
+  - 골목이
+  - 귀갓길에서
+  - 길과
+  - 깜박이는
+  - 보행로에
+  - 불빛이
+  - 상태
+  - 상태를
+  - 시설의
+  - 약한
+lexicon_scope: 합성 후보만 비교, 운영 사전 승인 아님

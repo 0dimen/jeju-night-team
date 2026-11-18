@@ -1,0 +1,23 @@
+name: 33_v2_structure_S3
+structure: S3
+intent: I3
+explain: E3
+provider: ollama
+model: qwen3:0.6b
+data_scope: synthetic
+repeats: 1
+select:
+  intent: []
+  report: []
+  explain: []
+  flow:
+  - 0
+  - 1
+  - 5
+  - 6
+group: v2
+phase: hardened_v2
+cutoff: 04:55
+timeout: 75
+max_wall_seconds: 1200
+seed: 42

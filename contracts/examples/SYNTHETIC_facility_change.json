@@ -1,0 +1,9 @@
+{
+  "facility_id": "CCTV-B1",
+  "type": "cctv",
+  "before": "normal",
+  "after": "not_working",
+  "report_id": "SYNTHETIC-RPT-1",
+  "verified_by": "synthetic-admin",
+  "verified_at": "2026-11-18T02:32:00+09:00"
+}

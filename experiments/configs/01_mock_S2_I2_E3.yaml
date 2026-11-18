@@ -1,0 +1,9 @@
+name: 01_mock_S2_I2_E3
+structure: S2
+intent: I2
+explain: E3
+provider: mock
+data_scope: synthetic
+repeats: 3
+group: offline
+cutoff: 04:55

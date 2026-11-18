@@ -1,0 +1,23 @@
+{
+  "candidate": {
+    "threshold": 0.8,
+    "calibration_n": 24,
+    "calibration_tp": 10,
+    "calibration_fp": 2,
+    "calibration_fn": 0,
+    "calibration_precision": 0.8333333333333334,
+    "calibration_recall": 1.0,
+    "calibration_f1": 0.9090909090909091,
+    "evaluation_n": 40,
+    "evaluation_tp": 8,
+    "evaluation_fp": 12,
+    "evaluation_fn": 0,
+    "evaluation_precision": 0.4,
+    "evaluation_recall": 1.0,
+    "evaluation_f1": 0.5714285714285715
+  },
+  "approved": false,
+  "selection": "보정 세트 F1 우선. 거리 30m·기간 30일은 모든 기준값에 동일하게 적용",
+  "effect": "중복 후보 표시만 허용. 제보 삭제·자동 병합은 하지 않음",
+  "model": "intfloat/multilingual-e5-small"
+}
