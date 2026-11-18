@@ -102,3 +102,5 @@ Windows에서는 Python 경로만 `.\.venv\Scripts\python.exe`로 바꿉니다. 
 이 저장소는 팀 개발용으로 선별한 코드에서 새 이력을 시작했습니다. 다음 변경은 SHARING_POLICY.md의 사전 검사와 검토 절차를 따릅니다.
 
 커밋 전 점검 도구: `python -m pip install -r requirements-share-check.txt` 후 `git config core.hooksPath .githooks`. 자세한 변경·검토 규칙은 [SHARING_POLICY.md](SHARING_POLICY.md)를 따릅니다.
+
+페이지 연결 모듈: [사용 방법](docs/PAGE_CLIENT_INTEGRATION.md). 실제 화면은 아직 없으며, 지도·페이지 이동 연결 후 브라우저에서 통합 확인해야 합니다.
