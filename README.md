@@ -112,3 +112,5 @@ Windows에서는 Python 경로만 `.\.venv\Scripts\python.exe`로 바꿉니다. 
 최신 후속: 공개 연구 구간의 지도 보행 경로4개를 확보하고, 출처·예약·모호한 제보 분기를 보완했습니다. [자료 수집 범위](docs/REAL_ROUTE_COLLECTION.md)와 [평가·보완 내용](docs/AGENT_INPUT_EVALUATION.md)을 확인하세요.
 
 대화 화면은 로컬 서버의 `/demo`에서 열 수 있습니다. [화면 사용법·현장 확인표 준비](docs/DEMO_PAGE_AND_FIELD_REVIEW.md)를 참고하세요. 실제 지도 길찾기 없이 합성 위치만 사용합니다.
+
+시설 자료는 [정리 결과와 처리 규칙](docs/FACILITY_CLEANUP.md), 추천 방식은 [기준 후보 비교](docs/RECOMMENDATION_CRITERIA_CANDIDATES.md)를 참고하세요. 기준 후보는 아직 기본 순위에 적용하지 않았습니다.
