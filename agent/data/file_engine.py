@@ -93,6 +93,8 @@ class FileRouteEngine:
         limitations=['출발점 중심 평면 투영의 근사 거리이며 지형·횡단 가능성을 검증하지 않습니다.',
                      '보행 시간은 파일 제공값이며 산정 근거는 경로 파일에 있습니다.',
                      '시설 위치는 현재 작동·촬영 범위·밝기를 뜻하지 않습니다.']
+        for key,label in [('attribution_url','지도 출처·라이선스'),('fix_map_url','지도 오류 수정')]:
+            if self.route_data['metadata'].get(key):limitations.append(label+': '+self.route_data['metadata'][key])
         if self.synthetic:limitations.insert(0,'SYNTHETIC 합성 파일 예시이며 실제 길찾기가 아닙니다.')
         version=stable_hash([self.version,events])
         result={'run_id':('SYNTHETIC-' if self.synthetic else 'FILE-')+stable_hash([request,version,radius]),

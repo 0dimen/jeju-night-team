@@ -111,3 +111,12 @@ def test_file_engine_connects_to_conversation_api(tmp_path,monkeypatch):
     result=response.json();assert result['kind']=='route' and result['synthetic'] is True
     assert result['analysis']['logic_version'].startswith('file-aeqd')
     assert all(float(r['distance'][:-1])<300 for r in result['analysis']['routes'])
+
+
+def test_route_source_license_links_remain_visible(tmp_path):
+    route,cctv,request,paths=fixtures(tmp_path)
+    route['properties']['attribution_url']='https://example.org/license'
+    route['properties']['fix_map_url']='https://example.org/fix'
+    result=make(route,cctv,paths)(request)
+    assert any('https://example.org/license' in x for x in result['limitations'])
+    assert any('https://example.org/fix' in x for x in result['limitations'])
