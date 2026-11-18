@@ -34,3 +34,12 @@ def test_field_review_rejects_invalid_input_before_writing(tmp_path):
     output=tmp_path/'review'
     with pytest.raises(ValueError):export_review(path,output)
     assert not output.exists()
+
+
+def test_field_review_preserves_existing_human_notes(tmp_path):
+    path=Path('data/route_examples/SYNTHETIC_routes.geojson')
+    export_review(path,tmp_path)
+    note=tmp_path/'field_review.csv'
+    note.write_text('사람이 적은 현장 메모',encoding='utf-8')
+    with pytest.raises(FileExistsError):export_review(path,tmp_path)
+    assert note.read_text(encoding='utf-8')=='사람이 적은 현장 메모'

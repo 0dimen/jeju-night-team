@@ -4,11 +4,11 @@ import json
 from pathlib import Path
 from agent.data.routes import load_routes
 
-CHECKS = ('통행 가능 여부', '횡단 지점', '야간 밝기', '공사·폐쇄', '시설 현재 상태')
-
 def export_review(route_path, output_dir):
     loaded = load_routes(route_path)
     out = Path(output_dir)
+    if any((out/name).exists() for name in ('field_review.csv','summary.json')):
+        raise FileExistsError('기존 확인표를 보존합니다. 새 출력 폴더를 지정하세요.')
     out.mkdir(parents=True, exist_ok=True)
     rows = []
     for route in loaded['routes']:
@@ -18,7 +18,7 @@ def export_review(route_path, output_dir):
                 '통행 가능 여부': '', '횡단 지점': '', '야간 밝기': '', '공사·폐쇄': '', '시설 현재 상태': '',
                 '확인 날짜·시각': '', '확인 방법': '', '근거': '', '메모': ''})
     fields = list(rows[0])
-    with (out/'field_review.csv').open('w', encoding='utf-8-sig', newline='') as stream:
+    with (out/'field_review.csv').open('x', encoding='utf-8-sig', newline='') as stream:
         writer = csv.DictWriter(stream, fieldnames=fields)
         writer.writeheader(); writer.writerows(rows)
     summary = {'source_sha256': loaded['source_sha256'], 'source': loaded['metadata'],
