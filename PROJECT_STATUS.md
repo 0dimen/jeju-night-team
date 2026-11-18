@@ -87,3 +87,7 @@ README, SHARING_POLICY.md, 이 문서를 먼저 읽고 기능 브랜치를 검�
 후속 자료 수집과 입력 보완: [지도 경로 수집 범위](docs/REAL_ROUTE_COLLECTION.md), [입력 전후 관찰](docs/AGENT_INPUT_EVALUATION.md).
 
 새 가상환경 검증: requirements-test.txt로 설치한 환경에서 키 제거·네트워크 차단 후236개 검사 통과(연결시도0). Windows·센터 확인은 여전히 별도입니다.
+
+## 대화 화면·다음날 준비 추가
+
+로컬 `/demo` 합성 대화 화면 연결, 실제 Chromium 뒤로가기·새로고침 확인, 선분별 빈 현장 확인표 내보내기를 추가했습니다. Python239개·페이지 상태 모의5개 통과, 실제 화면 외부 요청0·오류0입니다. [사용법과 남은 작업](docs/DEMO_PAGE_AND_FIELD_REVIEW.md)을 참고하세요. 실제 자료 이용 승인·현장 확인·지도 연결·센터 확인·main 병합은 별도입니다.

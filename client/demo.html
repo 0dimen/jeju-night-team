@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>제주밤길 대화 시연</title><link rel="stylesheet" href="/demo/demo.css">
+<main><h1>제주밤길 대화 시연</h1>
+<p class="notice">합성 경로·시설 시연입니다. 실제 위치의 길찾기나 안전 보장이 아닙니다.</p>
+<p>실제 집 주소를 입력하지 마세요. 위치는 합성 예시만 사용합니다. 페이지를 떠나거나 새로 열면 대화와 위치를 지웁니다.</p>
+<button id="locations" type="button">합성 출발·도착 위치 선택</button>
+<button id="reset" type="button">대화·위치 지우기</button>
+<p id="location-status">선택한 위치 없음</p>
+<form id="conversation"><label for="text">질문 또는 출발 날짜·시각</label>
+<textarea id="text" maxlength="5000" required placeholder="안전한 길 알려줘 → 2026-11-19 → 오후 3시"></textarea>
+<button type="submit">보내기</button></form>
+<p>출처 질문 예: CCTV 정보는 어디서 가져왔어요? 제보 예: CCTV와 가로등이 모두 고장 났어요.</p>
+<section id="result" aria-live="polite"><p>합성 위치를 선택하고 질문해 주세요.</p></section>
+</main><script type="module" src="/demo/demo.mjs"></script></html>

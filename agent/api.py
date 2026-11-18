@@ -91,3 +91,15 @@ def conversation(body: ConversationBody,response: Response):
         return result
     except (ValidationError,ValueError,TypeError,KeyError) as exc:
         raise HTTPException(422,'페이지 위치와 날짜·오전·오후 입력을 확인해 주세요.') from exc
+
+
+@app.get('/demo', include_in_schema=False)
+@app.get('/demo/{asset}', include_in_schema=False)
+def demo_page(asset: str = 'demo.html'):
+    from pathlib import Path
+    from fastapi.responses import FileResponse
+    if asset not in {'demo.html','demo.css','demo.mjs','page_conversation.mjs'}:
+        raise HTTPException(404, '파일이 없습니다.')
+    return FileResponse(Path(__file__).resolve().parents[1]/'client'/asset,headers={
+        'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff',
+        'Content-Security-Policy':"default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"})
