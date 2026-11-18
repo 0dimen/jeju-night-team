@@ -6,16 +6,38 @@ PLACES = {'제주시청': (33.4996, 126.5312), '탑동광장': (33.517, 126.525)
           '제주공항': (33.5104, 126.4913), '동문시장': (33.5117, 126.526)}
 
 
+def out_of_scope_action(text):
+    """명시적 예약 실행 요청만 구분한다. 예약 언급만으로 길 질문을 막지 않는다."""
+    targets=('항공권','비행기','택시','숙소','호텔','렌터카','배달')
+    compact=normalized(text)
+    action=re.search(r'(?:예약|예매)(?:을|좀)?(?:해(?:줘|주세요|줄래|줄수|주실)|부탁|가능(?:해|한지|할까)|하고싶|하려)',compact)
+    return any(term in compact for term in targets) and bool(action or re.search(r'(?:예약|예매)해$',compact))
+
+
+def asks_source(text):
+    compact=normalized(text)
+    topic=any(term in compact for term in ('정보','자료','데이터','통계','기준'))
+    question=any(term in compact for term in ('어디서가져','어디에서가져','어디서받','언제조사','언제수집','언제기준'))
+    return topic and question
+
+
 def parse(text):
     text, _ = mask_personal_info(text)
-    if any(w in text for w in ['제보', '고장', '깜빡', '꺼짐', '파손', '불 꺼', '불이 꺼']):
+    if out_of_scope_action(text):
+        kind = 'unsupported'
+    elif asks_source(text):
+        kind = 'data_question'
+    elif any(w in text for w in ['제보', '고장', '깜빡', '꺼짐', '파손', '불 꺼', '불이 꺼']):
         kind = 'report'
     elif any(w in text for w in ['데이터', '통계', '출처', '기준일', '방문객']):
         kind = 'data_question'
     elif any(w in text for w in ['에서', '까지', '경로', '가려', '가는', '길로', '밤길', '데로']):
         kind = 'route'
     else:
-        kind = 'unsupported'
+        compact=normalized(text);enums=load_yaml('registry/enums.yaml')
+        facility=any(normalized(term) in compact for terms in enums['facility'].values() for term in terms)
+        problem=any(normalized(term) in compact for terms in enums['problem'].values() for term in terms)
+        kind = 'report' if facility and problem else 'unsupported'
     compact=normalized(text)
     def wanted(term):
         term=normalized(term)

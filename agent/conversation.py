@@ -4,7 +4,7 @@ from datetime import date,datetime
 import math
 import re
 from agent.common import load_yaml,check_schema
-from agent.intent import parse
+from agent.intent import parse,out_of_scope_action
 from agent.report import emergency_check
 
 
@@ -14,6 +14,14 @@ def page_turn(text,state=None):
                 'state':{},'stored':False}
     if text.strip() in ('취소','초기화','대화 초기화'):
         return {'kind':'reset','message':'이 페이지의 대화와 위치 상태를 비웠습니다.','state':{},'stored':False}
+    if out_of_scope_action(text):
+        return {'kind':'unsupported','message':'예약·예매를 실행하지 않습니다. 보행 경로 비교·시설 제보·자료 출처 질문을 지원합니다.','state':{},'stored':False}
+    intent=parse(text)
+    if intent['kind']=='data_question':
+        return {'kind':'delegate','text':text,'state':{},'stored':False}
+    if intent['kind']=='report':
+        from agent.report.preview import preview_report
+        return {**preview_report(text),'state':{}}
     if not isinstance(state,(dict,type(None))):raise ValueError('페이지 상태 형식 확인')
     source=state or {}
     # 알 수 없는 상태·이전 대화 원문은 되돌려 주지 않는다.
@@ -29,10 +37,6 @@ def page_turn(text,state=None):
             if any(isinstance(p.get(k),bool) or not isinstance(p.get(k),(int,float)) or not math.isfinite(p[k]) for k in ('lat','lng')):raise ValueError('위치 좌표 확인')
             if not(-90<=p['lat']<=90 and -180<=p['lng']<=180):raise ValueError('위치 범위 확인')
             request[field]={k:p[k] for k in ('name','lat','lng')}
-    intent=parse(text)
-    # 출처 질문·제보·긴급은 경로 시각 확인 대화에 묶지 않는다.
-    if intent['kind'] in ('data_question','report'):
-        return {'kind':'delegate','text':text,'state':{},'stored':False}
     route=intent['kind']=='route' or bool(re.search(r'집으로|초등학교|대학교',text)) or current.get('awaiting_route') is True
     if not route:return {'kind':'delegate','text':text,'state':{},'stored':False}
     current['awaiting_route']=True

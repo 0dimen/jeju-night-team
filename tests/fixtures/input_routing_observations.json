@@ -1,0 +1,271 @@
+{
+  "scope": "입력 분기와 확인 질문의 전후 관찰. 의미 정답·정확도 산출 없음.",
+  "source_groups": {
+    "synthetic": 8,
+    "user_supplied": 3
+  },
+  "human_semantic_verdict": "모든 행 미승인/null. 사람이 작성 의도와 실제 결과를 확인해야 함.",
+  "location_context": "실제 개인 위치가 아닌 합성 좌표33.5,126.5만 사용",
+  "model_calls": 0,
+  "rows": [
+    {
+      "case": "S01",
+      "scope": "synthetic",
+      "text": "여기 나오는 CCTV 정보는 어디서 가져왔고 언제 조사한 거예요?",
+      "context": "empty",
+      "human_semantic_verdict": null,
+      "before": {
+        "kind": "unsupported",
+        "missing": [],
+        "question_fields": [],
+        "stored": null,
+        "state_empty": true
+      },
+      "after": {
+        "kind": "data_question",
+        "missing": [],
+        "question_fields": [],
+        "stored": null,
+        "state_empty": true
+      }
+    },
+    {
+      "case": "S02",
+      "scope": "synthetic",
+      "text": "가로등 정보가 언제 조사된 건지 알려줘",
+      "context": "synthetic located pending-route",
+      "human_semantic_verdict": null,
+      "before": {
+        "kind": "clarification",
+        "missing": [
+          "date"
+        ],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": false
+      },
+      "after": {
+        "kind": "data_question",
+        "missing": [],
+        "question_fields": [],
+        "stored": null,
+        "state_empty": true
+      }
+    },
+    {
+      "case": "S03",
+      "scope": "synthetic",
+      "text": "오늘 밤 제주에서 서울 가는 항공권 예약해줘",
+      "context": "empty",
+      "human_semantic_verdict": null,
+      "before": {
+        "kind": "clarification",
+        "missing": [
+          "destination"
+        ],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": false
+      },
+      "after": {
+        "kind": "unsupported",
+        "missing": [],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": true
+      }
+    },
+    {
+      "case": "S04",
+      "scope": "synthetic",
+      "text": "제주공항에서 동문시장까지 택시 예약해줘",
+      "context": "synthetic located pending-route",
+      "human_semantic_verdict": null,
+      "before": {
+        "kind": "clarification",
+        "missing": [
+          "date"
+        ],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": false
+      },
+      "after": {
+        "kind": "unsupported",
+        "missing": [],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": true
+      }
+    },
+    {
+      "case": "S05",
+      "scope": "synthetic",
+      "text": "CCTV가 고장 난 건 아니고 쓰레기가 쌓여 있어요",
+      "context": "empty",
+      "human_semantic_verdict": null,
+      "before": {
+        "kind": "clarification",
+        "missing": [
+          "location"
+        ],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": true
+      },
+      "after": {
+        "kind": "report_preview",
+        "missing": [],
+        "question_fields": [
+          "meaning"
+        ],
+        "stored": false,
+        "state_empty": true
+      }
+    },
+    {
+      "case": "S06",
+      "scope": "synthetic",
+      "text": "CCTV와 가로등이 모두 고장 났어요",
+      "context": "empty",
+      "human_semantic_verdict": null,
+      "before": {
+        "kind": "clarification",
+        "missing": [
+          "location"
+        ],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": true
+      },
+      "after": {
+        "kind": "report_preview",
+        "missing": [],
+        "question_fields": [
+          "facility"
+        ],
+        "stored": false,
+        "state_empty": true
+      }
+    },
+    {
+      "case": "S07",
+      "scope": "synthetic",
+      "text": "CCTV가 어두워요",
+      "context": "empty",
+      "human_semantic_verdict": null,
+      "before": {
+        "kind": "unsupported",
+        "missing": [],
+        "question_fields": [],
+        "stored": null,
+        "state_empty": true
+      },
+      "after": {
+        "kind": "report_preview",
+        "missing": [],
+        "question_fields": [
+          "meaning"
+        ],
+        "stored": false,
+        "state_empty": true
+      }
+    },
+    {
+      "case": "S08",
+      "scope": "synthetic",
+      "text": "누가 따라와요. 항공권 예약해줘",
+      "context": "synthetic located pending-route",
+      "human_semantic_verdict": null,
+      "before": {
+        "kind": "emergency",
+        "missing": [],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": true
+      },
+      "after": {
+        "kind": "emergency",
+        "missing": [],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": true
+      }
+    },
+    {
+      "case": "U01",
+      "scope": "user_supplied",
+      "text": "여기서 인화 초등학교랑 동광 초등학교 중에 어디가 더 빨리/안전하게 도착할 수 있어?",
+      "context": "empty",
+      "human_semantic_verdict": null,
+      "before": {
+        "kind": "clarification",
+        "missing": [
+          "destination"
+        ],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": false
+      },
+      "after": {
+        "kind": "clarification",
+        "missing": [
+          "destination"
+        ],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": false
+      }
+    },
+    {
+      "case": "U02",
+      "scope": "user_supplied",
+      "text": "제주 대학교에서 집으로 가려고 하는데 어떻게 가는게 안전할까?",
+      "context": "empty",
+      "human_semantic_verdict": null,
+      "before": {
+        "kind": "clarification",
+        "missing": [
+          "destination"
+        ],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": false
+      },
+      "after": {
+        "kind": "clarification",
+        "missing": [
+          "destination"
+        ],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": false
+      }
+    },
+    {
+      "case": "U04",
+      "scope": "user_supplied",
+      "text": "3시에 갈거야",
+      "context": "synthetic located pending-route",
+      "human_semantic_verdict": null,
+      "before": {
+        "kind": "clarification",
+        "missing": [
+          "date"
+        ],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": false
+      },
+      "after": {
+        "kind": "clarification",
+        "missing": [
+          "date"
+        ],
+        "question_fields": [],
+        "stored": false,
+        "state_empty": false
+      }
+    }
+  ]
+}

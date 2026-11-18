@@ -28,5 +28,5 @@ def preview_report(text,user_choice=None):
     if candidate['conflict_with_user_choice']:
         questions.append({'field':'user_choice','message':'선택한 항목과 자동 후보가 다릅니다. 사람이 확인해야 합니다.'})
     return {'kind':'report_preview','stored':False,'classification_candidate':candidate,
-            'questions':questions,'requires_human_review':True,
+            'questions':questions,'needs_clarification':bool(questions),'requires_human_review':True,
             'message':'자동 분류 후보입니다. 정답·게시 승인이 아니며 아직 저장하지 않았습니다.'}

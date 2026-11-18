@@ -85,7 +85,7 @@ Windows에서는 Python 경로만 `.\.venv\Scripts\python.exe`로 바꿉니다. 
 `agent/`는 요청 처리, `agent/data/`는 자료 검사, `stubs/`는 합성 계산·제보 저장 대역, `contracts/`는 주고받는 형식, `config/`는 교체 설정, `tests/`는 검사입니다. 기본 실행 의존성에는 pytest가 없으므로 검사는 별도로 설치합니다.
 
 ```bash
-.venv/bin/python -m pip install pytest
+.venv/bin/python -m pip install -r requirements-test.txt
 .venv/bin/python -m pytest -q
 ```
 
@@ -108,3 +108,5 @@ Windows에서는 Python 경로만 `.\.venv\Scripts\python.exe`로 바꿉니다. 
 페이지 연결 모듈: [사용 방법](docs/PAGE_CLIENT_INTEGRATION.md). 실제 화면은 아직 없으며, 지도·페이지 이동 연결 후 브라우저에서 통합 확인해야 합니다.
 
 경로·CCTV 파일 계산기: [설치와 연결](docs/FILE_ROUTE_ENGINE.md). 선택 의존성을 설치한 뒤 합성 파일로 먼저 확인하며, 실제 자료 채택을 대신하지 않습니다.
+
+최신 후속: 공개 연구 구간의 지도 보행 경로4개를 확보하고, 출처·예약·모호한 제보 분기를 보완했습니다. [자료 수집 범위](docs/REAL_ROUTE_COLLECTION.md)와 [평가·보완 내용](docs/AGENT_INPUT_EVALUATION.md)을 확인하세요.
