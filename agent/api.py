@@ -79,6 +79,12 @@ def conversation(body: ConversationBody,response: Response):
     response.headers['Pragma']='no-cache'
     try:
         result=page_turn(body.text,body.state)
+        if result['kind']=='route_ready':
+            from agent.comparison import comparison_table
+            calculated=agent.route(result['request'])
+            return {'kind':'route',**calculated,'comparison_table':comparison_table(calculated['analysis']),
+                    'state':result['state'],'page_location_stored':False,
+                    'message':'현재 결과는 합성 시설·경로 시연입니다. 입력한 실제 위치의 길찾기가 아닙니다.'}
         if result['kind']=='delegate':
             # 시간과 무관한 요청은 기존 응답을 바로 돌려준다. 페이지 위치는 전달하지 않는다.
             return {**agent.run(body.text),'state':{},'page_location_stored':False}

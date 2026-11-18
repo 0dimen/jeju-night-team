@@ -12,6 +12,8 @@ def page_turn(text,state=None):
     if emergency_check(text):
         return {'kind':'emergency','message':load_yaml('registry/emergency_phrases.yaml')['message'],
                 'state':{},'stored':False}
+    if text.strip() in ('취소','초기화','대화 초기화'):
+        return {'kind':'reset','message':'이 페이지의 대화와 위치 상태를 비웠습니다.','state':{},'stored':False}
     if not isinstance(state,(dict,type(None))):raise ValueError('페이지 상태 형식 확인')
     source=state or {}
     # 알 수 없는 상태·이전 대화 원문은 되돌려 주지 않는다.
