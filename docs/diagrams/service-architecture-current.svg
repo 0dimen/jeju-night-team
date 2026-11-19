@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="936pt" height="576pt" viewBox="0 0 936 576" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-20T08:38:41.215438</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 576
+L 936 576
+L 936 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 49.5792 111.6
+L 886.4208 111.6
+Q 894.888 111.6 894.888 103.1328
+L 894.888 53.0352
+Q 894.888 44.568 886.4208 44.568
+L 49.5792 44.568
+Q 41.112 44.568 41.112 53.0352
+L 41.112 103.1328
+Q 41.112 111.6 49.5792 111.6
+z
+" clip-path="url(#pf68e966d2a)" style="fill: #ece5fa; stroke: #6d55a4; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 468 113.600521
+Q 468 126.417655 468 137.669542
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 471 131.669542
+L 468 137.669542
+L 465 131.669542
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 49.5792 198.3888
+L 886.4208 198.3888
+Q 894.888 198.3888 894.888 189.9216
+L 894.888 150.408
+Q 894.888 141.9408 886.4208 141.9408
+L 49.5792 141.9408
+Q 41.112 141.9408 41.112 150.408
+L 41.112 189.9216
+Q 41.112 198.3888 49.5792 198.3888
+z
+" clip-path="url(#pf68e966d2a)" style="fill: #e8f3f5; stroke: #6d55a4; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 171.648 199.684927
+Q 171.648 211.795763 171.648 222.341352
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 174.648 216.341352
+L 171.648 222.341352
+L 168.648 216.341352
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 468 199.684927
+Q 468 211.795763 468 222.341352
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 471 216.341352
+L 468 222.341352
+L 465 216.341352
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 764.352 199.684927
+Q 764.352 211.795763 764.352 222.341352
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 767.352 216.341352
+L 764.352 222.341352
+L 761.352 216.341352
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 49.5792 339.5088
+L 293.7168 339.5088
+Q 302.184 339.5088 302.184 331.0416
+L 302.184 235.08
+Q 302.184 226.6128 293.7168 226.6128
+L 49.5792 226.6128
+Q 41.112 226.6128 41.112 235.08
+L 41.112 331.0416
+Q 41.112 339.5088 49.5792 339.5088
+z
+" clip-path="url(#pf68e966d2a)" style="fill: #eef2ff; stroke: #6d55a4; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 345.9312 339.5088
+L 590.0688 339.5088
+Q 598.536 339.5088 598.536 331.0416
+L 598.536 235.08
+Q 598.536 226.6128 590.0688 226.6128
+L 345.9312 226.6128
+Q 337.464 226.6128 337.464 235.08
+L 337.464 331.0416
+Q 337.464 339.5088 345.9312 339.5088
+z
+" clip-path="url(#pf68e966d2a)" style="fill: #eef2ff; stroke: #6d55a4; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 642.2832 339.5088
+L 886.4208 339.5088
+Q 894.888 339.5088 894.888 331.0416
+L 894.888 235.08
+Q 894.888 226.6128 886.4208 226.6128
+L 642.2832 226.6128
+Q 633.816 226.6128 633.816 235.08
+L 633.816 331.0416
+Q 633.816 339.5088 642.2832 339.5088
+z
+" clip-path="url(#pf68e966d2a)" style="fill: #eef2ff; stroke: #6d55a4; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 171.648 342.370777
+Q 171.648 353.268267 171.648 364.165757
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 168.648 348.370777
+L 171.648 342.370777
+L 174.648 348.370777
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 174.648 358.165757
+L 171.648 364.165757
+L 168.648 358.165757
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 468 342.370777
+Q 468 353.268267 468 364.165757
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 465 348.370777
+L 468 342.370777
+L 471 348.370777
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 471 358.165757
+L 468 364.165757
+L 465 358.165757
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 764.352 342.370777
+Q 764.352 353.268267 764.352 364.165757
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 761.352 348.370777
+L 764.352 342.370777
+L 767.352 348.370777
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 767.352 358.165757
+L 764.352 364.165757
+L 761.352 358.165757
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 49.5792 478.512
+L 293.7168 478.512
+Q 302.184 478.512 302.184 470.0448
+L 302.184 377.6112
+Q 302.184 369.144 293.7168 369.144
+L 49.5792 369.144
+Q 41.112 369.144 41.112 377.6112
+L 41.112 470.0448
+Q 41.112 478.512 49.5792 478.512
+z
+" clip-path="url(#pf68e966d2a)" style="fill: #f0f7f7; stroke: #6d55a4; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 345.9312 478.512
+L 590.0688 478.512
+Q 598.536 478.512 598.536 470.0448
+L 598.536 377.6112
+Q 598.536 369.144 590.0688 369.144
+L 345.9312 369.144
+Q 337.464 369.144 337.464 377.6112
+L 337.464 470.0448
+Q 337.464 478.512 345.9312 478.512
+z
+" clip-path="url(#pf68e966d2a)" style="fill: #f0f7f7; stroke: #6d55a4; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 642.2832 478.512
+L 886.4208 478.512
+Q 894.888 478.512 894.888 470.0448
+L 894.888 377.6112
+Q 894.888 369.144 886.4208 369.144
+L 642.2832 369.144
+Q 633.816 369.144 633.816 377.6112
+L 633.816 470.0448
+Q 633.816 478.512 642.2832 478.512
+z
+" clip-path="url(#pf68e966d2a)" style="fill: #fff4e5; stroke: #6d55a4; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 764.352 480.512521
+Q 764.352 493.329655 764.352 504.581542
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke-dasharray: 5.18,2.24; stroke-dashoffset: 0; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+    <path d="M 767.352 498.581542
+L 764.352 504.581542
+L 761.352 498.581542
+" clip-path="url(#pf68e966d2a)" style="fill: none; stroke-dasharray: 5.18,2.24; stroke-dashoffset: 0; stroke: #716088; stroke-width: 1.4; stroke-linecap: round"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 49.5792 566.712
+L 886.4208 566.712
+Q 894.888 566.712 894.888 558.2448
+L 894.888 517.32
+Q 894.888 508.8528 886.4208 508.8528
+L 49.5792 508.8528
+Q 41.112 508.8528 41.112 517.32
+L 41.112 558.2448
+Q 41.112 566.712 49.5792 566.712
+z
+" clip-path="url(#pf68e966d2a)" style="fill: #fffaf0; stroke-dasharray: 5.55,2.4; stroke-dashoffset: 0; stroke: #6d55a4; stroke-width: 1.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 19px; font-family: 'NanumGothic'; text-anchor: middle; fill: #342352" x="468" y="21.9888" transform="rotate(-0 468 21.9888)">제주밤길 · 현재 배포 구조와 다음 연결 단계</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'NanumGothic'; text-anchor: middle; fill: #342352" x="468" y="67.7632" transform="rotate(-0 468 67.7632)">사용자 화면 /app</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; text-anchor: middle; fill: #243449" x="468" y="98.999989" transform="rotate(-0 468 98.999989)">경로 비교  |  보행환경 제보  |  유동인구 분석  |  지역 데이터 보기  |  시설 이슈</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'NanumGothic'; text-anchor: middle; fill: #342352" x="468" y="165.136" transform="rotate(-0 468 165.136)">FastAPI 서버 · 기능별 입력 검증</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; text-anchor: middle; fill: #243449" x="468" y="185.79957" transform="rotate(-0 468 185.79957)">개인 검색·좌표는 POST 본문  |  키는 서버 환경변수  |  외부 언어 모델 호출 없음</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'NanumGothic'; text-anchor: middle; fill: #342352" x="171.648" y="254.0416" transform="rotate(-0 171.648 254.0416)">경로 계산·추천</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(91.723 281.47432)">세 옵션 요청 → 같은 형상 합치기</text>
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(107.21925 298.72432)">CCTV·조명 인접 길이 계산</text>
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(91.6655 315.97432)">선택 기준 평균 → 추천·제외 이유</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'NanumGothic'; text-anchor: middle; fill: #342352" x="468" y="254.0416" transform="rotate(-0 468 254.0416)">자료·시설 조회</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(400.4375 281.47432)">월별 두 지역 비교·각각 상세</text>
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(414.525 298.72432)">시설 구역은 별도 선택</text>
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(389.685 315.980609)">실제 게시 제보와 처리 예시 구분</text>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'NanumGothic'; text-anchor: middle; fill: #342352" x="764.352" y="254.0416" transform="rotate(-0 764.352 254.0416)">시범 제보</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(698.457 281.47432)">긴급 안내 → 개인정보 가림</text>
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(710.8195 298.69018)">분류 후보·사용자 확인</text>
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(717.8345 315.99768)">접수번호·검토 대기</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'NanumGothic'; text-anchor: middle; fill: #342352" x="171.648" y="396.5728" transform="rotate(-0 171.648 396.5728)">외부 지도 제공사</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(101.757648 422.24152)">VWorld: 장소 검색·배경지도</text>
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(103.906711 439.49152)">TMAP: 경로·거리·예상 시간</text>
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(98.738 456.6957)">개인 선택 경로 서버 캐시 없음</text>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'NanumGothic'; text-anchor: middle; fill: #342352" x="468" y="396.5728" transform="rotate(-0 468 396.5728)">공개 계산 자료</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(393.966055 421.98277)">CCTV 937행 · 조명 89,933행</text>
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(415.135938 439.49152)">월별 43지역 · 53개월</text>
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(398.75293 456.70738)">독립 시설 지도: 두 구간 주변</text>
+   </g>
+   <g id="text_16">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'NanumGothic'; text-anchor: middle; fill: #342352" x="764.352" y="396.5728" transform="rotate(-0 764.352 396.5728)">현재 접수 보관</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(700.067 422.26488)">서버 프로세스 임시 메모리</text>
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(703.8045 439.4457)">실제 게시·기관 전달 없음</text>
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; fill: #243449" transform="translate(705.472 456.74152)">운영 경로 점수에 미반영</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 700; font-size: 14px; font-family: 'NanumGothic'; text-anchor: middle; fill: #342352" x="468" y="532.048" transform="rotate(-0 468 532.048)">다음 단계 · 아직 운영 연결 전</text>
+   </g>
+   <g id="text_19">
+    <text style="font-size: 11.5px; font-family: 'NanumGothic'; text-anchor: middle; fill: #243449" x="468" y="554.13445" transform="rotate(-0 468 554.13445)">관리자 인증·영구 저장 → 검토·게시·만료·취소 → 승인된 변경만 경로에 반영</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pf68e966d2a">
+   <rect x="9.36" y="5.76" width="917.28" height="564.48"/>
+  </clipPath>
+ </defs>
+</svg>

@@ -1,10 +1,10 @@
 # 제주밤길: 실제 경로와 시설을 비교하는 에이전트
 
-**최신 인수인계(11-20 새벽): [오늘 아침 할 일·사람별 담당](docs/HANDOFF_2026-11-20.md)** · 이전: [실제 확인·시험 대역·미완료 구분](docs/AGENT_HANDOFF.md)
+**현재 서비스:** https://jeju-night-team.vercel.app/app · **[최신 기술 기획서](docs/SERVICE_PLAN.md)** · **[PDF](docs/pdf/SERVICE_PLAN.pdf)** · **[아침 인수인계](docs/TEAM_HANDOFF.md)**
 
 **장소를 검색·선택하고, TMAP 보행 경로의 거리·예상 시간·CCTV·조명 인접 비율을 비교할 수 있습니다.** VWorld 배경지도와 공개 구간 대화도 연결했습니다. 시설 위치를 이용한 연구용 비교이며 실제 밝기·촬영·작동·현장 통행을 확인한 서비스는 아닙니다.
 
-최신 개발 브랜치는 **`feature/open-data-facility-routes`**입니다. main에는 아직 합치지 않았습니다. 공개 배포 주소는 없으며 배포 담당이 Vercel 계정·환경변수를 연결해야 합니다. [현재 상태와 다음 작업](PROJECT_STATUS.md)을 먼저 확인하세요.
+최신 서비스·제출 브랜치는 **`feature/service-screens`**입니다. main과 구분하며, 위 주소에 배포돼 있습니다. [현재 상태와 다음 작업](PROJECT_STATUS.md)을 먼저 확인하세요.
 
 맥에서 라즈베리파이 서버를 열려면 [localhost 연결 안내](docs/LOCALHOST_CONNECTION.md)를 따르세요.
 
@@ -13,7 +13,7 @@
 Python 3.13·Linux에서 확인했습니다. macOS·Windows·센터 실기기는 별도 확인이 필요합니다.
 
 ```bash
-git clone --branch feature/open-data-facility-routes https://github.com/0dimen/jeju-night-team.git
+git clone --branch feature/service-screens https://github.com/0dimen/jeju-night-team.git
 cd jeju-night-team
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements-base.txt
@@ -69,20 +69,22 @@ Windows PowerShell은 가상환경 실행 경로가 `.venv\Scripts\python.exe`�
 
 계산 자료는 약 4.3MB이며 전체 원본의 주소·다른 열을 포함하지 않습니다. 좌표·출처는 서버에 필요하고 선택한 경로·주변 시설만 브라우저에 응답합니다. 데이터가 바뀌면 다시 생성해야 합니다. 로컬 원본 개발은 `agent.api:app`, Vercel 진입점 `app.py`는 준비된 계산 자료를 사용합니다. 데이터가 없으면 합성 결과로 대신하지 않습니다.
 
-Vercel에서는 저장소 루트·FastAPI·이 기능 브랜치를 사용합니다. [시험 배포 인수 안내](docs/VERCEL_PREVIEW.md)를 따르세요. 실제 배포 빌드·외부 접속 검증은 아직입니다.
+Vercel에서는 저장소 루트·FastAPI·이 기능 브랜치를 사용합니다. [시험 배포 인수 안내](docs/VERCEL_PREVIEW.md)를 따르세요. 현재 배포 빌드와 공개 주소 검사를 완료했습니다. [배포 확인 기록](docs/DEPLOYMENT_2026-11-20.md)을 확인하세요.
 
 ## 검사와 다음 개발
 
 ```bash
 .venv/bin/python -m pip install -r requirements-test.txt
-.venv/bin/python -m pytest -q
+.venv/bin/python -m pytest -q --ignore=tests/browser
 ```
 
-Python 306개 검사와 실제 Chromium 모바일 화면 검사를 통과했습니다. 실제 API 시험에는 공개 장소만 사용했습니다. 모델 합의·합성 문장 검사가 실제 사용자 정확도를 뜻하지 않습니다. [시험과 남은 일](docs/SELECTED_ROUTE_AGENT.md)에 범위를 정리했습니다.
+현재 통합 코드의 자동 검사 359개와 PC Chromium 화면 폭 검사를 통과했습니다. 실제 휴대폰 검사와는 구분합니다. 실제 API 시험에는 공개 장소만 사용했습니다. 모델 합의·합성 문장 검사가 실제 사용자 정확도를 뜻하지 않습니다. [시험과 남은 일](docs/SELECTED_ROUTE_AGENT.md)에 범위를 정리했습니다.
 
-다음 우선순위는 지도·로드뷰 대조, 제공받은 문장에 대한 사람의 판정, 자연어와 장소 선택의 추가 통합, 제보 검증·게시의 실제 권한 연결, 센터 실행과 배포입니다.
+다음 우선순위는 실제 휴대폰·센터 확인, 지도·로드뷰 대조, 추천 기준의 사람 평가, 제보 영구 저장·관리자 승인·운영 경로 반영입니다. 최신 기능·수식·검증 범위는 기술 기획서를 기준으로 확인합니다.
 
 ## 참고 문서
+
+- [최신 기술 기획서와 구조 그림](docs/SERVICE_PLAN.md) · [PDF](docs/pdf/SERVICE_PLAN.pdf)
 
 - [현재 완성 범위·배포 담당 인수](PROJECT_STATUS.md)
 - [새 장소 선택·대화 연결](docs/SELECTED_ROUTE_AGENT.md)
