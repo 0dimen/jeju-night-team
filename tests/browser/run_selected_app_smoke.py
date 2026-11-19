@@ -50,7 +50,7 @@ def run():
             reveal(page,'time');page.fill('#live-date','2026-11-20');page.fill('#live-time','21:00');page.click('#live-route-button')
             page.wait_for_selector('#live-route-result .route-card',timeout=60000)
             assert '2026-11-20T21:00' in page.locator('#live-route-result').inner_text()
-            page.locator('#live-route-result').get_by_role('button',name='지도에서 경로·시설 보기').click()
+            assert page.locator('#live-route-result').get_by_role('button',name='지도에서 경로·시설 보기').count()==0
             expect(page.locator('#live-route-result')).to_contain_text('VWorld 배경지도 연결 완료',timeout=45000)
             page.wait_for_selector('#live-route-result .vworld-map circle title',state='attached')
             assert any(method=='POST' and path=='/maps/vworld/tile' for method,path in requests)

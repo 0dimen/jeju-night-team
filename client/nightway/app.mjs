@@ -629,23 +629,16 @@ function renderFacilityRoutes(view, target) {
     target,
     "caption",
   );
-  const mapButton = element(
-    "button",
-    "지도에서 경로·시설 보기",
-    target,
-    "secondary",
-  );
-  mapButton.type = "button";
   const mapHost = element("div", "", target, "vworld-host");
   const mapEpoch = generation;
-  mapButton.addEventListener("click", async () => {
-    mapButton.disabled = true;
+  async function loadMap() {
     const mapAbort = new AbortController();
     pending.add(mapAbort);
     const isCurrent = () =>
       mapEpoch === generation &&
       mapHost.isConnected &&
       !mapAbort.signal.aborted;
+    message(mapHost, "지도에 경로와 주변 시설을 표시하고 있어요…", "support");
     try {
       await drawVworld(view, mapHost, isCurrent, mapAbort.signal);
       frame.toggleAttribute(
@@ -660,17 +653,21 @@ function renderFacilityRoutes(view, target) {
           line.dataset.route === selected ? "1" : ".35",
         );
     } catch {
-      if (isCurrent())
+      if (isCurrent()) {
         message(
           mapHost,
-          "VWorld 배경지도를 불러오지 못했습니다. 키·도메인·연결을 확인해 주세요. 좌표 도식과 경로 수치는 유지됩니다.",
+          "배경지도를 불러오지 못했어요. 아래 경로 도식과 수치는 그대로 볼 수 있어요.",
           "error",
         );
+        const retry = element("button", "지도 다시 불러오기", mapHost, "secondary");
+        retry.type = "button";
+        retry.addEventListener("click", loadMap);
+      }
     } finally {
       pending.delete(mapAbort);
-      mapButton.disabled = false;
     }
-  });
+  }
+  queueMicrotask(loadMap);
   const about = element("div", "", target, "info-card");
   element(
     "p",
