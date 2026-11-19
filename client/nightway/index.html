@@ -297,7 +297,6 @@
             </div>
             <div class="chip-row static">
               <span class="chip is-on">월별 방문 통계</span>
-              <span class="chip is-off">시간대별 · 자료 없음</span>
             </div>
             <div class="map-frame jeju-frame" data-jeju-map="overview"></div>
             <div class="card rows-card">
@@ -337,7 +336,7 @@
             </fieldset>
             <p class="info-card">
               <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
-              <span>시간대별 원본을 확보하면 조회 옵션이 열립니다.</span>
+              <span>현재 자료는 월별 집계예요. 시간대별·실시간 방문량은 제공하지 않아요.</span>
             </p>
             <div class="step-actions"><button type="button" class="primary" data-view-go="distribution">지역 분포 보기</button></div>
           </div>
@@ -370,6 +369,7 @@
               <h1>어느 지역을 비교할까요?</h1>
               <p>방문 통계를 비교할 지역을 두 곳 선택하세요.</p>
             </div>
+            <p id="region-selection-status" class="support" role="status" aria-live="polite">비교할 지역을 두 곳 골라 주세요. (0/2)</p>
             <fieldset class="select-grid" id="region-choices">
               <legend class="sr-only">비교할 지역</legend>
             </fieldset>
@@ -402,16 +402,19 @@
               <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
               <span>월별 합계에서 특정 길의 혼잡도나 야간 보행자 수를 확인할 수 없어요.</span>
             </p>
-            <div class="step-actions"><button type="button" class="primary" id="region-detail-button" data-view-go="detail">연동의 자료 상세 보기</button></div>
+            <div class="step-actions two" id="region-detail-actions">
+              <button type="button" class="primary" id="region-detail-button">첫 번째 지역 자료 상세</button>
+              <button type="button" class="primary" id="region-detail-button-second">두 번째 지역 자료 상세</button>
+            </div>
           </div>
           <div class="view" data-view="detail" data-title="지역 자료 상세" hidden>
             <div class="step-head">
-              <h1 id="region-detail-title">연동 자료 상세</h1>
+              <h1 id="region-detail-title">지역 자료 상세</h1>
               <p>지역의 위치와 제공되는 자료를 확인하세요.</p>
             </div>
             <div class="map-frame jeju-frame" data-jeju-map="detail"></div>
             <div class="card bars-card">
-              <h2>최근 12개월 방문인구</h2>
+              <h2>선택 월까지 최대 12개월 방문인구</h2>
               <p class="caption" id="region-trend-sub"></p>
               <div id="region-trend"></div>
             </div>
@@ -431,10 +434,27 @@
         </section>
 
         <section id="facility" class="screen" hidden>
+          <div class="view" data-view="select" data-title="시설 구역 선택">
+            <div class="step-head">
+              <h1>어느 구역의 시설을 볼까요?</h1>
+              <p>지역 비교·경로 선택과 별개로 조회할 구역을 골라 주세요.</p>
+            </div>
+            <label class="field-row select-row">
+              <span class="field-text"><small>조회 구역</small>
+                <select id="facility-region">
+                  <option value="">구역을 선택해 주세요</option>
+                  <option value="yeondong">연동 · 삼무공원~누웨마루 공개 구간 주변</option>
+                  <option value="seogwipo">서귀포 · 중앙로~올레시장 공개 구간 주변</option>
+                </select>
+              </span>
+            </label>
+            <p class="info-card">현재 연결된 시설 지도는 두 공개 구간 주변이며 읍면동 전체 자료가 아니에요. 게시된 실제 제보는 아직 없어요.</p>
+            <div class="step-actions"><button type="button" class="primary" id="facility-region-open" disabled>선택한 구역 시설 보기</button></div>
+          </div>
           <div class="view" data-view="map" data-title="시설 지도">
             <div class="step-head">
               <h1>주변에 어떤 시설이 있나요?</h1>
-              <p>레이어를 선택하면 지도에 해당 항목이 표시돼요.</p>
+              <p id="facility-scope">선택한 구역의 공개 시설 위치를 표시해요.</p>
             </div>
             <div class="chip-row" id="facility-layers">
               <label class="chip"><input type="checkbox" value="cctv" checked />CCTV 위치</label>
@@ -454,12 +474,12 @@
               </div>
             </div>
             <p class="caption" id="facility-source">출처: 공공데이터포털 CCTV·가로등 위치 목록. 촬영 범위·작동·밝기를 뜻하지 않습니다.</p>
-            <div class="step-actions"><button type="button" class="primary" data-view-go="nearby">주변 시설 목록 보기</button></div>
+            <div class="step-actions two"><button type="button" class="primary" data-view-go="nearby">주변 시설 목록 보기</button><button type="button" class="secondary" data-view-go="select">조회 구역 바꾸기</button></div>
           </div>
           <div class="view" data-view="nearby" data-title="주변 시설과 제보" hidden>
             <div class="step-head">
               <h1>선택 구역의 시설 정보</h1>
-              <p>시설 위치와 서비스에서 게시한 변경 정보를 확인해요.</p>
+              <p id="facility-nearby-scope">선택한 구역의 시설 위치를 확인해요. 현재 게시된 실제 제보는 없어요.</p>
             </div>
             <div class="card list-card">
               <h2>시설 위치</h2>
@@ -473,7 +493,7 @@
               </div>
             </div>
             <div class="card list-card">
-              <h2>게시된 시설 변경</h2>
+              <h2>처리 흐름 예시 · 선택 구역과 무관</h2>
               <button type="button" class="list-item" data-view-go="issue">
                 <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-lamp" /></svg>
                 <span class="field-text"><strong>가로등 소등 확인 <span class="tag">예시</span></strong><small>예시 구간 · 게시 완료</small></span>
@@ -482,9 +502,9 @@
             </div>
             <p class="info-card">
               <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
-              <span>게시된 시설 변경은 검토를 마친 제보만 표시해요. 지금은 게시된 실제 제보가 없어 처리 흐름 예시를 보여 드려요.</span>
+              <span>현재 서비스에는 게시된 실제 제보가 없어요. 아래는 선택 구역과 무관한 처리 흐름 예시예요.</span>
             </p>
-            <div class="step-actions"><button type="button" class="primary" data-view-go="issue">게시된 이슈 상세 보기</button></div>
+            <div class="step-actions"><button type="button" class="primary" data-view-go="issue">처리 흐름 예시 보기</button></div>
           </div>
           <div class="view" data-view="issue" data-title="게시된 이슈 상세" hidden>
             <div class="step-head">
