@@ -43,9 +43,9 @@ def run():
             assert '합성' not in page.content() and '연구용' not in page.content()
             assert page.locator('.feature-grid button').count()==5
             page.screenshot(path=str(shots/'service-home.png'))
-            # 유동인구·지역 비교(예시 자료)와 시설 지도(공개 위치)
+            # 유동인구·지역 비교(제주데이터허브 실제 집계)와 시설 지도(공개 위치)
             page.click('.feature-grid [data-screen=population]');expect(page.locator('#screen-title')).to_have_text('유동인구 자료')
-            expect(page.locator('#population')).to_contain_text('예시')
+            expect(page.locator('#population')).to_contain_text('제주데이터허브')
             page.click('#population [data-view-go=settings]');page.click('#population [data-view-go=distribution]')
             expect(page.locator('#screen-title')).to_have_text('분포와 출처');page.screenshot(path=str(shots/'service-population.png'))
             page.click('#population .view:not([hidden]) [data-screen=region]');page.click('#region-compare')
