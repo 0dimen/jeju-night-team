@@ -185,13 +185,18 @@ async function regionInit() {
     const input = el("input", undefined, card);
     input.type = "checkbox";
     input.value = r.name;
-    input.checked = r.name === "연동" || r.name === "노형동";
+    input.checked = false;
     icon(card, "pin", 22);
     el("strong", r.name, card);
     el("small", r.city, card);
   }
   host.addEventListener("change", (event) => {
-    if (selectedRegions().length > 2) event.target.checked = false;
+    if (selectedRegions().length > 2) {
+      event.target.checked = false;
+      regionButton();
+      $("region-selection-status").textContent = "두 곳까지 비교할 수 있어요. 다른 지역을 고르려면 선택한 곳 하나를 먼저 해제해 주세요.";
+      return;
+    }
     regionButton();
   });
   $("region-compare").addEventListener("click", () => {
@@ -200,7 +205,9 @@ async function regionInit() {
   regionButton();
 }
 function regionButton() {
-  const n = selectedRegions().length;
+  const regions = selectedRegions();
+  const n = regions.length;
+  $("region-selection-status").textContent = n ? regions.map(r => r.name).join(" · ") + " 선택 (" + n + "/2)" : "비교할 지역을 두 곳 골라 주세요. (0/2)";
   const button = $("region-compare");
   button.disabled = n !== 2;
   button.textContent = n === 2 ? "선택한 2개 지역 비교" : "지역을 두 곳 선택해 주세요 (" + n + "/2)";

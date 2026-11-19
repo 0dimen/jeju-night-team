@@ -293,7 +293,6 @@
             </div>
             <div class="chip-row static">
               <span class="chip is-on">월별 방문 통계</span>
-              <span class="chip is-off">시간대별 · 자료 없음</span>
             </div>
             <div class="map-frame jeju-frame" data-jeju-map="overview"></div>
             <div class="card rows-card">
@@ -333,7 +332,7 @@
             </fieldset>
             <p class="info-card">
               <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
-              <span>시간대별 원본을 확보하면 조회 옵션이 열립니다.</span>
+              <span>현재 자료는 월별 집계예요. 시간대별·실시간 방문량은 제공하지 않아요.</span>
             </p>
             <div class="step-actions"><button type="button" class="primary" data-view-go="distribution">지역 분포 보기</button></div>
           </div>
@@ -366,6 +365,7 @@
               <h1>어느 지역을 비교할까요?</h1>
               <p>방문 통계를 비교할 지역을 두 곳 선택하세요.</p>
             </div>
+            <p id="region-selection-status" class="support" role="status" aria-live="polite">비교할 지역을 두 곳 골라 주세요. (0/2)</p>
             <fieldset class="select-grid" id="region-choices">
               <legend class="sr-only">비교할 지역</legend>
             </fieldset>
