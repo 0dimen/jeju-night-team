@@ -5,6 +5,10 @@ from urllib.request import urlopen
 from playwright.sync_api import sync_playwright,expect
 
 
+def open_search(page):
+    if page.locator('#report-place-query').is_hidden():page.click('#report-search-toggle')
+
+
 def run():
     keys=[os.environ.get(k) for k in ('VWORLD_API_KEY','TMAP_APP_KEY')]
     if not all(keys):raise RuntimeError('두 지도 키가 필요합니다. 값은 출력하지 않습니다.')
@@ -37,41 +41,51 @@ def run():
             assert '합성' not in page.content() and '연구용' not in page.content()
             assert page.locator('.feature-grid button').count()==5
             page.screenshot(path=str(shots/'service-home.png'))
-            # 준비 중 메뉴
-            for soon,title in (('population','유동인구 분석'),('issues','시설 이슈')):
-                page.click(f'.feature-grid [data-soon={soon}]')
-                expect(page.locator('#soon-title')).to_have_text(title);expect(page.locator('#screen-title')).to_have_text(title)
-                page.click('#screen-back')
-            page.click('.feature-grid [data-soon=population]');page.screenshot(path=str(shots/'service-soon.png'));page.click('#screen-back')
+            # 유동인구·지역 비교(예시 자료)와 시설 지도(공개 위치)
+            page.click('.feature-grid [data-screen=population]');expect(page.locator('#screen-title')).to_have_text('유동인구 자료')
+            expect(page.locator('#population')).to_contain_text('예시')
+            page.click('#population [data-view-go=settings]');page.click('#population [data-view-go=distribution]')
+            expect(page.locator('#screen-title')).to_have_text('분포와 출처');page.screenshot(path=str(shots/'service-population.png'))
+            page.click('#population .view:not([hidden]) [data-screen=region]');page.click('#region-compare')
+            expect(page.locator('#region-bars .bar-row')).to_have_count(2)
+            page.click('nav [data-screen=home]');page.click('.feature-grid [data-screen=facility]')
+            page.wait_for_selector('#facility-map circle, #facility-map .error',timeout=30000);page.screenshot(path=str(shots/'service-facility.png'))
+            page.click('#screen-back')
             # 경로 입력 화면
             page.click('nav [data-screen=route]');expect(page.locator('#route-input')).to_be_visible()
             page.screenshot(path=str(shots/'service-route-input.png'))
-            # 제보: 위치 없이 확인하면 막힘
+            # 제보: 위치 없이 다음 단계로 가면 막힘(단계: 위치 → 유형 → 설명 → 확인)
             page.click('nav [data-screen=report]')
-            page.fill('#report-text','가로등이 꺼져 있었어요');page.click('#report-preview-button')
+            page.click('#report-step1-next')
             expect(page.locator('#report-result .error')).to_contain_text('문제 위치')
+            expect(page.locator('#report .report-step[data-step="1"]')).to_be_visible()
             # 장소 검색으로 위치 선택
-            page.fill('#report-place-query','탑동광장');page.click('#report-place-search')
+            open_search(page);page.fill('#report-place-query','탑동광장');page.click('#report-place-search')
             page.wait_for_selector('#report-place-candidates button',timeout=30000);page.locator('#report-place-candidates button').first.click()
             expect(page.locator('#report-place-selected')).to_contain_text('선택:')
-            page.select_option('#report-facility','streetlight');page.select_option('#report-problem','not_working')
+            page.click('#report-step1-next');page.check('#facility-streetlight',force=True);page.check('#problem-not_working',force=True);page.click('#report-step2-next')
             page.fill('#report-text','편의점 옆 가로등이 꺼져 있었어요. 010-1234-5678로 연락 주세요');page.click('#report-preview-button')
             expect(page.locator('#report-confirm')).to_be_visible(timeout=20000)
             page.screenshot(path=str(shots/'service-report.png'),full_page=True)
             page.check('#report-consent');page.click('#report-submit')
             expect(page.locator('#receipt')).to_contain_text('제보가 접수됐어요',timeout=20000)
             expect(page.locator('#receipt')).to_contain_text('검토 대기')
-            expect(page.locator('nav [data-screen=my]')).to_have_attribute('aria-current','page')
+            page.screenshot(path=str(shots/'service-report-done.png'))
+            page.click('#report-go-my');expect(page.locator('nav [data-screen=my]')).to_have_attribute('aria-current','page')
+            expect(page.locator('#my-timeline')).to_contain_text('검토 대기')
             page.screenshot(path=str(shots/'service-my.png'))
             # 긴급 표현은 112 안내를 먼저
             page.click('nav [data-screen=report]')
-            page.fill('#report-place-query','탑동광장');page.click('#report-place-search')
+            open_search(page);page.fill('#report-place-query','탑동광장');page.click('#report-place-search')
             page.wait_for_selector('#report-place-candidates button',timeout=30000);page.locator('#report-place-candidates button').first.click()
+            page.click('#report-step1-next');page.click('#report-step2-next')
             page.fill('#report-text','누가 계속 따라와요');page.click('#report-preview-button')
             expect(page.locator('#report-result')).to_contain_text('112',timeout=20000)
             assert page.locator('#report-confirm').is_hidden()
             # GPS: 거부 → 안내, 제주 밖 → 안내, 제주 안 → 선택 후 접수
-            page.click('nav [data-screen=report]');page.click('#report-gps')
+            page.click('nav [data-screen=report]')
+            while page.locator('#report .report-step[data-step="1"]').is_hidden():page.click('#screen-back')
+            page.click('#report-gps')
             expect(page.locator('#report-place-candidates .error')).to_contain_text('권한',timeout=20000)
             context.grant_permissions(['geolocation'],origin=base)
             context.set_geolocation({'latitude':37.5665,'longitude':126.978,'accuracy':20})
@@ -79,12 +93,12 @@ def run():
             context.set_geolocation({'latitude':33.517,'longitude':126.525,'accuracy':25})
             page.click('#report-gps');expect(page.locator('#report-place-selected')).to_contain_text('현재 위치 · 정확도 약 25m',timeout=20000)
             assert page.input_value('#report-place-query')==''
-            page.select_option('#report-facility','streetlight');page.select_option('#report-problem','not_working')
+            page.click('#report-step1-next');page.check('#facility-streetlight',force=True);page.check('#problem-not_working',force=True);page.click('#report-step2-next')
             page.fill('#report-text','골목 입구 가로등이 꺼져 있었어요');page.click('#report-preview-button')
             expect(page.locator('#report-confirm')).to_be_visible(timeout=20000)
             page.screenshot(path=str(shots/'service-report-gps.png'),full_page=True)
             page.check('#report-consent');page.click('#report-submit')
-            expect(page.locator('#receipt')).to_contain_text('위치: 현재 위치',timeout=20000)
+            expect(page.locator('#receipt')).to_contain_text('현재 위치',timeout=20000)
             context.clear_permissions()
             # 데이터 화면
             page.click('nav [data-screen=data]');page.click('#data-sources > summary')

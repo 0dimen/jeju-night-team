@@ -1,122 +1,89 @@
 <!doctype html>
 <html lang="ko">
-  <meta charset="utf-8" /><meta
-    name="viewport"
-    content="width=device-width,initial-scale=1"
-  /><meta name="color-scheme" content="dark" /><title>
-    제주밤길 · JEJU NIGHTWAY</title
-  ><link rel="stylesheet" href="/app/style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>제주밤길 · JEJU NIGHTWAY</title>
+  <link rel="stylesheet" href="/app/style.css" />
   <body>
+    <svg class="sprite" aria-hidden="true" focusable="false">
+      <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 3l9 8M6 9v12h5v-7h3v7h4V9" /></symbol>
+      <symbol id="i-map" viewBox="0 0 24 24"><path d="M4 20V4l6 3 6-3 4 3v14l-4-3-6 3-6-3M10 7v14M16 4v14" /></symbol>
+      <symbol id="i-report" viewBox="0 0 24 24"><path d="M4 4h16v13H9l-5 4V4Zm4 5h8M8 12h6" /></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20h16M6 16V9M12 16V4M18 16V7" /></symbol>
+      <symbol id="i-user" viewBox="0 0 24 24"><path d="M6 21v-3a6 6 0 0 1 12 0v3M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0" /></symbol>
+      <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2.5" /><circle cx="18" cy="6" r="2.5" /><path d="M8.5 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.5" /></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" /></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" /><path d="m20 20-4.2-4.2" /></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11Z" /><circle cx="12" cy="10" r="2.5" /></symbol>
+      <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" /><circle cx="12" cy="12" r="2.5" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" /></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></symbol>
+      <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2" /><path d="M3.5 10h17M8 3v4M16 3v4" /></symbol>
+      <symbol id="i-camera" viewBox="0 0 24 24"><rect x="3" y="7" width="13" height="9" rx="2" /><path d="m16 10 5-3v9l-5-3M7 16v4M4 20h6" /></symbol>
+      <symbol id="i-lamp" viewBox="0 0 24 24"><path d="M8 21V7a4 4 0 0 1 4-4h1a4 4 0 0 1 4 4M14 7h6M15 10l-1 2M19 10l1 2M6 21h4" /></symbol>
+      <symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="2" /><path d="m9 21 2.5-6 2.5 2v4M8 12l2-4 4 1 2 3h3M11.5 15 13 9" /></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8h.01" /></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" /></symbol>
+      <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6" /></symbol>
+      <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6" /></symbol>
+    </svg>
     <div class="app-shell">
       <header>
-        <button
-          id="screen-back"
-          class="screen-back"
-          type="button"
-          aria-label="이전 화면으로 돌아가기"
-          hidden
-        >
-          ‹
+        <button id="screen-back" class="screen-back" type="button" aria-label="이전 화면으로 돌아가기" hidden>
+          <svg class="ico" width="22" height="22" aria-hidden="true"><use href="#i-back" /></svg>
         </button>
         <button id="brand-home" class="brand" aria-label="제주밤길 홈">
-          <span class="brand-mark"
-            ><svg
-              viewBox="0 0 24 24"
-              width="26"
-              height="26"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.75"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path
-                d="m3 19 6-7 4 5 3-3 5 5M8 22h10M4 3v5M1.5 5.5h5M16 2a5 5 0 0 0 5 7 5 5 0 1 1-5-7Z"
-              /></svg></span
-          ><span>제주밤길<small>JEJU NIGHTWAY</small></span></button
-        ><span id="screen-title" class="screen-title" hidden></span
-        ><span class="mode">시범 운영</span>
+          <span class="brand-mark"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 19 6-7 4 5 3-3 5 5M8 22h10M4 3v5M1.5 5.5h5M16 2a5 5 0 0 0 5 7 5 5 0 1 1-5-7Z" /></svg></span
+          ><span>제주밤길<small>JEJU NIGHTWAY</small></span>
+        </button>
+        <span id="screen-title" class="screen-title" hidden></span>
+        <span class="mode">시범 운영</span>
       </header>
       <main>
         <section id="home" class="screen">
           <div class="hero">
-            <span class="eyebrow">JEJU NIGHTWAY</span>
             <h1>제주의 밤길을<br />더 잘 알 수 있도록</h1>
-            <p>제주 공공데이터와 함께<br />걸어갈 길의 정보를 비교해 보세요.</p>
+            <p>제주 공공데이터와 시민 제보로<br />보행환경을 살펴보세요.</p>
             <svg class="landscape" viewBox="0 0 400 160" aria-hidden="true">
-              <path
-                d="M336 15a18 18 0 1 0 13 27 19 19 0 0 1-13-27Z"
-                fill="#e9ddff"
-              />
-              <path
-                d="M0 120 80 70 150 115 250 45 340 95 400 90V160H0Z"
-                fill="#29294b"
-              />
-              <path
-                d="M0 145 140 95 235 135 315 90 400 130V160H0Z"
-                fill="#151830"
-              />
+              <path d="M336 15a18 18 0 1 0 13 27 19 19 0 0 1-13-27Z" fill="#e9ddff" />
+              <path d="M0 120 80 70 150 115 250 45 340 95 400 90V160H0Z" fill="#29294b" />
+              <path d="M0 145 140 95 235 135 315 90 400 130V160H0Z" fill="#151830" />
             </svg>
           </div>
           <button class="search" data-screen="route">
-            <span class="search-mark" aria-hidden="true">⌕</span> 어디로
-            이동하시나요?
+            <svg class="ico search-mark" width="20" height="20" aria-hidden="true"><use href="#i-search" /></svg>
+            어디로 이동하시나요?
           </button>
           <div class="feature-grid">
-            <button data-screen="route">
-              <span>⌁</span>경로 비교<small>거리 · 시설 정보</small></button
-            ><button data-screen="report">
-              <span>▤</span>보행환경 제보<small>문제 설명 · 확인</small></button
-            ><button data-screen="soon" data-soon="population">
-              <span>▥</span>유동인구 분석<small>준비 중</small></button
-            ><button data-screen="data">
-              <span>◇</span>지역 데이터 보기<small>출처와 한계</small></button
-            ><button data-screen="soon" data-soon="issues">
-              <span>♧</span>시설 이슈<small>준비 중</small>
-            </button>
+            <button data-screen="route"><svg class="ico" width="24" height="24" aria-hidden="true"><use href="#i-route" /></svg>경로 비교<small>거리 · 시설 정보</small></button>
+            <button data-screen="report"><svg class="ico" width="24" height="24" aria-hidden="true"><use href="#i-report" /></svg>보행환경 제보<small>위치 · 문제 설명</small></button>
+            <button data-screen="population"><svg class="ico" width="24" height="24" aria-hidden="true"><use href="#i-chart" /></svg>유동인구 분석<small>과거 집계 자료</small></button>
+            <button data-screen="region"><svg class="ico" width="24" height="24" aria-hidden="true"><use href="#i-map" /></svg>지역 데이터 보기<small>지역별 방문 통계</small></button>
+            <button data-screen="facility"><svg class="ico" width="24" height="24" aria-hidden="true"><use href="#i-bell" /></svg>시설 이슈<small>시설 위치 · 게시된 변경</small></button>
           </div>
-          <div class="card region-card">
+          <button class="card region-card" data-screen="region">
             <svg class="jeju-mark" viewBox="0 0 110 65" aria-hidden="true">
-              <path
-                d="M5 38 20 24 43 18 65 9 91 13 105 28 93 40 67 44 48 55 20 51Z"
-                fill="#784bca"
-                stroke="#c6a5ff"
-                stroke-width="2"
-              />
-              <path
-                d="m22 35 20-5 20-8 22 5"
-                fill="none"
-                stroke="#dfc8ff"
-                stroke-dasharray="2 5"
-                stroke-width="3"
-              />
+              <path d="M5 38 20 24 43 18 65 9 91 13 105 28 93 40 67 44 48 55 20 51Z" fill="#784bca" stroke="#c6a5ff" stroke-width="2" />
+              <path d="m22 35 20-5 20-8 22 5" fill="none" stroke="#dfc8ff" stroke-dasharray="2 5" stroke-width="3" />
             </svg>
-            <div>
-              <h2>
-                <button class="region-title" data-screen="data">
-                  제주, 어떤 길을 걸을까요?
-                </button>
-              </h2>
-              <p>
-                지금 연결된 공개 시설 자료와<br />확인할 수 있는 범위를
-                살펴보세요.
-              </p>
-            </div>
-          </div>
+            <span>
+              <strong>제주, 어디를 걸을까요?</strong>
+              <span class="support">지역별 방문 통계와 주변 시설을<br />지도에서 확인해 보세요.</span>
+            </span>
+          </button>
           <p class="notice">
             시설 위치를 바탕으로 경로를 비교합니다. 현재 밝기·작동 상태와 현장
             통행은 확인되지 않았습니다. 선택한 위치는 이 페이지를 떠나면
             지워집니다.
           </p>
         </section>
-        <section id="route" class="screen" hidden>
+
+        <section id="route" class="screen" data-phase="input" hidden>
           <div class="section-top">
-            <span class="eyebrow">ROUTE COMPARISON</span>
             <h1>어디로 걸어갈까요?</h1>
-            <p>장소·날짜·시각을 확인하고 같은 목적지의 경로를 비교해요.</p>
+            <p>출발지와 목적지를 고른 뒤 비교 기준을 선택하세요.</p>
           </div>
-          <ol class="route-progress" aria-label="경로 선택 순서">
+          <ol class="route-progress" aria-label="경로 선택 순서" hidden>
             <li data-phase="input" aria-current="step">조건 입력</li>
             <li data-phase="compare">경로 비교</li>
             <li data-phase="detail">근거 확인</li>
@@ -124,280 +91,553 @@
           </ol>
           <div class="journey-panel">
             <details id="route-input" open>
-              <summary>
-                이동 조건 입력<span>장소 · 출발 시각 · 비교 기준</span>
-              </summary>
-              <p class="support">
-                출발지와 목적지를 고르고 비교할 조건을 선택해 주세요.
-              </p>
+              <summary>이동 조건 입력</summary>
               <form id="live-place-form" autocomplete="off">
-                <label
-                  >검색 방식<select id="live-search-mode">
-                    <option value="place">장소명</option>
-                    <option value="road">도로명 주소</option>
-                    <option value="parcel">지번 주소</option>
-                  </select></label
-                >
-                <label class="place-field"
-                  ><span class="field-kicker">출발지 · 필수</span
-                  ><input
-                    placeholder="출발 장소를 검색해 주세요"
-                    id="live-origin-query"
-                    maxlength="120"
-                    autocomplete="off"
-                /></label>
-                <button
-                  id="live-origin-search"
-                  class="search-place-button"
-                  type="button"
-                >
-                  출발지 찾기
-                </button>
-                <div id="live-origin-candidates" aria-live="polite"></div>
-                <p class="selected-place" id="live-origin-selected">
-                  출발지를 선택해 주세요.
-                </p>
-                <label class="place-field"
-                  ><span class="field-kicker">목적지 · 필수</span
-                  ><input
-                    placeholder="도착 장소나 주소를 검색해 주세요"
-                    id="live-destination-query"
-                    maxlength="120"
-                    autocomplete="off"
-                /></label>
-                <button
-                  id="live-destination-search"
-                  class="search-place-button"
-                  type="button"
-                >
-                  목적지 찾기
-                </button>
-                <div id="live-destination-candidates" aria-live="polite"></div>
-                <p class="selected-place" id="live-destination-selected">
-                  도착지를 선택해 주세요.
-                </p>
-                <div class="two-col">
-                  <label
-                    >출발 날짜 · 한국 시간<input
-                      id="live-date"
-                      type="date"
-                      required
-                  /></label>
-                  <label
-                    >출발 시각 · 24시간<input
-                      id="live-time"
-                      type="time"
-                      required
-                  /></label>
+                <div class="field-block">
+                  <button type="button" class="field-row" id="live-origin-toggle" aria-expanded="true" aria-controls="live-origin-panel">
+                    <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-pin" /></svg>
+                    <span class="field-text"><small>출발지</small><strong id="live-origin-value">선택해 주세요</strong></span>
+                    <svg class="ico chev" width="18" height="18" aria-hidden="true"><use href="#i-chev" /></svg>
+                  </button>
+                  <div class="field-panel" id="live-origin-panel">
+                    <label for="live-origin-query" class="sr-only">출발지 검색</label>
+                    <div class="field-row-input">
+                      <input placeholder="출발 장소를 검색해 주세요" id="live-origin-query" maxlength="120" autocomplete="off" />
+                      <button id="live-origin-search" class="search-place-button" type="button">찾기</button>
+                    </div>
+                    <div id="live-origin-candidates" class="candidates" aria-live="polite"></div>
+                    <p class="selected-place" id="live-origin-selected">출발지를 선택해 주세요.</p>
+                  </div>
                 </div>
-                <label
-                  >비교 기준<select id="live-preference">
-                    <option value="both">CCTV·조명 함께 비교</option>
-                    <option value="cctv">CCTV 인접 구간</option>
-                    <option value="light">조명 인접 구간</option>
-                    <option value="fastest">제공 예상 시간이 짧은 길</option>
-                  </select></label
-                >
+                <div class="field-block">
+                  <button type="button" class="field-row" id="live-destination-toggle" aria-expanded="true" aria-controls="live-destination-panel">
+                    <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-pin" /></svg>
+                    <span class="field-text"><small>목적지</small><strong id="live-destination-value">선택해 주세요</strong></span>
+                    <svg class="ico chev" width="18" height="18" aria-hidden="true"><use href="#i-chev" /></svg>
+                  </button>
+                  <div class="field-panel" id="live-destination-panel">
+                    <label for="live-destination-query" class="sr-only">목적지 검색</label>
+                    <div class="field-row-input">
+                      <input placeholder="도착 장소나 주소를 검색해 주세요" id="live-destination-query" maxlength="120" autocomplete="off" />
+                      <button id="live-destination-search" class="search-place-button" type="button">찾기</button>
+                    </div>
+                    <div id="live-destination-candidates" class="candidates" aria-live="polite"></div>
+                    <p class="selected-place" id="live-destination-selected">도착지를 선택해 주세요.</p>
+                  </div>
+                </div>
+                <div class="field-block">
+                  <button type="button" class="field-row" id="live-time-toggle" aria-expanded="false" aria-controls="live-time-panel">
+                    <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-clock" /></svg>
+                    <span class="field-text"><small>출발 시각</small><strong id="live-time-value">날짜와 시각을 골라 주세요</strong></span>
+                    <svg class="ico chev" width="18" height="18" aria-hidden="true"><use href="#i-chev" /></svg>
+                  </button>
+                  <div class="field-panel two-col" id="live-time-panel" hidden>
+                    <label>출발 날짜 · 한국 시간<input id="live-date" type="date" required /></label>
+                    <label>출발 시각 · 24시간<input id="live-time" type="time" required /></label>
+                  </div>
+                </div>
+                <fieldset class="card chip-card" id="live-preference">
+                  <legend>비교 기준</legend>
+                  <div class="chip-row">
+                    <label class="chip"><input type="radio" name="live-preference" value="cctv" checked />CCTV 인접 구간</label>
+                    <label class="chip"><input type="radio" name="live-preference" value="fastest" />이동 시간</label>
+                    <label class="chip"><input type="radio" name="live-preference" value="light" />조명 인접 구간</label>
+                    <label class="chip"><input type="radio" name="live-preference" value="both" />CCTV·조명 함께</label>
+                  </div>
+                </fieldset>
+                <p class="info-card">
+                  <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
+                  <span>출발 시각은 이동 조건으로만 저장됩니다. 시간대별 보행량 자료는 준비 중이에요.</span>
+                </p>
                 <details class="privacy-note">
-                  <summary>위치 사용과 비교 범위</summary>
+                  <summary>검색 방식과 위치 사용</summary>
+                  <label class="search-mode">검색 방식<select id="live-search-mode">
+                      <option value="place">장소명</option>
+                      <option value="road">도로명 주소</option>
+                      <option value="parcel">지번 주소</option>
+                    </select></label>
                   <p>
                     검색어는 VWorld, 선택 좌표는 TMAP에 전달합니다. 앱 서버에는
                     저장하지 않으며 페이지를 떠나면 지웁니다. 외부 제공사의 처리
                     정책은 별도입니다. 제주 범위의 직선 5m~20km를 지원합니다.
                   </p>
                 </details>
-                <button id="live-route-button" class="primary" type="submit">
-                  경로 비교하기
-                </button>
-                <button id="live-clear" class="text-button" type="button">
-                  입력 초기화
-                </button>
+                <button id="live-clear" class="text-button" type="button">입력 초기화</button>
+                <div class="step-actions">
+                  <button id="live-route-button" class="primary" type="submit">두 경로 비교하기</button>
+                </div>
               </form>
             </details>
             <div id="live-route-result" aria-live="polite"></div>
           </div>
         </section>
-        <section id="report" class="screen" hidden>
-          <span class="eyebrow">WALKING ENVIRONMENT</span>
-          <h1>보행환경 제보</h1>
-          <ol class="report-progress" aria-label="제보 확인 순서">
-            <li data-report-step="1" aria-current="step">위치</li>
-            <li data-report-step="2">유형</li>
-            <li data-report-step="3">설명</li>
-            <li data-report-step="4">확인</li>
+
+        <section id="report" class="screen" data-step="1" hidden>
+          <ol class="report-progress" aria-label="제보 단계">
+            <li data-report-step="1" aria-current="step"><button type="button" data-goto-step="1">1 위치</button></li>
+            <li data-report-step="2"><button type="button" data-goto-step="2">2 유형</button></li>
+            <li data-report-step="3"><button type="button" data-goto-step="3">3 설명</button></li>
+            <li data-report-step="4"><button type="button" data-goto-step="4">4 확인</button></li>
           </ol>
-          <p>
-            위치와 문제를 알려 주시면 검토한 뒤 다음 경로 분석에 반영해요.
-            시범 운영 중이라 기관에는 전달되지 않아요.
-          </p>
-          <form id="report-form">
-            <div class="card form-card">
-              <button id="report-gps" class="secondary" type="button">
-                현재 위치 사용
-              </button>
-              <p class="support">
-                위치는 이 페이지에만 잠시 두고 저장하지 않아요. 권한을 허용하지
-                않아도 아래에서 장소를 검색해 고를 수 있어요.
+          <div class="step-head">
+            <h1 id="report-heading">문제가 있었던 위치인가요?</h1>
+            <p id="report-sub" class="support">GPS로 위치를 확인하거나 장소를 검색해 주세요.</p>
+          </div>
+          <form id="report-form" novalidate>
+            <div class="report-step" data-step="1">
+              <div class="map-frame pin-map">
+                <svg class="route-map" viewBox="0 0 380 240" aria-hidden="true">
+                  <g class="map-grid"><line x1="30" y1="0" x2="42" y2="240" /><line x1="110" y1="0" x2="118" y2="240" /><line x1="190" y1="0" x2="196" y2="240" /><line x1="270" y1="0" x2="280" y2="240" /><line x1="345" y1="0" x2="350" y2="240" /><line x1="0" y1="40" x2="380" y2="30" /><line x1="0" y1="96" x2="380" y2="84" /><line x1="0" y1="150" x2="380" y2="140" /><line x1="0" y1="205" x2="380" y2="196" /></g>
+                  <g id="report-map-pin" class="map-pin" hidden><circle cx="190" cy="118" r="34" class="pin-halo" /><path d="M190 140s-18-15-18-28a18 18 0 0 1 36 0c0 13-18 28-18 28Z" class="pin-body" /><circle cx="190" cy="112" r="6" class="pin-dot" /></g>
+                </svg>
+                <span class="map-chip">위치 도식 · 배경지도 없음</span>
+                <button id="report-gps" class="map-tool" type="button" aria-label="현재 위치(GPS) 사용">
+                  <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-target" /></svg><span>현재 위치</span>
+                </button>
+              </div>
+              <div class="field-row static">
+                <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-target" /></svg>
+                <span class="field-text"><small>선택한 위치</small><strong id="report-place-selected">문제 위치를 선택해 주세요.</strong></span>
+              </div>
+              <div id="report-search-panel" class="card search-panel" hidden>
+                <label for="report-place-query" class="field-kicker">장소 검색</label>
+                <div class="field-row-input">
+                  <input id="report-place-query" maxlength="120" autocomplete="off" placeholder="가까운 장소나 주소를 검색해 주세요" />
+                  <button id="report-place-search" class="search-place-button" type="button">찾기</button>
+                </div>
+              </div>
+              <div id="report-place-candidates" class="candidates" aria-live="polite"></div>
+              <p class="info-card">
+                <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
+                <span>위치는 이 페이지에만 잠시 두고 저장하지 않아요. 위치 권한을 거부했거나 GPS가 잡히지 않으면 장소를 검색해 직접 선택할 수 있어요.</span>
               </p>
-              <label class="place-field"
-                ><span class="field-kicker">문제 위치 · 필수</span
-                ><input
-                  id="report-place-query"
-                  maxlength="120"
-                  autocomplete="off"
-                  placeholder="가까운 장소나 주소를 검색해 주세요"
-              /></label>
-              <button
-                id="report-place-search"
-                class="search-place-button"
-                type="button"
-              >
-                위치 찾기
-              </button>
-              <div id="report-place-candidates" aria-live="polite"></div>
-              <p class="selected-place" id="report-place-selected">
-                문제 위치를 선택해 주세요.
-              </p>
-              <p class="support">
-                가장 가까운 장소를 골라 주세요. 정확한 시설 위치는 검토할 때
-                확인해요.
-              </p>
-              <label
-                >시설 유형<select id="report-facility">
-                  <option value="streetlight">가로등·보안등</option>
-                  <option value="cctv">CCTV</option>
-                  <option value="walkway">보행로</option>
-                  <option value="other">기타·확인 필요</option>
-                </select></label
-              ><label
-                >문제 유형<select id="report-problem">
-                  <option value="not_working">작동하지 않음</option>
-                  <option value="flickering">깜빡임</option>
-                  <option value="too_dark">어두움</option>
-                  <option value="damaged">파손</option>
-                  <option value="obstructed">통행 방해</option>
-                  <option value="other">기타·확인 필요</option>
-                </select></label
-              ><label
-                ><span class="report-description-title"
-                  >상황을 자세히 적어 주세요</span
-                >상세 설명 · 필수<textarea
-                  id="report-text"
-                  maxlength="5000"
-                  required
-                  placeholder="예: 탑동광장 입구 쪽 가로등이 꺼져 있었어요."
-                ></textarea>
-              </label>
-              <p class="support">이름·전화번호·집 주소는 적지 마세요.</p>
+              <div class="step-actions two">
+                <button type="button" class="primary" id="report-step1-next">이 위치로 계속</button>
+                <button type="button" class="secondary" id="report-search-toggle" aria-expanded="false" aria-controls="report-search-panel">장소 검색으로 선택</button>
+              </div>
             </div>
-            <button type="submit" class="primary" id="report-preview-button">
-              제보 내용 확인
-            </button>
+            <div class="report-step" data-step="2" hidden>
+              <fieldset class="select-grid">
+                <legend class="sr-only">시설 유형</legend>
+                <label class="select-card"><input type="radio" name="report-facility" id="facility-streetlight" value="streetlight" checked /><svg class="ico" width="22" height="22" aria-hidden="true"><use href="#i-lamp" /></svg><strong>가로등 문제</strong><small>꺼짐 · 점등 불량</small></label>
+                <label class="select-card"><input type="radio" name="report-facility" id="facility-cctv" value="cctv" /><svg class="ico" width="22" height="22" aria-hidden="true"><use href="#i-camera" /></svg><strong>CCTV 시설 문제</strong><small>파손 등 외관 문제</small></label>
+                <label class="select-card"><input type="radio" name="report-facility" id="facility-walkway" value="walkway" /><svg class="ico" width="22" height="22" aria-hidden="true"><use href="#i-walk" /></svg><strong>보행로 불편</strong><small>장애물 · 파손</small></label>
+                <label class="select-card"><input type="radio" name="report-facility" id="facility-other" value="other" /><svg class="ico" width="22" height="22" aria-hidden="true"><use href="#i-report" /></svg><strong>기타</strong><small>분류하기 어려움</small></label>
+              </fieldset>
+              <fieldset class="chip-group-plain">
+                <legend>어떤 상태였나요?</legend>
+                <div class="chip-row">
+                  <label class="chip"><input type="radio" name="report-problem" id="problem-not_working" value="not_working" checked />꺼져 있음</label>
+                  <label class="chip"><input type="radio" name="report-problem" id="problem-flickering" value="flickering" />깜빡임</label>
+                  <label class="chip"><input type="radio" name="report-problem" id="problem-too_dark" value="too_dark" />어두움</label>
+                  <label class="chip"><input type="radio" name="report-problem" id="problem-damaged" value="damaged" />파손</label>
+                  <label class="chip"><input type="radio" name="report-problem" id="problem-obstructed" value="obstructed" />통행 방해</label>
+                  <label class="chip"><input type="radio" name="report-problem" id="problem-other" value="other" />기타</label>
+                </div>
+              </fieldset>
+              <p class="info-card">
+                <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
+                <span>확인할 수 있는 상황만 상세 설명에 적어 주세요.</span>
+              </p>
+              <div class="step-actions">
+                <button type="button" class="primary" id="report-step2-next">상세 설명 작성</button>
+              </div>
+            </div>
+            <div class="report-step" data-step="3" hidden>
+              <div class="card form-card">
+                <label for="report-text" class="field-kicker">문제 설명 · 필수</label>
+                <textarea id="report-text" maxlength="5000" placeholder="예: 탑동광장 입구 쪽 가로등이 꺼져 있었어요."></textarea>
+                <p class="counter" id="report-count">0 / 5,000자</p>
+              </div>
+              <button type="button" class="field-row" data-goto-step="1">
+                <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-pin" /></svg>
+                <span class="field-text"><small>문제 위치 · 바꾸려면 누르세요</small><strong id="report-place-row">선택하지 않음</strong></span>
+                <svg class="ico chev" width="18" height="18" aria-hidden="true"><use href="#i-chev" /></svg>
+              </button>
+              <p class="info-card">
+                <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
+                <span>이름, 전화번호, 집 주소처럼 개인을 알아볼 수 있는 내용은 적지 마세요.</span>
+              </p>
+              <div class="step-actions">
+                <button type="submit" class="primary" id="report-preview-button">제보 내용 확인</button>
+              </div>
+            </div>
           </form>
+          <div class="report-step" data-step="4" hidden>
+            <div class="card rows-card">
+              <h2>접수 내용</h2>
+              <dl id="report-summary"></dl>
+            </div>
+            <div class="card text-card">
+              <h2>문제 설명</h2>
+              <p id="report-summary-text"></p>
+            </div>
+          </div>
           <div id="report-result" aria-live="polite"></div>
-          <div id="report-confirm" hidden>
-            <label class="consent"
-              ><input type="checkbox" id="report-consent" />시범 운영 중인
-              접수이며 기관에 전달되지 않는다는 것을 확인했어요.</label
-            ><button type="button" id="report-submit" class="primary">
-              제보 접수하기
-            </button>
+          <div id="report-confirm" class="report-confirm" hidden>
+            <label class="consent"><input type="checkbox" id="report-consent" />시범 운영 중인
+              접수이며 기관에 전달되지 않는다는 것을 확인했어요.</label>
+            <div class="step-actions two">
+              <button type="button" id="report-submit" class="primary">제보 제출</button>
+              <button type="button" class="secondary" data-goto-step="3">내용 수정</button>
+            </div>
+          </div>
+          <div class="report-step done-view" data-step="5" id="receipt" hidden></div>
+        </section>
+
+        <section id="population" class="screen" hidden>
+          <div class="view" data-view="overview" data-title="유동인구 자료">
+            <div class="step-head">
+              <h1>제주의 방문 흐름</h1>
+              <p>과거 집계 자료로 지역별 방문 규모를 살펴보세요.</p>
+            </div>
+            <div class="chip-row static">
+              <span class="chip is-on">월별 방문 통계</span>
+              <span class="chip is-off">시간대별 · 자료 없음</span>
+            </div>
+            <div class="map-frame jeju-frame" data-jeju-map="overview"></div>
+            <div class="card rows-card">
+              <h2>현재 조회 범위</h2>
+              <dl>
+                <div><dt>집계 주기</dt><dd>월별</dd></div>
+                <div><dt>공간 단위</dt><dd data-pop="unit">읍면동</dd></div>
+                <div><dt>화면 구분</dt><dd>예시 자료</dd></div>
+              </dl>
+            </div>
+            <div class="step-actions"><button type="button" class="primary" data-view-go="settings">조회 조건 설정</button></div>
+          </div>
+          <div class="view" data-view="settings" data-title="기간과 지역 설정" hidden>
+            <div class="step-head">
+              <h1>어느 달을 살펴볼까요?</h1>
+              <p>같은 집계 기준으로 조회합니다.</p>
+            </div>
+            <label class="field-row select-row">
+              <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-calendar" /></svg>
+              <span class="field-text"><small>기준 월</small>
+                <select id="pop-month"><option value="2026년 9월">2026년 9월 · 예시</option><option value="2026년 8월">2026년 8월 · 예시</option><option value="2026년 7월">2026년 7월 · 예시</option></select></span>
+              <svg class="ico chev" width="18" height="18" aria-hidden="true"><use href="#i-chev" /></svg>
+            </label>
+            <label class="field-row select-row">
+              <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-pin" /></svg>
+              <span class="field-text"><small>지역 범위</small>
+                <select id="pop-area"><option value="제주시">제주시</option><option value="서귀포시">서귀포시</option></select></span>
+              <svg class="ico chev" width="18" height="18" aria-hidden="true"><use href="#i-chev" /></svg>
+            </label>
+            <fieldset class="card chip-card">
+              <legend>집계 단위</legend>
+              <div class="chip-row">
+                <label class="chip"><input type="radio" name="pop-unit" value="읍면동" checked />읍면동</label>
+                <label class="chip"><input type="radio" name="pop-unit" value="시 전체" />시 전체</label>
+              </div>
+            </fieldset>
+            <p class="info-card">
+              <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
+              <span>시간대별 원본을 확보하면 조회 옵션이 열립니다.</span>
+            </p>
+            <div class="step-actions"><button type="button" class="primary" data-view-go="distribution">지역 분포 보기</button></div>
+          </div>
+          <div class="view" data-view="distribution" data-title="분포와 출처" hidden>
+            <div class="step-head">
+              <h1 id="pop-dist-title">제주시 월별 방문 분포</h1>
+              <p id="pop-dist-sub">2026년 9월 · 읍면동 단위 · 예시</p>
+            </div>
+            <div class="map-frame jeju-frame" data-jeju-map="distribution"></div>
+            <div class="card chip-card">
+              <h2>분포 범례</h2>
+              <div class="chip-row static">
+                <span class="chip legend-high">방문 규모 높음</span>
+                <span class="chip legend-mid">중간</span>
+                <span class="chip legend-low">낮음</span>
+              </div>
+            </div>
+            <div class="card rows-card">
+              <h2>출처 정보</h2>
+              <dl>
+                <div><dt>출처 후보</dt><dd>제주관광빅데이터플랫폼</dd></div>
+                <div><dt>시각·시간대</dt><dd>월별 자료에서 제공 안 됨</dd></div>
+              </dl>
+            </div>
+            <div class="step-actions"><button type="button" class="primary" data-screen="region">지역별 방문 규모 비교</button></div>
           </div>
         </section>
+
+        <section id="region" class="screen" hidden>
+          <div class="view" data-view="select" data-title="비교 지역 선택">
+            <div class="step-head">
+              <h1>어느 지역을 비교할까요?</h1>
+              <p>방문 통계를 비교할 지역을 두 곳 선택하세요.</p>
+            </div>
+            <fieldset class="select-grid" id="region-choices">
+              <legend class="sr-only">비교할 지역</legend>
+            </fieldset>
+            <label class="field-row select-row">
+              <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-calendar" /></svg>
+              <span class="field-text"><small>기준 월</small>
+                <select id="region-month"><option value="2026년 9월">2026년 9월 · 예시</option><option value="2026년 8월">2026년 8월 · 예시</option></select></span>
+              <svg class="ico chev" width="18" height="18" aria-hidden="true"><use href="#i-chev" /></svg>
+            </label>
+            <div class="step-actions"><button type="button" class="primary" id="region-compare">선택한 2개 지역 비교</button></div>
+          </div>
+          <div class="view" data-view="compare" data-title="지역별 방문 규모" hidden>
+            <div class="step-head">
+              <h1 id="region-compare-title">연동과 노형동 비교</h1>
+              <p id="region-compare-sub">2026년 9월 · 월별 방문 규모 예시</p>
+            </div>
+            <div class="card bars-card">
+              <h2>방문객 수 예시 · 명</h2>
+              <div id="region-bars"></div>
+            </div>
+            <div class="card rows-card">
+              <h2>비교 조건</h2>
+              <dl>
+                <div><dt>공간 단위</dt><dd>읍면동</dd></div>
+                <div><dt>기준 기간</dt><dd>선택 월 전체</dd></div>
+              </dl>
+            </div>
+            <p class="info-card">
+              <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
+              <span>월별 합계에서 특정 길의 혼잡도나 야간 보행자 수를 확인할 수 없어요.</span>
+            </p>
+            <div class="step-actions"><button type="button" class="primary" id="region-detail-button" data-view-go="detail">연동의 자료 상세 보기</button></div>
+          </div>
+          <div class="view" data-view="detail" data-title="지역 자료 상세" hidden>
+            <div class="step-head">
+              <h1 id="region-detail-title">연동 자료 상세</h1>
+              <p>지역의 위치와 제공되는 자료를 확인하세요.</p>
+            </div>
+            <div class="map-frame jeju-frame" data-jeju-map="detail"></div>
+            <div class="card rows-card">
+              <h2>지역 데이터</h2>
+              <dl>
+                <div><dt>방문객 집계</dt><dd>월별 자료 · 예시</dd></div>
+                <div><dt>시간대별 원본</dt><dd>자료 없음</dd></div>
+                <div><dt>가로등·CCTV 위치</dt><dd>공개 목록 연결</dd></div>
+              </dl>
+            </div>
+            <div class="step-actions two">
+              <button type="button" class="primary" data-screen="facility">시설 지도 보기</button>
+              <button type="button" class="secondary" data-view-go="select">비교 지역 다시 선택</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="facility" class="screen" hidden>
+          <div class="view" data-view="map" data-title="시설 지도">
+            <div class="step-head">
+              <h1>주변에 어떤 시설이 있나요?</h1>
+              <p>레이어를 선택하면 지도에 해당 항목이 표시돼요.</p>
+            </div>
+            <div class="chip-row" id="facility-layers">
+              <label class="chip"><input type="checkbox" value="cctv" checked />CCTV 위치</label>
+              <label class="chip"><input type="checkbox" value="light" />조명 위치</label>
+              <label class="chip"><input type="checkbox" value="issue" />게시된 제보</label>
+            </div>
+            <div class="map-frame facility-frame" id="facility-map"></div>
+            <div class="card list-card">
+              <h2>지도에 표시 중</h2>
+              <div class="list-item">
+                <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-camera" /></svg>
+                <span class="field-text"><strong>CCTV 설치 위치</strong><small id="facility-cctv-note">공개 목록 위치 · 불러오는 중</small></span>
+              </div>
+              <div class="list-item">
+                <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-lamp" /></svg>
+                <span class="field-text"><strong>가로등·보안등 위치</strong><small id="facility-light-note">레이어를 선택해 확인</small></span>
+              </div>
+            </div>
+            <p class="caption" id="facility-source">출처: 공공데이터포털 CCTV·가로등 위치 목록. 촬영 범위·작동·밝기를 뜻하지 않습니다.</p>
+            <div class="step-actions"><button type="button" class="primary" data-view-go="nearby">주변 시설 목록 보기</button></div>
+          </div>
+          <div class="view" data-view="nearby" data-title="주변 시설과 제보" hidden>
+            <div class="step-head">
+              <h1>선택 구역의 시설 정보</h1>
+              <p>시설 위치와 서비스에서 게시한 변경 정보를 확인해요.</p>
+            </div>
+            <div class="card list-card">
+              <h2>시설 위치</h2>
+              <div class="list-item">
+                <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-camera" /></svg>
+                <span class="field-text"><strong id="nearby-cctv">CCTV 설치 위치</strong><small>설치 지점 정보 · 작동 상태 미확인</small></span>
+              </div>
+              <div class="list-item">
+                <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-lamp" /></svg>
+                <span class="field-text"><strong id="nearby-light">가로등·보안등 위치</strong><small>설치 지점 정보 · 점등 상태 미확인</small></span>
+              </div>
+            </div>
+            <div class="card list-card">
+              <h2>게시된 시설 변경</h2>
+              <button type="button" class="list-item" data-view-go="issue">
+                <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-lamp" /></svg>
+                <span class="field-text"><strong>가로등 소등 확인 <span class="tag">예시</span></strong><small>예시 구간 · 게시 완료</small></span>
+                <svg class="ico chev" width="18" height="18" aria-hidden="true"><use href="#i-chev" /></svg>
+              </button>
+            </div>
+            <p class="info-card">
+              <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
+              <span>게시된 시설 변경은 검토를 마친 제보만 표시해요. 지금은 게시된 실제 제보가 없어 처리 흐름 예시를 보여 드려요.</span>
+            </p>
+            <div class="step-actions"><button type="button" class="primary" data-view-go="issue">게시된 이슈 상세 보기</button></div>
+          </div>
+          <div class="view" data-view="issue" data-title="게시된 이슈 상세" hidden>
+            <div class="step-head">
+              <h1>가로등 소등 확인</h1>
+              <p>예시 구간 · 서비스 내 확인 정보 · 예시</p>
+            </div>
+            <div class="map-frame pin-map">
+              <svg class="route-map" viewBox="0 0 380 220" aria-hidden="true">
+                <g class="map-grid"><line x1="30" y1="0" x2="42" y2="220" /><line x1="110" y1="0" x2="118" y2="220" /><line x1="190" y1="0" x2="196" y2="220" /><line x1="270" y1="0" x2="280" y2="220" /><line x1="0" y1="40" x2="380" y2="30" /><line x1="0" y1="96" x2="380" y2="84" /><line x1="0" y1="150" x2="380" y2="140" /></g>
+                <circle cx="196" cy="104" r="9" class="issue-dot" /><circle cx="196" cy="104" r="3.5" fill="#101125" />
+              </svg>
+              <span class="map-chip">예시 지도</span>
+            </div>
+            <div class="card rows-card">
+              <h2>게시 정보</h2>
+              <dl>
+                <div><dt>상태</dt><dd>게시 완료</dd></div>
+                <div><dt>확인 내용</dt><dd>가로등 1곳 소등</dd></div>
+                <div><dt>반영 위치</dt><dd>시설 상태 정보</dd></div>
+              </dl>
+            </div>
+            <p class="info-card">
+              <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
+              <span>게시 완료는 시설 정보가 갱신된 상태예요. 수리 여부는 별도 확인이 필요해요.</span>
+            </p>
+            <div class="step-actions two">
+              <button type="button" class="primary" data-screen="report">이 위치에서 문제 제보</button>
+              <button type="button" class="secondary" data-view-go="map">시설 지도로 돌아가기</button>
+            </div>
+          </div>
+        </section>
+
         <section id="data" class="screen" hidden>
-          <span class="eyebrow">LOCAL DATA</span>
-          <h1>자료와 확인 범위</h1>
-          <div class="card">
+          <div class="step-head">
+            <h1>자료와 확인 범위</h1>
+            <p>지금 쓰는 공개 자료와 아직 확인하지 않은 범위예요.</p>
+          </div>
+          <div class="link-grid">
+            <button type="button" class="field-row" data-screen="population">
+              <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-chart" /></svg>
+              <span class="field-text"><small>과거 집계 자료 · 예시</small><strong>유동인구 분석</strong></span>
+              <svg class="ico chev" width="18" height="18" aria-hidden="true"><use href="#i-chev" /></svg>
+            </button>
+            <button type="button" class="field-row" data-screen="region">
+              <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-map" /></svg>
+              <span class="field-text"><small>지역별 방문 통계 · 예시</small><strong>지역 데이터 보기</strong></span>
+              <svg class="ico chev" width="18" height="18" aria-hidden="true"><use href="#i-chev" /></svg>
+            </button>
+          </div>
+          <div class="card rows-card">
             <h2>지금 쓰는 자료</h2>
             <dl>
-              <div>
-                <dt>CCTV</dt>
-                <dd>공개 목록4목적 · 설치 위치 정보</dd>
-              </div>
-              <div>
-                <dt>조명 위치·실제 밝기</dt>
-                <dd>위치 자료 연결 · 밝기·점등 미확인</dd>
-              </div>
-              <div>
-                <dt>시간대별 보행량</dt>
-                <dd>자료 없음</dd>
-              </div>
-              <div>
-                <dt>시설 현재 작동</dt>
-                <dd>확인하지 않음</dd>
-              </div>
+              <div><dt>CCTV</dt><dd>공개 목록 4목적 · 설치 위치</dd></div>
+              <div><dt>조명 위치·실제 밝기</dt><dd>위치 연결 · 밝기 미확인</dd></div>
+              <div><dt>시간대별 보행량</dt><dd>자료 없음</dd></div>
+              <div><dt>시설 현재 작동</dt><dd>확인하지 않음</dd></div>
             </dl>
-            <p>월별 방문 통계를 지금 걷는 사람 수로 표시하지 않습니다.</p>
           </div>
           <details id="data-sources" class="card">
             <summary>자료 출처와 기준일</summary>
             <ul class="source-list">
-              <li>
-                CCTV: 행정안전부 CCTV정보 중 제주 파일(공공데이터포털,
-                2025-05-12·2025-11-05 기준). 생활방범·교통단속·어린이보호·시설물관리
-                네 목적만 사용
-              </li>
-              <li>
-                CCTV(선택): 제주데이터허브 CCTV 정보(2022-12-15~2024-07-29 기준
-                혼재)
-              </li>
-              <li>
-                제주시 가로등: 공공데이터포털 제주시 가로등현황(2024-10-10 기준).
-                위도·경도가 바뀐 행은 고친 사본 사용
-              </li>
-              <li>
-                서귀포시 가로등·보안등: 공공데이터포털(2025-07-25 기준)
-              </li>
-              <li>
-                보행 경로: TMAP 보행자 경로안내. 장소 검색·배경지도: VWorld
-                공간정보 오픈플랫폼(국토교통부)
-              </li>
+              <li>CCTV: 행정안전부 CCTV정보 중 제주 파일(공공데이터포털, 2025-05-12·2025-11-05 기준). 생활방범·교통단속·어린이보호·시설물관리 네 목적만 사용</li>
+              <li>CCTV(선택): 제주데이터허브 CCTV 정보(2022-12-15~2024-07-29 기준 혼재)</li>
+              <li>제주시 가로등: 공공데이터포털 제주시 가로등현황(2024-10-10 기준). 위도·경도가 바뀐 행은 고친 사본 사용</li>
+              <li>서귀포시 가로등·보안등: 공공데이터포털(2025-07-25 기준)</li>
+              <li>보행 경로: TMAP 보행자 경로안내. 장소 검색·배경지도: VWorld 공간정보 오픈플랫폼(국토교통부)</li>
             </ul>
-            <p class="support">
-              설치 위치 목록이에요. 지금 작동하는지, 불이 켜져 있는지, 카메라가
-              무엇을 비추는지는 알 수 없어요.
-            </p>
+            <p class="support">설치 위치 목록이에요. 지금 작동하는지, 불이 켜져 있는지, 카메라가 무엇을 비추는지는 알 수 없어요.</p>
           </details>
         </section>
+
         <section id="my" class="screen" hidden>
-          <span class="eyebrow">MY REPORTS</span>
-          <h1>이번 페이지의 제보</h1>
-          <div id="receipt">
-            <div class="card">
-              <p>아직 접수한 제보가 없어요.</p>
-              <p>시범 운영 중이라 기관 접수·수리 요청은 하지 않아요.</p>
-              <button data-screen="report" class="text-button">
-                제보하러 가기
-              </button>
+          <div class="view" data-view="list" data-title="내 제보 목록">
+            <div class="step-head">
+              <h1>내 제보</h1>
+              <p>접수한 항목을 선택하면 처리 상태를 확인할 수 있어요.</p>
             </div>
+            <div class="chip-row" id="my-filter">
+              <label class="chip"><input type="radio" name="my-filter" value="all" checked />전체</label>
+              <label class="chip"><input type="radio" name="my-filter" value="review" />검토 중</label>
+              <label class="chip"><input type="radio" name="my-filter" value="published" />게시 완료</label>
+            </div>
+            <div id="my-list"></div>
+            <p class="caption">이번 페이지에서 접수한 제보만 보여요. 페이지를 벗어나거나 새로 열면 지워져요.</p>
+            <div class="step-actions"><button type="button" class="primary" id="my-open-latest">제보하러 가기</button></div>
           </div>
-          <p class="notice">
-            접수한 제보는 검토를 거친 뒤에만 경로 분석에 반영돼요. 페이지를
-            벗어나거나 새로 열면 이 목록은 지워져요.
-          </p>
-        </section>
-        <section id="soon" class="screen" hidden>
-          <span class="eyebrow">COMING SOON</span>
-          <h1 id="soon-title">준비 중이에요</h1>
-          <div class="card info-card">
-            <p id="soon-text">이 기능은 자료를 연결하고 있어요.</p>
-            <p class="support">
-              지금은 경로 비교와 보행환경 제보를 이용할 수 있어요.
+          <div class="view" data-view="detail" data-title="제보 처리 상세" hidden>
+            <div class="step-head">
+              <h1 id="my-detail-title">가로등 문제 제보</h1>
+              <p id="my-detail-sub">접수번호</p>
+            </div>
+            <div class="card timeline-card">
+              <h2>진행 현황</h2>
+              <ol class="timeline" id="my-timeline"></ol>
+            </div>
+            <p class="info-card">
+              <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
+              <span id="my-detail-info">현재 단계에서는 경로 분석에 반영되지 않았어요.</span>
             </p>
-            <button data-screen="route" class="primary">경로 비교하기</button>
+            <div class="step-actions"><button type="button" class="primary" id="my-detail-action">내 제보 목록으로</button></div>
+          </div>
+          <div class="view done-view" data-view="published" data-title="게시된 변경 확인" hidden>
+            <div class="success-mark"><svg class="ico" width="44" height="44" aria-hidden="true"><use href="#i-check" /></svg></div>
+            <h1>시설 상태가 갱신됐어요</h1>
+            <p class="support">검증·게시 이후의 상태 예시입니다.</p>
+            <div class="card rows-card">
+              <h2 class="accent">예시 제보 · 게시 완료</h2>
+              <dl>
+                <div><dt>검토 결과</dt><dd>가로등 1곳 소등 확인</dd></div>
+                <div><dt>반영 항목</dt><dd>경로 A 주변 시설 상태</dd></div>
+                <div><dt>수리 여부</dt><dd>확인 안 됨</dd></div>
+              </dl>
+            </div>
+            <p class="info-card success">
+              <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
+              <span>같은 경로 조건에서 어떤 정보가 바뀌었는지 볼 수 있어요.</span>
+            </p>
+            <div class="step-actions"><button type="button" class="primary" data-view-go="compare">경로 다시 비교하기</button></div>
+          </div>
+          <div class="view" data-view="compare" data-title="반영 전후 비교" hidden>
+            <div class="step-head">
+              <h1>경로 정보가 갱신됐어요</h1>
+              <p>동일한 출발지·목적지·시각으로 다시 비교한 예시예요.</p>
+            </div>
+            <div class="map-frame">
+              <svg class="route-map" viewBox="0 0 380 200" aria-hidden="true">
+                <g class="map-grid"><line x1="40" y1="0" x2="52" y2="200" /><line x1="120" y1="0" x2="128" y2="200" /><line x1="200" y1="0" x2="206" y2="200" /><line x1="280" y1="0" x2="290" y2="200" /><line x1="0" y1="40" x2="380" y2="30" /><line x1="0" y1="100" x2="380" y2="88" /><line x1="0" y1="160" x2="380" y2="150" /></g>
+                <polyline class="route-halo" points="60,170 130,150 132,90 220,84 290,74 320,34" />
+                <polyline class="route-halo" points="60,170 200,160 290,152 296,90 320,34" />
+                <polyline points="60,170 200,160 290,152 296,90 320,34" fill="none" stroke="#89e3dd" stroke-width="4" stroke-dasharray="7 6" stroke-linecap="round" stroke-linejoin="round" />
+                <polyline points="60,170 130,150 132,90 220,84 290,74 320,34" fill="none" stroke="#af86ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="60" cy="170" r="7" class="map-start" /><circle cx="320" cy="34" r="7" class="map-end" />
+              </svg>
+              <span class="map-chip">예시 지도</span>
+            </div>
+            <div class="card rows-card">
+              <h2>경로 A · 시설 상태 변화</h2>
+              <dl>
+                <div><dt>이전</dt><dd>게시된 소등 정보 없음</dd></div>
+                <div><dt>업데이트 후</dt><dd class="changed">가로등 1곳 소등 확인</dd></div>
+              </dl>
+            </div>
+            <div class="card rows-card">
+              <h2>유지된 지표</h2>
+              <dl>
+                <div><dt>CCTV 인접 구간</dt><dd>45% → 45% · 예시</dd></div>
+                <div><dt>예상 시간</dt><dd>18분 → 18분 · 예시</dd></div>
+              </dl>
+            </div>
+            <div class="step-actions"><button type="button" class="primary" data-screen="route">두 경로 다시 보기</button></div>
           </div>
         </section>
       </main>
       <footer class="privacy">
-        <button id="clear-page" type="button">입력한 위치 지우기</button
-        ><span>위치는 이 페이지에만 잠시 남아요</span>
+        <button id="clear-page" type="button">입력한 위치 지우기</button><span>위치는 이 페이지에만 잠시 남아요</span>
       </footer>
       <nav aria-label="주 메뉴">
-        <button data-screen="home" aria-current="page"><span>⌂</span>홈</button
-        ><button data-screen="route"><span>◇</span>지도</button
-        ><button data-screen="report"><span>▤</span>제보</button
-        ><button data-screen="data"><span>▥</span>데이터</button
-        ><button data-screen="my"><span>♙</span>마이</button>
+        <button data-screen="home" aria-current="page"><svg class="ico" width="22" height="22" aria-hidden="true"><use href="#i-home" /></svg>홈</button>
+        <button data-screen="route"><svg class="ico" width="22" height="22" aria-hidden="true"><use href="#i-map" /></svg>지도</button>
+        <button data-screen="report"><svg class="ico" width="22" height="22" aria-hidden="true"><use href="#i-report" /></svg>제보</button>
+        <button data-screen="data"><svg class="ico" width="22" height="22" aria-hidden="true"><use href="#i-chart" /></svg>데이터</button>
+        <button data-screen="my"><svg class="ico" width="22" height="22" aria-hidden="true"><use href="#i-user" /></svg>마이</button>
       </nav>
     </div>
     <script type="module" src="/app/app.mjs"></script>

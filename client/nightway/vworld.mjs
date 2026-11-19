@@ -22,12 +22,12 @@ export async function drawVworld(view,host,isCurrent,signal) {
   const background=node('g'),facilities=node('g'),lines=node('g');svg.append(background,facilities,lines);
   host.append(svg);
   const project=p=>{const [x,y]=worldPixel(p,z);return [x-left,y-top];};
-  for(const row of view.routes)lines.append(node('polyline',{points:row.coordinates.map(p=>project(p).join(',')).join(' '),stroke:row.id==='SHORTEST'?'#6c32c9':'#007b75',fill:'none','stroke-width':5,'stroke-dasharray':row.id==='SHORTEST'?'none':'7 6','data-route':row.id}));
+  for(const [i,row] of view.routes.entries())lines.append(node('polyline',{points:row.coordinates.map(p=>project(p).join(',')).join(' '),stroke:['#6c32c9','#007b75','#b35c00'][Math.min(i,2)],fill:'none','stroke-width':5,'stroke-dasharray':['none','7 6','2 6'][Math.min(i,2)],'data-route':row.id}));
   for(const [label,p] of [['출발',view.routes[0].coordinates[0]],['도착',view.routes[0].coordinates.at(-1)]]){
     const [x,y]=project(p);lines.append(node('circle',{cx:x,cy:y,r:6,fill:'#fff',stroke:'#222','stroke-width':2}));lines.append(node('text',{x:x+8,y:y-8,fill:'#111','font-size':13,stroke:'#fff','paint-order':'stroke','stroke-width':3},label));
   }
   const attribution=document.createElement('a');attribution.href='https://www.vworld.kr/';attribution.target='_blank';attribution.rel='noopener noreferrer';attribution.textContent='배경지도: 공간정보 오픈플랫폼 VWorld · 국토교통부';host.append(attribution);
-  const legend=document.createElement('p');legend.textContent=(view.provider==='tmap'?'보라 실선: 받은 후보 중 짧은 길 · 청록 점선: 다른 보행 옵션':'보라 실선: 최단 · 청록 점선: 시설 우선')+' · 주황 점: CCTV · 파란 점: 조명. 시설 위치는 촬영·밝기·작동 범위를 뜻하지 않습니다.';host.append(legend);
+  const legend=document.createElement('p');legend.textContent='A 보라 실선 · B 청록 점선'+(view.routes.length>2?' · C 주황 점선':'')+' · 주황 점: CCTV · 파란 점: 조명. 시설 위치는 촬영·밝기·작동 범위를 뜻하지 않습니다.';host.append(legend);
   const tiles=[];
   for(let x=Math.floor(left/256);x<=Math.floor((left+380)/256);x++)for(let y=Math.floor(top/256);y<=Math.floor((top+250)/256);y++)tiles.push({x,y});
   let failures=0;
