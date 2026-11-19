@@ -7,7 +7,10 @@ from playwright.sync_api import sync_playwright,expect
 
 
 def reveal(page,field):
-    """출발지·목적지·시각 행은 눌러야 입력칸이 열린다."""
+    """출발지·목적지·시각 행은 눌러야 입력칸이 열린다. 결과 단계에서는 뒤로 가기로 입력 단계에 돌아간다."""
+    for _ in range(3):
+        if page.locator(f'#live-{field}-toggle').is_visible() or not page.locator('#screen-back').is_visible():break
+        page.click('#screen-back')
     if page.locator(f'#live-{field}-panel').is_hidden():page.click(f'#live-{field}-toggle')
 
 
