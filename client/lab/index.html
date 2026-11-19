@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="ko">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><meta name="color-scheme" content="dark" /><title>
+    제주밤길 · 에이전트 확인</title
+  ><link rel="stylesheet" href="/app/style.css" />
+  <body>
+    <div class="app-shell">
+      <header>
+        <button
+          id="screen-back"
+          class="screen-back"
+          type="button"
+          aria-label="이전 화면으로 돌아가기"
+          hidden
+        >
+          ‹
+        </button>
+        <button id="brand-home" class="brand" aria-label="제주밤길 홈">
+          <span class="brand-mark"
+            ><svg
+              viewBox="0 0 24 24"
+              width="26"
+              height="26"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="m3 19 6-7 4 5 3-3 5 5M8 22h10M4 3v5M1.5 5.5h5M16 2a5 5 0 0 0 5 7 5 5 0 1 1-5-7Z"
+              /></svg></span
+          ><span>제주밤길<small>JEJU NIGHTWAY</small></span></button
+        ><span id="screen-title" class="screen-title" hidden></span
+        ><a class="mode" href="/app">에이전트 확인 · 서비스로</a>
+      </header>
+      <main>
+        <section id="home" class="screen">
+          <div class="hero">
+            <span class="eyebrow">JEJU NIGHTWAY</span>
+            <h1>제주의 밤길을<br />더 잘 알 수 있도록</h1>
+            <p>제주 공공데이터와 함께<br />걸어갈 길의 정보를 비교해 보세요.</p>
+            <svg class="landscape" viewBox="0 0 400 160" aria-hidden="true">
+              <path
+                d="M336 15a18 18 0 1 0 13 27 19 19 0 0 1-13-27Z"
+                fill="#e9ddff"
+              />
+              <path
+                d="M0 120 80 70 150 115 250 45 340 95 400 90V160H0Z"
+                fill="#29294b"
+              />
+              <path
+                d="M0 145 140 95 235 135 315 90 400 130V160H0Z"
+                fill="#151830"
+              />
+            </svg>
+          </div>
+          <button class="search" data-screen="route">
+            <span class="search-mark" aria-hidden="true">⌕</span> 어디로
+            이동하시나요?
+          </button>
+          <div class="feature-grid">
+            <button data-screen="route">
+              <span>⌁</span>경로 비교<small>거리 · 시설 정보</small></button
+            ><button data-screen="report">
+              <span>▤</span>보행환경 제보<small>문제 설명 · 확인</small></button
+            ><button data-screen="data">
+              <span>▥</span>유동인구 분석<small>자료 연결 전</small></button
+            ><button data-screen="data">
+              <span>◇</span>지역 데이터 보기<small>출처와 한계</small></button
+            ><button data-screen="my">
+              <span>♧</span>시설 이슈<small>게시 정보 안내</small>
+            </button>
+          </div>
+          <div class="card region-card">
+            <svg class="jeju-mark" viewBox="0 0 110 65" aria-hidden="true">
+              <path
+                d="M5 38 20 24 43 18 65 9 91 13 105 28 93 40 67 44 48 55 20 51Z"
+                fill="#784bca"
+                stroke="#c6a5ff"
+                stroke-width="2"
+              />
+              <path
+                d="m22 35 20-5 20-8 22 5"
+                fill="none"
+                stroke="#dfc8ff"
+                stroke-dasharray="2 5"
+                stroke-width="3"
+              />
+            </svg>
+            <div>
+              <h2>
+                <button class="region-title" data-screen="data">
+                  제주, 어떤 길을 걸을까요?
+                </button>
+              </h2>
+              <p>
+                지금 연결된 공개 시설 자료와<br />확인할 수 있는 범위를
+                살펴보세요.
+              </p>
+            </div>
+          </div>
+          <p class="notice">
+            시설 위치를 바탕으로 경로를 비교합니다. 현재 밝기·작동 상태와 현장
+            통행은 확인되지 않았습니다. 선택한 위치는 이 페이지를 떠나면
+            지워집니다.
+          </p>
+        </section>
+        <section id="route" class="screen" hidden>
+          <div class="section-top">
+            <span class="eyebrow">ROUTE COMPARISON</span>
+            <h1>어디로 걸어갈까요?</h1>
+            <p>장소·날짜·시각을 확인하고 같은 목적지의 경로를 비교해요.</p>
+          </div>
+          <ol class="route-progress" aria-label="경로 선택 순서">
+            <li data-phase="input" aria-current="step">조건 입력</li>
+            <li data-phase="compare">경로 비교</li>
+            <li data-phase="detail">근거 확인</li>
+            <li data-phase="chosen">경로 선택</li>
+          </ol>
+          <div class="journey-panel">
+            <details id="route-input" open>
+              <summary>
+                이동 조건 입력<span>장소 · 출발 시각 · 비교 기준</span>
+              </summary>
+              <p class="support">
+                출발지와 목적지를 고르고 비교할 조건을 선택해 주세요.
+              </p>
+              <form id="live-place-form" autocomplete="off">
+                <label
+                  >검색 방식<select id="live-search-mode">
+                    <option value="place">장소명</option>
+                    <option value="road">도로명 주소</option>
+                    <option value="parcel">지번 주소</option>
+                  </select></label
+                >
+                <label class="place-field"
+                  ><span class="field-kicker">출발지 · 필수</span
+                  ><input
+                    placeholder="출발 장소를 검색해 주세요"
+                    id="live-origin-query"
+                    maxlength="120"
+                    autocomplete="off"
+                /></label>
+                <button
+                  id="live-origin-search"
+                  class="search-place-button"
+                  type="button"
+                >
+                  출발지 찾기
+                </button>
+                <div id="live-origin-candidates" aria-live="polite"></div>
+                <p class="selected-place" id="live-origin-selected">
+                  출발지를 선택해 주세요.
+                </p>
+                <label class="place-field"
+                  ><span class="field-kicker">목적지 · 필수</span
+                  ><input
+                    placeholder="도착 장소나 주소를 검색해 주세요"
+                    id="live-destination-query"
+                    maxlength="120"
+                    autocomplete="off"
+                /></label>
+                <button
+                  id="live-destination-search"
+                  class="search-place-button"
+                  type="button"
+                >
+                  목적지 찾기
+                </button>
+                <div id="live-destination-candidates" aria-live="polite"></div>
+                <p class="selected-place" id="live-destination-selected">
+                  도착지를 선택해 주세요.
+                </p>
+                <div class="two-col">
+                  <label
+                    >출발 날짜 · 한국 시간<input
+                      id="live-date"
+                      type="date"
+                      required
+                  /></label>
+                  <label
+                    >출발 시각 · 24시간<input
+                      id="live-time"
+                      type="time"
+                      required
+                  /></label>
+                </div>
+                <label
+                  >비교 기준<select id="live-preference">
+                    <option value="both">CCTV·조명 함께 비교</option>
+                    <option value="cctv">CCTV 인접 구간</option>
+                    <option value="light">조명 인접 구간</option>
+                    <option value="fastest">제공 예상 시간이 짧은 길</option>
+                  </select></label
+                >
+                <details class="privacy-note">
+                  <summary>위치 사용과 비교 범위</summary>
+                  <p>
+                    검색어는 VWorld, 선택 좌표는 TMAP에 전달합니다. 앱 서버에는
+                    저장하지 않으며 페이지를 떠나면 지웁니다. 외부 제공사의 처리
+                    정책은 별도입니다. 제주 범위의 직선 5m~20km를 지원합니다.
+                  </p>
+                </details>
+                <button id="live-route-button" class="primary" type="submit">
+                  경로 비교하기
+                </button>
+                <button id="live-clear" class="text-button" type="button">
+                  입력 초기화
+                </button>
+              </form>
+            </details>
+            <div id="live-route-result" aria-live="polite"></div>
+          </div>
+          <details id="research-tools" class="alternate-tools">
+            <summary>
+              공개 구간으로 먼저 비교해 보기<span
+                >연동 · 서귀포 예제와 대화</span
+              >
+            </summary>
+            <div class="card" id="actual-route-panel">
+              <h2>공개 데이터로 길 찾기</h2>
+              <p>
+                도로망에서 시설 인접 구간이 많은 후보를 자동으로 찾습니다. 현재
+                두 공개 구간만 지원하는 연구 시연입니다.
+              </p>
+              <form id="facility-form">
+                <label
+                  >비교 구간<select id="facility-region">
+                    <option value="yeondong">
+                      삼무공원~누웨마루 공중화장실 지도 지점
+                    </option>
+                    <option value="seogwipo">
+                      중앙로 일대~매일올레시장 지도 지점
+                    </option>
+                  </select></label
+                ><label
+                  >우선할 조건<select id="facility-preference">
+                    <option value="both">CCTV·조명 함께</option>
+                    <option value="cctv">CCTV 인접 구간</option>
+                    <option value="light">조명 인접 구간</option>
+                    <option value="fastest">가장 짧은 길</option>
+                  </select></label
+                >
+                <details>
+                  <summary>연구 설정·자료 선택</summary>
+                  <label
+                    >CCTV 원본<select id="facility-source">
+                      <option value="standard">
+                        행정안전부 표준 · 2025년 자료
+                      </option>
+                      <option value="datahub">
+                        제주데이터허브 · 과거 자료
+                      </option>
+                    </select></label
+                  >
+                  <div class="two-col">
+                    <label
+                      >조명 반경(m)<input
+                        id="facility-light-radius"
+                        type="number"
+                        value="15"
+                        min="1"
+                        max="80"
+                        required /></label
+                    ><label
+                      >CCTV 반경(m)<input
+                        id="facility-cctv-radius"
+                        type="number"
+                        value="50"
+                        min="1"
+                        max="200"
+                        required
+                    /></label>
+                  </div>
+                  <div class="two-col">
+                    <label
+                      >시설 가중치<input
+                        id="facility-weight"
+                        type="number"
+                        value="4"
+                        min="0"
+                        max="16"
+                        step="0.5"
+                        required /></label
+                    ><label
+                      >최단 대비 거리 상한(배)<input
+                        id="facility-detour"
+                        type="number"
+                        value="1.5"
+                        min="1"
+                        max="2"
+                        step="0.1"
+                        required
+                    /></label>
+                  </div>
+                  <p class="support">
+                    반경·가중치·우회 한도는 시험용 설정입니다. 실제 밝기나 안전
+                    기준이 아닙니다. CCTV는
+                    생활방범·교통단속·어린이보호·시설물관리 목적을 포함합니다.
+                  </p>
+                </details>
+                <button id="facility-button" type="submit" class="primary">
+                  공개 자료로 자동 경로 찾기
+                </button>
+                <button id="tmap-button" type="button">
+                  TMAP 보행 후보 요청·시설 비교
+                </button>
+              </form>
+              <form id="research-chat-form">
+                <h3>공개 구간을 대화로 찾기</h3>
+                <p>
+                  예: 연동 공개 구간을 티맵으로 CCTV 위주로, 2026-11-20 오후
+                  9시에 출발할게요. 집·임의 주소는 아직 지원하지 않습니다.
+                </p>
+                <label
+                  >질문 또는 추가 답변<input
+                    id="research-chat-input"
+                    maxlength="5000"
+                    required
+                    autocomplete="off"
+                /></label>
+                <button id="research-chat-send" type="submit">
+                  공개 구간 질문 보내기
+                </button>
+                <button id="research-chat-reset" type="button">
+                  공개 대화 초기화
+                </button>
+              </form>
+              <div id="research-chat-result" aria-live="polite"></div>
+              <div id="facility-result" aria-live="polite"></div>
+            </div>
+          </details>
+          <details id="synthetic-tools" class="alternate-tools">
+            <summary>
+              합성 시연·개발 확인<span>가상 경로와 접수 흐름</span>
+            </summary>
+            <h2>합성 경로·대화 시연</h2>
+            <form id="route-form">
+              <div class="card form-card">
+                <label
+                  >출발지 · 필수<select id="origin" required>
+                    <option value="">선택해 주세요</option>
+                    <option value="제주시청">제주시청</option>
+                    <option value="동문시장">동문시장</option>
+                    <option value="탑동광장">탑동광장</option>
+                    <option value="제주공항">제주공항</option>
+                  </select></label
+                ><label
+                  >도착지 · 필수<select id="destination" required>
+                    <option value="">선택해 주세요</option>
+                    <option value="탑동광장">탑동광장</option>
+                    <option value="동문시장">동문시장</option>
+                    <option value="제주시청">제주시청</option>
+                    <option value="제주공항">제주공항</option>
+                  </select></label
+                >
+                <div class="two-col">
+                  <label
+                    >출발 날짜 · 필수<input
+                      id="departure-date"
+                      type="date"
+                      required /></label
+                  ><label
+                    >출발 시각 · 필수<input
+                      id="departure-time"
+                      type="time"
+                      required
+                  /></label>
+                </div>
+                <fieldset>
+                  <legend>비교 기준</legend>
+                  <label class="chip"
+                    ><input
+                      type="radio"
+                      name="preference"
+                      value="cctv"
+                      checked
+                    />CCTV 인접 구간</label
+                  ><label class="chip"
+                    ><input type="radio" name="preference" value="none" />이동
+                    시간</label
+                  ><label class="chip disabled"
+                    ><input type="radio" disabled />조명 · 자료 없음</label
+                  >
+                </fieldset>
+              </div>
+              <button class="primary" type="submit" id="compare-button">
+                두 경로 비교하기
+              </button>
+            </form>
+            <div id="route-result" aria-live="polite"></div>
+            <div class="card agent-chat">
+              <h2>문장으로 물어보기</h2>
+              <p>
+                빠진 위치·날짜·오전·오후를 확인해요. 출처 질문은 바로
+                안내합니다.
+              </p>
+              <form id="chat-form">
+                <label for="chat-input">질문</label
+                ><textarea
+                  id="chat-input"
+                  maxlength="5000"
+                  required
+                  placeholder="CCTV 자료는 어디서 가져온 거야?"
+                ></textarea
+                ><button class="secondary" type="submit" id="chat-send">
+                  에이전트에게 보내기
+                </button>
+              </form>
+              <div id="chat-result" aria-live="polite"></div>
+            </div>
+          </details>
+        </section>
+        <section id="report" class="screen" hidden>
+          <span class="eyebrow">WALKING ENVIRONMENT</span>
+          <h1>보행환경 제보</h1>
+          <ol class="report-progress" aria-label="제보 확인 순서">
+            <li data-report-step="1" aria-current="step">위치</li>
+            <li data-report-step="2">유형</li>
+            <li data-report-step="3">설명</li>
+            <li data-report-step="4">확인</li>
+          </ol>
+          <p>
+            위치와 문제를 확인한 뒤 합성 제보 접수를 시연합니다. 실제 기관에는
+            전달되지 않습니다.
+          </p>
+          <form id="report-form">
+            <div class="card form-card">
+              <label
+                >문제 위치 · 필수<select id="report-location" required>
+                  <option value="">공개 예시 지점 선택</option>
+                  <option value="탑동광장">탑동광장 예시 위치</option>
+                  <option value="동문시장">동문시장 예시 위치</option>
+                </select></label
+              >
+              <p class="support">
+                정확한 시설 핀·GPS는 연결 전입니다. 실제 문제 위치를 확인한
+                것으로 처리하지 않습니다.
+              </p>
+              <label
+                >시설 유형<select id="report-facility">
+                  <option value="streetlight">가로등·보안등</option>
+                  <option value="cctv">CCTV</option>
+                  <option value="walkway">보행로</option>
+                  <option value="other">기타·확인 필요</option>
+                </select></label
+              ><label
+                >문제 유형<select id="report-problem">
+                  <option value="not_working">작동하지 않음</option>
+                  <option value="flickering">깜빡임</option>
+                  <option value="too_dark">어두움</option>
+                  <option value="damaged">파손</option>
+                  <option value="obstructed">통행 방해</option>
+                  <option value="other">기타·확인 필요</option>
+                </select></label
+              ><label
+                ><span class="report-description-title"
+                  >상황을 자세히 적어 주세요</span
+                >상세 설명 · 필수<textarea
+                  id="report-text"
+                  maxlength="5000"
+                  required
+                  placeholder="예: 탑동광장 입구 쪽 가로등이 꺼져 있었어요."
+                ></textarea>
+              </label>
+              <p class="support">이름·전화번호·집 주소는 적지 마세요.</p>
+            </div>
+            <button type="submit" class="primary" id="report-preview-button">
+              제보 내용 확인
+            </button>
+          </form>
+          <div id="report-result" aria-live="polite"></div>
+          <div id="report-confirm" hidden>
+            <label class="consent"
+              ><input type="checkbox" id="report-consent" />실제 신고가 아닌
+              합성 시연임을 확인했고, 위 분류와 위치 예시로
+              접수하겠습니다.</label
+            ><button type="button" id="report-submit" class="secondary">
+              합성 제보 접수 시연
+            </button>
+          </div>
+        </section>
+        <section id="data" class="screen" hidden>
+          <span class="eyebrow">LOCAL DATA</span>
+          <h1>자료와 확인 범위</h1>
+          <details class="connection-panel">
+            <summary>현재 연결 상태</summary>
+            <p id="runtime-connection" class="support" role="status">
+              데이터·에이전트 연결 상태 확인 중…
+            </p>
+          </details>
+          <div class="card">
+            <h2>현재 자료 연결 상태</h2>
+            <dl>
+              <div>
+                <dt>CCTV</dt>
+                <dd>공개 목록4목적 · 설치 위치 정보</dd>
+              </div>
+              <div>
+                <dt>조명 위치·실제 밝기</dt>
+                <dd>위치 자료 연결 · 밝기·점등 미확인</dd>
+              </div>
+              <div>
+                <dt>시간대별 보행량</dt>
+                <dd>자료 없음</dd>
+              </div>
+              <div>
+                <dt>시설 현재 작동</dt>
+                <dd>확인하지 않음</dd>
+              </div>
+            </dl>
+            <p>월별 방문 통계를 지금 걷는 사람 수로 표시하지 않습니다.</p>
+          </div>
+          <button id="source-button" class="secondary">
+            기본 합성 에이전트의 출처 설명 보기
+          </button>
+          <div id="data-result" aria-live="polite"></div>
+        </section>
+        <section id="my" class="screen" hidden>
+          <span class="eyebrow">MY REPORTS</span>
+          <h1>이번 페이지의 제보</h1>
+          <div id="receipt">
+            <div class="card">
+              <p>아직 접수한 합성 제보가 없어요.</p>
+              <p>실제 기관 접수·수리 요청은 제공하지 않습니다.</p>
+              <button data-screen="report" class="text-button">
+                제보 시연 시작
+              </button>
+            </div>
+          </div>
+          <p class="notice">
+            검토 대기와 게시 완료는 다릅니다. 이 화면은 검토·게시 권한을
+            제공하지 않습니다. 페이지를 벗어나거나 새로 열면 접수 화면도
+            지워집니다.
+          </p>
+        </section>
+      </main>
+      <footer class="privacy">
+        <button id="clear-page" type="button">위치·대화 지우기</button
+        ><span>페이지 메모리만 사용</span>
+      </footer>
+      <nav aria-label="주 메뉴">
+        <button data-screen="home" aria-current="page"><span>⌂</span>홈</button
+        ><button data-screen="route"><span>◇</span>지도</button
+        ><button data-screen="report"><span>▤</span>제보</button
+        ><button data-screen="data"><span>▥</span>데이터</button
+        ><button data-screen="my"><span>♙</span>마이</button>
+      </nav>
+    </div>
+    <script type="module" src="/lab/app.mjs"></script>
+  </body>
+</html>

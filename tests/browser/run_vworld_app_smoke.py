@@ -31,7 +31,7 @@ def run(tmap=False):
                 else:external.append('external_request');route.abort()
             context.route('**/*',guard);page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
             page.on('response',lambda r:tile_status.append(r.status) if '/maps/vworld/tiles/' in r.url else None)
-            page.goto(base+'/app');page.click('nav [data-screen=route]');reveal(page,'research-tools');page.click('#tmap-button' if tmap else '#facility-button');page.wait_for_selector('#facility-result .route-card')
+            page.goto(base+'/lab');page.click('nav [data-screen=route]');reveal(page,'research-tools');page.click('#tmap-button' if tmap else '#facility-button');page.wait_for_selector('#facility-result .route-card')
             page.get_by_role('button',name='VWorld 배경지도·시설 위치 불러오기').click()
             expect(page.locator('#facility-result')).to_contain_text('VWorld 배경지도 연결 완료',timeout=45000)
             page.wait_for_selector('.vworld-map circle title',state='attached')

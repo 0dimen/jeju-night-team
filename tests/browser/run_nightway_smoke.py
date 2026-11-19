@@ -27,7 +27,7 @@ def run():
                 if route.request.url.startswith(base+'/'):route.continue_()
                 else:external.append(route.request.url);route.abort()
             context.route('**/*',guard);page=context.new_page();page.on('pageerror',lambda error:errors.append(str(error)))
-            page.goto(base+'/app');page.wait_for_selector('.feature-grid')
+            page.goto(base+'/lab');page.wait_for_selector('.feature-grid')
             for width in (320,390,430):
                 page.set_viewport_size({'width':width,'height':844})
                 for screen in ('home','route','report','data','my'):

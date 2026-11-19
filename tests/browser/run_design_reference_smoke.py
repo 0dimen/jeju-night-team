@@ -10,7 +10,7 @@ def run():
     base=f'http://127.0.0.1:{port}'
     env={k:v for k,v in os.environ.items() if not any(x in k for x in ('KEY','TOKEN','SECRET'))}
     proc=subprocess.Popen([sys.executable,'-m','uvicorn','agent.api:app','--host','127.0.0.1','--port',str(port),'--no-access-log'],env=env,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
-    shots=Path('docs/screenshots');shots.mkdir(exist_ok=True)
+    shots=Path('/tmp/jeju-lab-shots');shots.mkdir(exist_ok=True)
     try:
         for _ in range(100):
             try:
@@ -24,7 +24,7 @@ def run():
                 if route.request.url.startswith(base+'/'):route.continue_()
                 else:external.append('external');route.abort()
             context.route('**/*',guard);page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
-            page.goto(base+'/app')
+            page.goto(base+'/lab')
             assert page.locator('.feature-grid button').count()==5
             page.screenshot(path=str(shots/'reference-home.png'))
             page.click('.search')
