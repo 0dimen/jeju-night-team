@@ -454,7 +454,7 @@ $("report-submit").addEventListener("click", async () => {
       mark.innerHTML =
         '<svg class="ico" width="44" height="44" aria-hidden="true"><use href="#i-check"/></svg>';
       element("h1", "제보가 접수됐어요", receipt);
-      element("p", "검토한 뒤 다음 경로 분석에 반영해요.", receipt, "support");
+      element("p", "접수 내역을 확인해 주세요. 현재 경로 분석에는 반영되지 않아요.", receipt, "support");
       const card = element("div", "", receipt, "card rows-card");
       element("h2", "접수 내역", card);
       const dl = element("dl", "", card);
