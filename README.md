@@ -1,140 +1,88 @@
-> 보행 API 연결: [TMAP 실제 경로·시설 비교](docs/TMAP_PEDESTRIAN_CONNECTION.md)
+# 제주밤길: 실제 경로와 시설을 비교하는 에이전트
 
-> 지도 연결: [VWorld 배경지도·공개 시설 표시](docs/VWORLD_CONNECTION.md)
+**장소를 검색·선택하고, TMAP 보행 경로의 거리·예상 시간·CCTV·조명 인접 비율을 비교할 수 있습니다.** VWorld 배경지도와 공개 구간 대화도 연결했습니다. 시설 위치를 이용한 연구용 비교이며 실제 밝기·촬영·작동·현장 통행을 확인한 서비스는 아닙니다.
 
-> 시험 배포: [실제 데이터·에이전트 연결과 배포 방식](docs/VERCEL_PREVIEW.md)
+최신 개발 브랜치는 **`feature/open-data-facility-routes`**입니다. main에는 아직 합치지 않았습니다. 공개 배포 주소는 없으며 배포 담당이 Vercel 계정·환경변수를 연결해야 합니다. [현재 상태와 다음 작업](PROJECT_STATUS.md)을 먼저 확인하세요.
 
-> 후속 보완: [공개 구간 대화 연결·보행 검토](docs/PUBLIC_ROUTE_CONVERSATION.md)
+## 설치와 실행
 
-# 제주밤길: 실행 방법과 다음 개발
-
-**팀 공유 시작 문서: [현재 완성 범위·실행·다음 담당 작업](PROJECT_STATUS.md).** 최신 대화·페이지 모듈은 `feature/conversation-route-comparison` 브랜치에서 검토하며 main에는 아직 합쳐지지 않았습니다.
-
-**현재는 개발자 컴퓨터에서 실행하는 보행 경로 비교·시설 제보 시연 프로그램입니다.** 공개 웹사이트나 완성된 지도 앱은 없습니다. 기본 실행은 AI 모델 없이 규칙과 문장 틀을 사용하며 키가 필요 없습니다.
-
-## 어디에서 사용할 수 있나요?
-
-| 사용 방법 | 할 수 있는 일 | 현재 한계 |
-|---|---|---|
-| 터미널 시연 | 합성 경로의 거리·시간·시설 인접 비율 비교 | 실제 길찾기 아님 |
-| 로컬 API와 자동 설명 화면 | 문장 입력, 합성 경로 비교, 제보 미리보기, 날짜·시각 확인 | 실제 서비스 화면·관리자 권한·페이지 이동 처리는 별도 |
-| 선택 AI 모듈 | 문장 해석·제보 분류·설명 생성의 모델 연결 실험 | 기본 꺼짐. 실제 개인정보를 무료 API에 보내면 안 됨 |
-| 자료 탐색 모듈 | 자료 목록에서 후보 검색 | 공유본에는 내부 목록이 없어 자료 미준비로 응답 |
-
-기본 구성은 정해진 처리 순서·키워드 해석·문장 틀입니다. 선택 AI는 `agent/llm/`에서 연결하며 모델은 계산된 거리·시설 수를 대신 만들지 않습니다. 전체 실험을 하려면 `requirements.lock.txt`와 별도 모델 준비가 필요합니다. 기본 실행부터 확인하세요.
-
-## 1. 설치와 기본 실행
-
-Python 3.13을 기준으로 준비했습니다. 현재 확인 환경은 Linux이며 Windows 잠금·한글 파일 대응을 보강했지만 Windows 실기기·센터 컴퓨터는 아직 확인 전입니다.
-
-Linux 또는 macOS 형식의 명령:
+Python 3.13·Linux에서 확인했습니다. macOS·Windows·센터 실기기는 별도 확인이 필요합니다.
 
 ```bash
+git clone --branch feature/open-data-facility-routes https://github.com/0dimen/jeju-night-team.git
+cd jeju-night-team
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements-base.txt
-.venv/bin/python scripts/check_basic_runtime.py
-.venv/bin/python -m agent --demo
-.venv/bin/python -m agent --text '누가 따라와요'
-```
-
-macOS에서는 아직 실행 검증하지 않았습니다. Windows PowerShell:
-
-```powershell
-py -3.13 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements-base.txt
-.\.venv\Scripts\python.exe scripts/check_basic_runtime.py
-.\.venv\Scripts\python.exe -m agent --demo
-```
-
-`passed: true`는 가상 자료 기본 실행 점검을 뜻합니다. 실제 자료 사용·센터 전체 기능 완료는 아닙니다.
-
-## 2. API 사용
-
-```bash
 .venv/bin/python -m uvicorn agent.api:app --host 127.0.0.1 --port 8000
 ```
 
-Windows에서는 Python 경로만 `.\.venv\Scripts\python.exe`로 바꿉니다. 실행한 컴퓨터에서 [API 설명 화면](http://127.0.0.1:8000/docs)을 엽니다. 다른 컴퓨터에 배포한 주소가 아닙니다. 각 POST 항목의 **Try it out**으로 입력합니다.
+같은 컴퓨터의 브라우저에서 **http://127.0.0.1:8000/app**을 엽니다. 기본 규칙형 에이전트와 공개 도로망 비교에는 모델 키가 필요 없습니다. 실제 검색·TMAP·배경지도에는 아래 지도 키를 서버 환경변수로 설정한 뒤 서버를 실행해야 합니다. 키 파일을 만들었다면 별도로 불러와야 하며, 저장만으로 실행 중 서버에 반영되지는 않습니다.
 
-| 주소 | 입력 예 | 결과 |
+Windows PowerShell은 가상환경 실행 경로가 `.venv\Scripts\python.exe`입니다. 자세한 기본 실행·선택 모델 설명은 [매뉴얼](MANUAL.md)을 참고하세요.
+
+## 화면에서 사용할 수 있는 기능
+
+| 흐름 | 사용 방법 | 필요한 것 |
 |---|---|---|
-| `POST /agent/chat` | `{"text":"누가 따라와요"}` | 112 안내 |
-| `POST /agent/chat` | `{"text":"데이터 출처 알려줘"}` | 시간 없이 자료 범위·한계 안내 |
-| `POST /reports/preview` | `{"text":"CCTV와 가로등이 고장 났어요"}` | 분류 후보·추가 확인 질문, 저장 안 함 |
-| `POST /agent/conversation` | `{"text":"집으로 갈거야","state":{}}` | 필요한 위치·날짜·오전/오후 확인 |
-| `POST /routes/compare` | `contracts/examples/SYNTHETIC_route_request.json` 내용을 `request`에 넣음 | 합성 경로 비교 |
+| 장소 선택 길찾기 | 장소명·도로명·지번 검색 → 결과 선택 → 날짜·24시간 시각 확인 → 경로 비교 | VWorld·TMAP 키, 제주 시설 자료 |
+| 공개 도로망 비교 | 연동·서귀포 구간과 선호 조건 선택 → 최단·시설 선호 후보 탐색 | 공개 자료 또는 서버용 계산 자료 |
+| 공개 구간 대화 | `연동 공개 구간을 티맵으로 CCTV 위주로 3시에 갈게요` → 날짜·오전/오후 확인 | TMAP 선택 시 키 필요 |
+| 배경지도 | 결과의 VWorld 버튼 선택 → 지도·시설·경로 표시 | VWorld 키 |
+| 합성 시연·제보 | 별도 합성 영역에서 대화·긴급 안내·제보 미리보기·시연 접수 | 추가 키 불필요 |
 
-대화 API는 응답의 `state`를 같은 페이지의 다음 요청에 넣어 이어갑니다. 서버는 집 위치를 저장하지 않습니다. 실제 화면은 페이지를 떠날 때 메모리를 지우고 진행 중인 요청을 중단해야 합니다. 브라우저 저장소·URL·로그에는 집 위치를 넣지 않습니다. 입력이 모이면 합성 비교표·추천 이유를 반환합니다. 실제 위치의 길찾기 결과는 아니며 응답에 합성 시연임을 표시합니다. `초기화` 또는 `취소`를 보내면 페이지 상태를 비웁니다.
+장소 선택 길찾기는 제주 범위에서 직선 5m~20km를 지원합니다. 최대 세 보행 옵션이 같은 길이면 하나로 묶습니다. 이름만으로 지점을 자동 확정하지 않으므로 주소를 보고 선택하세요. 문장 속 임의 장소를 자동 검색·확정하거나 서로 다른 목적지를 한 번에 비교하는 기능은 아직 없습니다.
 
-## 3. 지금까지 구현한 범위
+시간이 필요 없는 자료 출처 질문과 긴급 안내에는 날짜를 묻지 않습니다. 입력 시각은 확인하지만 현재 보행 계산이 시간별 밝기·혼잡·시설 상태를 반영하는 것은 아닙니다.
 
-- 합성 경로 비교와 반경 50미터의 CCTV 인접 비율 계산. 다른 반경도 명시 가능.
-- 긴급 안내, 개인정보 가림, 제보 검토 대기·검토 후 게시·재분석의 저장 대역.
-- 제보 저장 전 모호한 항목 확인 질문. 실제 확인 화면·게시 권한은 미구현.
-- 날짜와 오전·오후 확인, 페이지 상태를 주고받는 대화 API.
-- 생활방범 CCTV 선택 전처리와 출처·좌표·보행시간 근거를 검사하는 경로 파일 입력부.
-- 실제 CCTV는 8행을 사용 후보로 분리했으나 이용 조건·좌표계·실제 경로 연결은 미완료.
+## 위치와 키
 
-시설 인접성은 현재 작동·촬영 범위·안전을 보장하지 않습니다. 가로등 자료가 없으면 밝기를 계산하지 않습니다. 제보는 사람이 검토·게시하기 전 계산에 반영하지 않습니다.
+- 검색어는 POST 본문으로 VWorld에, 선택한 좌표는 POST 본문으로 TMAP에 전달합니다. 사용자 문장·주소를 URL 쿼리에 넣지 않습니다.
+- 선택 위치는 해당 페이지의 메모리에만 둡니다. 페이지 이동·종료·새로고침·초기화 시 지웁니다. 선택 위치의 검색·요청·경로를 앱 서버 파일·데이터베이스·캐시에 저장하지 않습니다. 외부 제공사의 처리·로그 정책은 별도입니다.
+- 공개 두 구간의 고정 응답만 한 시간 캐시합니다. 임의 선택 좌표는 이 캐시를 사용하지 않습니다.
+- 기본 에이전트는 규칙·문장 틀입니다. 모델이 숫자를 만들지 않으며 사용자 주소·문장을 외부 언어모델에 보내지 않습니다.
 
-## 4. 다음 개발자가 이어서 할 일
+| 환경변수 | 용도 |
+|---|---|
+| `VWORLD_API_KEY` | 장소·주소 검색과 서버 배경지도 중계 |
+| `VWORLD_DOMAIN` | 발급 조건에 맞는 실제 등록 도메인, 필요한 경우 설정 |
+| `TMAP_APP_KEY` | 보행 경로 조회 |
+| `DATA_GO_KR_SERVICE_KEY` | 선택 사항: 공공 CCTV 원본 갱신 도구 |
 
-1. **센터 실행:** 위 기본 점검을 실제 제출 컴퓨터에서 실행하고 성공·실패를 남깁니다.
-2. **실제 자료:** 시연 지역·경로를 정하고 자료 이용 조건·좌표계를 확인합니다. 원본과 실제 개인 위치는 공유 코드에 넣지 않습니다.
-3. **경로 입력:** 아래 합성 예시로 입력 형식을 확인한 후 실제 보행 경로를 준비합니다.
-4. **계산 연결:** `NightAgent(engine=...)`에 같은 입력·출력 형식의 실제 계산기를 연결합니다. 현재 합성 표시와 자료 버전·시점도 함께 처리해야 합니다.
-5. **화면 연결:** 대화 상태를 페이지 메모리에만 두고 이탈 시 지웁니다. 제보 미리보기와 실제 검토·게시 권한은 구분합니다.
-6. **사람 시험:** 수희의 문장과 작성 의도를 보존하고 실제 응답을 비교합니다. AI가 만든 후보를 사람 정답으로 바꾸어 기록하지 않습니다.
+키는 Git이나 채팅에 올리지 않습니다. Vercel에서는 프로젝트 환경변수에 설정하고 다시 배포합니다. [VWorld 연결](docs/VWORLD_CONNECTION.md) · [TMAP 연결](docs/TMAP_PEDESTRIAN_CONNECTION.md) · [장소 선택·위치 정책](docs/SELECTED_ROUTE_AGENT.md)
+
+## 자료와 배포
+
+공개 원본·수정 사본·도로망은 [data/open/README.md](data/open/README.md)에 출처와 함께 있습니다. 원본은 유지하고 제주시 가로등의 좌표 교환 수정 사본을 검사해 사용합니다. CCTV는 생활방범·교통단속·어린이보호·시설물관리 네 목적을 포함합니다. 기준일이 있는 목록이며 현재 작동 상태 자료가 아닙니다.
+
+원본 파일은 배포 실행물에서 제외합니다. 배포 준비 시 다음 명령으로 구간별 도로망과 제주 시설의 서버용 계산 자료를 생성합니다.
 
 ```bash
-.venv/bin/python scripts/check_route_file.py data/route_examples/SYNTHETIC_routes.geojson
+.venv/bin/python scripts/build_vercel_data.py
 ```
 
-`agent/`는 요청 처리, `agent/data/`는 자료 검사, `stubs/`는 합성 계산·제보 저장 대역, `contracts/`는 주고받는 형식, `config/`는 교체 설정, `tests/`는 검사입니다. 기본 실행 의존성에는 pytest가 없으므로 검사는 별도로 설치합니다.
+계산 자료는 약 4.3MB이며 전체 원본의 주소·다른 열을 포함하지 않습니다. 좌표·출처는 서버에 필요하고 선택한 경로·주변 시설만 브라우저에 응답합니다. 데이터가 바뀌면 다시 생성해야 합니다. 로컬 원본 개발은 `agent.api:app`, Vercel 진입점 `app.py`는 준비된 계산 자료를 사용합니다. 데이터가 없으면 합성 결과로 대신하지 않습니다.
+
+Vercel에서는 저장소 루트·FastAPI·이 기능 브랜치를 사용합니다. [시험 배포 인수 안내](docs/VERCEL_PREVIEW.md)를 따르세요. 실제 배포 빌드·외부 접속 검증은 아직입니다.
+
+## 검사와 다음 개발
 
 ```bash
 .venv/bin/python -m pip install -r requirements-test.txt
 .venv/bin/python -m pytest -q
 ```
 
-현재 기본 기능과 파일 엔진 검사를 수행했습니다. 최신 수치는 PROJECT_STATUS.md를 따릅니다. 선택 모델·벡터·외부 뉴스의 추가 기능은 전체 의존성과 파일 준비가 별도이며 공유본의 내부 목록 탐색은 사용할 수 없습니다.
+Python 306개 검사와 실제 Chromium 모바일 화면 검사를 통과했습니다. 실제 API 시험에는 공개 장소만 사용했습니다. 모델 합의·합성 문장 검사가 실제 사용자 정확도를 뜻하지 않습니다. [시험과 남은 일](docs/SELECTED_ROUTE_AGENT.md)에 범위를 정리했습니다.
 
-## 5. 팀 참고 문서
+다음 우선순위는 지도·로드뷰 대조, 제공받은 문장에 대한 사람의 판정, 자연어와 장소 선택의 추가 통합, 제보 검증·게시의 실제 권한 연결, 센터 실행과 배포입니다.
 
-- [팀 역할과 진행 순서](docs/TEAM_BRIEF.md) · [한 장 PDF](docs/pdf/TEAM_BRIEF.pdf)
-- [수희에게 요청할 문장 안내](docs/SUHEE_SENTENCE_REQUEST.md)
-- [날짜 확인과 페이지 위치 처리](docs/PAGE_TIME_LOCATION_POLICY.md)
-- [CCTV 선택 근거와 대안](docs/CCTV_SELECTION_DECISION.md)
-- [시연 지역 조사](docs/DEMO_REGION_RESEARCH.md)
+## 참고 문서
 
-공유본은 실행·개발 검토용입니다. 실제 자료 시연·관리자 권한·센터 검증과 최종 제출 완료는 별도로 확인합니다.
+- [현재 완성 범위·배포 담당 인수](PROJECT_STATUS.md)
+- [새 장소 선택·대화 연결](docs/SELECTED_ROUTE_AGENT.md)
+- [시설 선호 탐색·식·배포 제외](docs/FACILITY_ROUTE_APP.md)
+- [공개 자료 처리·출처](docs/REAL_DATA_AND_FACILITY_ROUTES.md)
+- [제공 문장 평가](docs/AGENT_INPUT_EVALUATION.md) · [수희 문장 안내](docs/SUHEE_SENTENCE_REQUEST.md)
+- [세 계산식과 4인 30문항 시험](docs/THREE_ROUTE_FORMULAS_AND_USER_STUDY.md)
+- [팀 역할 안내](docs/TEAM_BRIEF.md) · [공유·검토 규칙](SHARING_POLICY.md)
 
-이 저장소는 팀 개발용으로 선별한 코드에서 새 이력을 시작했습니다. 다음 변경은 SHARING_POLICY.md의 사전 검사와 검토 절차를 따릅니다.
-
-커밋 전 점검 도구: `python -m pip install -r requirements-share-check.txt` 후 `git config core.hooksPath .githooks`. 자세한 변경·검토 규칙은 [SHARING_POLICY.md](SHARING_POLICY.md)를 따릅니다.
-
-페이지 연결 모듈: [사용 방법](docs/PAGE_CLIENT_INTEGRATION.md). 실제 화면은 아직 없으며, 지도·페이지 이동 연결 후 브라우저에서 통합 확인해야 합니다.
-
-경로·CCTV 파일 계산기: [설치와 연결](docs/FILE_ROUTE_ENGINE.md). 선택 의존성을 설치한 뒤 합성 파일로 먼저 확인하며, 실제 자료 채택을 대신하지 않습니다.
-
-최신 후속: 공개 연구 구간의 지도 보행 경로4개를 확보하고, 출처·예약·모호한 제보 분기를 보완했습니다. [자료 수집 범위](docs/REAL_ROUTE_COLLECTION.md)와 [평가·보완 내용](docs/AGENT_INPUT_EVALUATION.md)을 확인하세요.
-
-대화 화면은 로컬 서버의 `/demo`에서 열 수 있습니다. [화면 사용법·현장 확인표 준비](docs/DEMO_PAGE_AND_FIELD_REVIEW.md)를 참고하세요. 실제 지도 길찾기 없이 합성 위치만 사용합니다.
-
-시설 자료는 [정리 결과와 처리 규칙](docs/FACILITY_CLEANUP.md), 추천 방식은 [기준 후보 비교](docs/RECOMMENDATION_CRITERIA_CANDIDATES.md)를 참고하세요. 기준 후보는 아직 기본 순위에 적용하지 않았습니다.
-
-[세 계산식과 4인30문항 시험](docs/THREE_ROUTE_FORMULAS_AND_USER_STUDY.md)을 준비했습니다. 임시 가중치 비교이며 기본 서비스 순위를 변경하지 않았습니다.
-
-공개 원본과 계산 결과는 `data/open/`에 함께 들어 있습니다([목록과 출처](data/open/README.md)). 가로등 좌표 복구, 최단 경로와 시설 선호 경로를 직접 계산하는 순서는 [실제 자료 확보와 시설 선호 경로 계산](docs/REAL_DATA_AND_FACILITY_ROUTES.md)에 있습니다. 연구용이며 기본 시연에는 연결하지 않았습니다. CCTV는 네 가지 설치 목적을 포함하도록 바뀌었습니다.
-
-## 디자인 기반 웹앱
-
-서버 실행 후 **같은 기기 브라우저의 `http://127.0.0.1:8000/app`**에서 제주밤길 화면을 사용할 수 있습니다. 홈·경로 비교·에이전트 질문·제보 미리보기·합성 접수를 연결했습니다. 실제 지도·GPS·기관 전달은 연결 전입니다. [실행과 연결 범위](docs/WEBAPP_AGENT_INTEGRATION.md)를 먼저 확인하세요.
-
-실제 원본의 행수·10번째 줄과 CCTV 부족 문제는 [실제 데이터 표본·대체 후보](docs/ACTUAL_DATA_SAMPLES_AND_CCTV_GAP.md)에 정리했습니다. 생활방범8행은 기재37대이며 제주 전체 수가 아닙니다. 최신 대체 원본은 아직 확보하지 못했고 기본 화면은 합성 계산입니다.
-
-실제 CCTV API 인증이 성공했고 확인한 제주 기관 범위의1,043행을 수집했습니다. 생활방범은71행·기재248대이며 모두 서귀포입니다. 기본 앱의 합성 계산은 유지합니다. [연결·재실행·자료 한계](docs/CCTV_API_CONNECTION.md).
-
-## 실제 공개 자료로 자동 경로 찾기
-
-`/app`의 지도 화면 상단에서 **공개 데이터로 길 찾기**를 실행하세요. 연동·서귀포의 도로망과4목적CCTV·가로등 위치를 사용해 최단과 시설 선호 후보를 찾습니다. [사용법·실제 결과·배포 원본 제외](docs/FACILITY_ROUTE_APP.md)를 먼저 확인하세요. 임의 주소 길찾기·밝기·안전 보장은 아닙니다.
+이 저장소는 팀 개발용입니다. 커밋 전 `requirements-share-check.txt`를 설치하고 `git config core.hooksPath .githooks`로 공유 검사 훅을 설정합니다. 관리 권한·제보 영구 저장·기관 전달·현장 통행 확인은 구현된 시연과 구분합니다.
