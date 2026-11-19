@@ -40,7 +40,7 @@ def selected_context(origin,destination,source='standard'):
         sources={'cctv':cctv_source,'light':{'basis_date':' / '.join(s['basis_date'] for s in light_sources.values()),'selected_rows':len(lights),'source_rows':sum(s['source_rows'] for s in light_sources.values()),'sources':light_sources}})
 
 
-def selected_compare(origin,destination,departure,source='standard',preference='both',light_radius=15,cctv_radius=50,weight=4,max_detour=1.5):
+def selected_compare(origin,destination,departure,source='standard',preference='both',light_radius=15,cctv_radius=50,weight=4,max_detour=1.5,*,reviewed_reports=None,report_policy=None,report_as_of=None):
     from datetime import datetime
     if not isinstance(departure,str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}',departure):raise ValueError('날짜와 24시간 시각 확인')
     parsed=datetime.fromisoformat(departure)
@@ -52,4 +52,7 @@ def selected_compare(origin,destination,departure,source='standard',preference='
         map_points=public_points(context,result['routes']))
     result['limitations']=[s for s in result['limitations'] if '공개 구간 두 곳만' not in s]
     result['limitations'].extend(['선택 좌표는 TMAP으로 전달합니다. 앱 서버는 이 요청·경로를 파일·DB·캐시에 저장하지 않습니다.','시설 목록은 제주 두 시의 공개 좌표입니다. 누락·기준일 차이 때문에 실제 시설 존재·밝기를 모두 설명하지 못합니다.'])
+    if reviewed_reports is not None or report_policy is not None or report_as_of is not None:
+        from agent.data.report_effects import compare_report_effects
+        result=compare_report_effects(result,reviewed_reports,report_policy,as_of=report_as_of,graph=context.graph)
     return result

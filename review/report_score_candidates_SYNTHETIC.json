@@ -1,0 +1,79 @@
+{
+  "synthetic": true,
+  "human_approved": false,
+  "operational_policy_changed": false,
+  "cases": [
+    {
+      "radius_m": 10,
+      "weight": 0.5,
+      "affected_length_m": 20.0,
+      "A_adjusted_cost": 110.0,
+      "B_adjusted_cost": 130,
+      "candidate_recommended_route_id": "A"
+    },
+    {
+      "radius_m": 10,
+      "weight": 1,
+      "affected_length_m": 20.0,
+      "A_adjusted_cost": 120.0,
+      "B_adjusted_cost": 130,
+      "candidate_recommended_route_id": "A"
+    },
+    {
+      "radius_m": 10,
+      "weight": 2,
+      "affected_length_m": 20.0,
+      "A_adjusted_cost": 140.0,
+      "B_adjusted_cost": 130,
+      "candidate_recommended_route_id": "B"
+    },
+    {
+      "radius_m": 20,
+      "weight": 0.5,
+      "affected_length_m": 40.0,
+      "A_adjusted_cost": 120.0,
+      "B_adjusted_cost": 130,
+      "candidate_recommended_route_id": "A"
+    },
+    {
+      "radius_m": 20,
+      "weight": 1,
+      "affected_length_m": 40.0,
+      "A_adjusted_cost": 140.0,
+      "B_adjusted_cost": 130,
+      "candidate_recommended_route_id": "B"
+    },
+    {
+      "radius_m": 20,
+      "weight": 2,
+      "affected_length_m": 40.0,
+      "A_adjusted_cost": 180.0,
+      "B_adjusted_cost": 130,
+      "candidate_recommended_route_id": "B"
+    },
+    {
+      "radius_m": 30,
+      "weight": 0.5,
+      "affected_length_m": 60.0,
+      "A_adjusted_cost": 130.0,
+      "B_adjusted_cost": 130,
+      "candidate_recommended_route_id": "A"
+    },
+    {
+      "radius_m": 30,
+      "weight": 1,
+      "affected_length_m": 60.0,
+      "A_adjusted_cost": 160.0,
+      "B_adjusted_cost": 130,
+      "candidate_recommended_route_id": "B"
+    },
+    {
+      "radius_m": 30,
+      "weight": 2,
+      "affected_length_m": 60.0,
+      "A_adjusted_cost": 220.0,
+      "B_adjusted_cost": 130,
+      "candidate_recommended_route_id": "B"
+    }
+  ]
+}

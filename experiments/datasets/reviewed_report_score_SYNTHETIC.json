@@ -1,0 +1,74 @@
+{
+  "synthetic": true,
+  "result": {
+    "routes": [
+      {
+        "id": "A",
+        "coordinates": [
+          [
+            126,
+            33
+          ],
+          [
+            126.001,
+            33
+          ]
+        ],
+        "comparison_cost": 100,
+        "duration_minutes": 1,
+        "distance_m": 100,
+        "cctv_percent": 20,
+        "light_percent": 30,
+        "eligible_for_recommendation": true
+      },
+      {
+        "id": "B",
+        "coordinates": [
+          [
+            126,
+            33.001
+          ],
+          [
+            126.001,
+            33.001
+          ]
+        ],
+        "comparison_cost": 130,
+        "duration_minutes": 2,
+        "distance_m": 100,
+        "cctv_percent": 20,
+        "light_percent": 30,
+        "eligible_for_recommendation": true
+      }
+    ],
+    "recommended_route_id": "A",
+    "preference": "both"
+  },
+  "reports": [
+    {
+      "id": "SYNTHETIC-1",
+      "status": "APPROVED",
+      "resolved": false,
+      "kind": "light_failure",
+      "approved_by": "검토자 예시",
+      "evidence_ref": "합성 검사",
+      "approved_at": "2026-11-20T07:00:00+09:00",
+      "valid_from": "2026-11-20T07:00:00+09:00",
+      "valid_until": "2026-11-21T07:00:00+09:00",
+      "coordinates": [
+        126.0005,
+        33
+      ]
+    }
+  ],
+  "graph": {
+    "center": [
+      126,
+      33
+    ],
+    "scale": [
+      100000,
+      100000
+    ]
+  }
+}
