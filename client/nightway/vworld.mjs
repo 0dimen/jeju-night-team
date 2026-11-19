@@ -43,7 +43,7 @@ export async function drawVworld(view,host,isCurrent) {
   for(let i=0;i<tiles.length;i+=2)await Promise.all(tiles.slice(i,i+2).map(tile));
   if(!isCurrent())return;
   notice.textContent=failures?'배경지도 일부를 불러오지 못했습니다. 아래 좌표 도식과 계산 수치는 유지됩니다.':'VWorld 배경지도 연결 완료. 현장 보행 검토는 별도입니다.';
-  const settings={region:view.region,cctv_source:view.sources.cctv.name.includes('mois')?'standard':'datahub',preference:view.preference,light_radius:view.parameters.light_radius_m,cctv_radius:view.parameters.cctv_radius_m,weight:view.parameters.requested_weight,max_detour:view.parameters.max_detour};
+  const settings={route_provider:view.provider==='tmap'?'tmap':'osm',region:view.region,cctv_source:view.sources.cctv.name.includes('mois')?'standard':'datahub',preference:view.preference,light_radius:view.parameters.light_radius_m,cctv_radius:view.parameters.cctv_radius_m,weight:view.parameters.requested_weight,max_detour:view.parameters.max_detour};
   try {
     const r=await fetch('/research/maps/facilities',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(settings),cache:'no-store'});
     if(!r.ok)throw new Error('facility');const data=await r.json();if(!isCurrent())return;

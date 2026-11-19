@@ -544,7 +544,7 @@ function renderFacilityRoutes(view) {
   target.append(svg);
   element(
     "p",
-    "보라 실선: 최단 · 청록 점선: 시설 조건 우선",
+    view.provider === "tmap" ? "보라 실선: 받은 후보 중 짧은 길 · 청록 점선: 다른 보행 옵션" : "보라 실선: 최단 · 청록 점선: 시설 조건 우선",
     target,
     "support",
   );
@@ -589,7 +589,7 @@ function renderFacilityRoutes(view) {
     button.dataset.route = row.id;
     element(
       "strong",
-      row.label + (row.id === view.recommended_route_id ? " · 추천 후보" : ""),
+      row.label + (row.id === view.recommended_route_id ? " · 추천 후보" : "") + (row.eligible_for_recommendation === false ? " · 우회 한도 초과, 비교용" : ""),
       button,
     );
     element(
@@ -614,7 +614,7 @@ function renderFacilityRoutes(view) {
   element("summary", "계산식·자료·미확인 범위", sources);
   element(
     "p",
-    "도로 조각 비용 = 길이 × [1 + 조명가중치×(1−조명 인접비율) + CCTV가중치×(1−CCTV 인접비율)]",
+    view.provider === "tmap" ? "TMAP 옵션별 경로를 받은 뒤 비교합니다. 시설 우선 조건은 제공사 경로 생성에 쓰이지 않습니다. 비교 비용 = 형상 길이 × [1 + 조명가중치×(1−조명 인접비율) + CCTV가중치×(1−CCTV 인접비율)]. 빠른 길은 제공 예상 시간 기준입니다." : "도로 조각 비용 = 길이 × [1 + 조명가중치×(1−조명 인접비율) + CCTV가중치×(1−CCTV 인접비율)]",
     sources,
   );
   element(
@@ -655,10 +655,10 @@ function renderFacilityRoutes(view) {
     element("p", limitation, sources, "support");
   for (const [label, url] of [
     [
-      "OpenStreetMap contributors · ODbL",
-      "https://www.openstreetmap.org/copyright",
+      view.provider === "tmap" ? "경로: TMAP 보행자 경로안내" : "OpenStreetMap contributors · ODbL",
+      view.provider === "tmap" ? "https://tmap-skopenapi.readme.io/reference/보행자-경로안내" : "https://www.openstreetmap.org/copyright",
     ],
-    ["지도 오류 수정", "https://www.openstreetmap.org/fixthemap"],
+    [view.provider === "tmap" ? "TMAP 제공사 안내" : "지도 오류 수정", view.provider === "tmap" ? "https://openapi.sk.com/" : "https://www.openstreetmap.org/fixthemap"],
   ]) {
     const a = element("a", label, sources);
     a.href = url;
@@ -720,3 +720,12 @@ fetch('/runtime/status',{cache:'no-store'})
     const status=document.getElementById('runtime-connection');
     status.textContent=(info.facility_data_connected?'공개 경로 자료 연결됨':'공개 경로 자료 미연결')+' · 규칙형 에이전트 연결됨'+(info.built_at?' · 준비 시각 '+new Date(info.built_at).toLocaleString('ko-KR'): '');
   }).catch(()=>{document.getElementById('runtime-connection').textContent='연결 상태를 확인하지 못했습니다. 다시 접속해 주세요.';});
+
+$("tmap-button").addEventListener("click", async()=>{
+  const button=$("tmap-button");button.disabled=true;
+  try {
+    const view=await post('/research/routes/tmap',{region:$("facility-region").value,preference:$("facility-preference").value,cctv_source:$("facility-source").value,light_radius:Number($("facility-light-radius").value),cctv_radius:Number($("facility-cctv-radius").value),weight:Number($("facility-weight").value),max_detour:Number($("facility-detour").value)});
+    if(view)renderFacilityRoutes(view);
+  }catch {message($("facility-result"),'TMAP 보행 후보를 불러오지 못했습니다. 키·이용 권한·한도·시설 자료 연결을 확인해 주세요. 합성 경로로 대신하지 않았습니다.','error');}
+  finally {button.disabled=false;}
+});

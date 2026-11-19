@@ -1,3 +1,5 @@
+> 보행 API 연결: [TMAP 실제 경로·시설 비교](docs/TMAP_PEDESTRIAN_CONNECTION.md)
+
 > 지도 연결: [VWorld 배경지도·공개 시설 표시](docs/VWORLD_CONNECTION.md)
 
 > 시험 배포: [실제 데이터·에이전트 연결과 배포 방식](docs/VERCEL_PREVIEW.md)

@@ -203,16 +203,37 @@ def vworld_tile(z:int,x:int,y:int):
         raise HTTPException(503,'배경지도를 불러오지 못했습니다. 키·도메인·제공사 연결을 확인해 주세요. 경로 수치는 유지됩니다.') from None
 
 
+class FacilityMapBody(FacilityRouteBody):
+    route_provider: Literal['osm','tmap']='osm'
+
+
 @app.post('/research/maps/facilities')
-def facility_map_points(body:FacilityRouteBody,response:Response):
+def facility_map_points(body:FacilityMapBody,response:Response):
     from agent.maps.vworld import public_points
     from agent.data.research_router import get_router
     response.headers['Cache-Control']='no-store'
     try:
         router=get_router(body.region,body.cctv_source)
-        view=router.route(body.preference,body.light_radius,body.cctv_radius,body.weight,body.max_detour)
+        if body.route_provider=='tmap':
+            from agent.data.tmap_routes import compare,TmapUnavailable
+            try:view=compare(router,body.preference,body.light_radius,body.cctv_radius,body.weight,body.max_detour)
+            except TmapUnavailable:raise HTTPException(503,'보행 후보를 확인하지 못했습니다.') from None
+        else:view=router.route(body.preference,body.light_radius,body.cctv_radius,body.weight,body.max_detour)
         return public_points(router,view['routes'])
     except FileNotFoundError:
         raise HTTPException(503,'공개 시설 자료가 없습니다.') from None
     except (ValueError,KeyError,StopIteration):
         raise HTTPException(422,'공개 지도 구간·연구 설정을 확인해 주세요.') from None
+
+
+@app.post('/research/routes/tmap')
+def tmap_routes(body:FacilityRouteBody,response:Response):
+    from agent.data.research_router import get_router
+    from agent.data.tmap_routes import compare,TmapUnavailable
+    response.headers['Cache-Control']='no-store'
+    try:
+        return compare(get_router(body.region,body.cctv_source),body.preference,body.light_radius,body.cctv_radius,body.weight,body.max_detour)
+    except (TmapUnavailable,FileNotFoundError):
+        raise HTTPException(503,'TMAP 보행 후보를 불러오지 못했습니다. 키·이용 권한·한도·시설 자료 연결을 확인해 주세요. 합성 경로로 대신하지 않습니다.') from None
+    except (ValueError,KeyError,TypeError):
+        raise HTTPException(422,'공개 구간과 보행 비교 설정을 확인해 주세요.') from None
