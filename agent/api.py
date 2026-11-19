@@ -1,4 +1,7 @@
 """시연용 POST API. 실제 관리자 인증과 실제 엔진 연결은 서비스 담당 범위다."""
+import time
+_API_IMPORT_STARTED = time.perf_counter()
+
 from fastapi import FastAPI, HTTPException, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
@@ -123,7 +126,7 @@ def lab_page(asset: str = 'index.html'):
 def nightway_app(asset: str = 'index.html'):
     from pathlib import Path
     from fastapi.responses import FileResponse
-    if asset not in {'index.html','style.css','tokens.css','app.mjs','vworld.mjs','screens.mjs'}:
+    if asset not in {'index.html','style.css','tokens.css','app.mjs','vworld.mjs','screens.mjs','prepare.mjs'}:
         raise HTTPException(404, '파일이 없습니다.')
     return FileResponse(Path(__file__).resolve().parents[1]/'client'/'nightway'/asset, headers={
         'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
@@ -273,16 +276,22 @@ class PlaceSearchBody(BaseModel):
 
 @app.post('/maps/places/search')
 def place_search(body:PlaceSearchBody,response:Response):
+    started = time.perf_counter()
     from agent.maps.search import search_places,SearchUnavailable
-    response.headers['Cache-Control']='no-store'
+    search_started = time.perf_counter()
+    def timing_headers():
+        now = time.perf_counter()
+        return {'Cache-Control': 'no-store', 'Server-Timing':
+                f'search;dur={(now-search_started)*1000:.2f}, handler;dur={(now-started)*1000:.2f}, init;dur={_API_IMPORT_MS:.2f}'}
     try:
         candidates=search_places(body.query,body.mode)
+        response.headers.update(timing_headers())
         return {'kind':'place_candidates','candidates':candidates,'stored':False,
                 'message':'주소와 위치를 확인하고 지점을 선택해 주세요.' if candidates else '제주 범위에서 검색 결과를 찾지 못했습니다. 더 구체적인 이름이나 도로명 주소를 입력해 주세요.'}
     except SearchUnavailable:
-        raise HTTPException(503,'장소 검색을 처리하지 못했습니다. 키·연결·검색 방식을 확인해 주세요.') from None
+        raise HTTPException(503,'장소 검색을 처리하지 못했습니다. 키·연결·검색 방식을 확인해 주세요.', headers=timing_headers()) from None
     except ValueError:
-        raise HTTPException(422,'제주 장소명이나 주소를 확인해 주세요.') from None
+        raise HTTPException(422,'제주 장소명이나 주소를 확인해 주세요.', headers=timing_headers()) from None
 
 
 class SelectedPoint(BaseModel):
@@ -326,3 +335,6 @@ class MapTileBody(BaseModel):
 def private_map_tile(body:MapTileBody):
     # 페이지 한정 위치의 타일 번호도 브라우저 요청 URL에 남기지 않는다.
     return vworld_tile(body.z,body.x,body.y)
+
+# 프로세스별 최초 모듈 준비 시간. 검색어·키·좌표는 계측하지 않는다.
+_API_IMPORT_MS = (time.perf_counter() - _API_IMPORT_STARTED) * 1000

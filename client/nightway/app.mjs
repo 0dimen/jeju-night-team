@@ -1,3 +1,4 @@
+import { createPreparation } from "/app/prepare.mjs";
 import { drawVworld } from "/app/vworld.mjs";
 import {
   addReport,
@@ -935,6 +936,7 @@ for (const field of ["origin", "destination"]) {
       target = $("live-" + field + "-candidates"),
       revision = ++liveRevision[field];
     button.disabled = true;
+    message(target, "장소를 검색하고 있어요. 처음 연결할 때는 시간이 더 걸릴 수 있어요.", "support");
     delete liveLocations[field];
     $("live-" + field + "-selected").textContent =
       "검색 결과에서 위치를 선택해 주세요.";
@@ -1141,6 +1143,7 @@ async function searchReportPlace() {
   $("report-place-selected").textContent =
     "검색 결과에서 위치를 선택해 주세요.";
   button.disabled = true;
+  message(target, "장소를 검색하고 있어요. 처음 연결할 때는 시간이 더 걸릴 수 있어요.", "support");
   try {
     const view = await post("/maps/places/search", {
       query: $("report-place-query").value,
@@ -1294,3 +1297,13 @@ initScreens({
   routeView: () => lastRouteView,
   navigate,
 });
+
+// 화면 조작은 준비 확인을 기다리지 않는다. 위치를 보내지 않으며 반복 호출하지 않는다.
+const prepareServer = createPreparation();
+function prepareOnce() {
+  const aborter = new AbortController();
+  pending.add(aborter);
+  void prepareServer(aborter.signal).finally(() => pending.delete(aborter));
+}
+if (document.readyState === "complete") prepareOnce();
+else window.addEventListener("pageshow", prepareOnce, { once: true });
