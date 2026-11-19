@@ -251,29 +251,20 @@ function regionRender(view) {
 }
 
 /* 시설 지도: 공개 CCTV·조명 위치(실제 목록) */
-let facilityData = null,
-  facilityLoading = null;
-let getRouteView = () => null;
-async function loadFacility() {
-  const routeView = getRouteView();
-  if (routeView?.map_points) {
-    facilityData = { points: routeView.map_points.points, notice: routeView.map_points.notice, scope: "비교한 경로 주변", routes: routeView.routes };
-    return facilityData;
-  }
-  if (facilityData && facilityData.scope !== "비교한 경로 주변") return facilityData;
-  facilityLoading ||= fetch("/research/maps/facilities", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ region: "yeondong" }),
-    cache: "no-store",
-  })
-    .then((r) => {
-      if (!r.ok) throw new Error("facility");
-      return r.json();
-    })
-    .then((data) => (facilityData = { points: data.points, notice: data.notice, scope: "연동 공개 구간 주변" }))
-    .finally(() => (facilityLoading = null));
-  return facilityLoading;
+let facilityData = null, facilityAbort = null, facilityRevision = 0;
+const FACILITY_REGIONS = {
+  yeondong: "연동 · 삼무공원~누웨마루 공개 구간 주변",
+  seogwipo: "서귀포 · 중앙로~올레시장 공개 구간 주변",
+};
+async function loadFacility(region, signal) {
+  const response = await fetch("/research/maps/facilities", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ region }), cache: "no-store", signal,
+  });
+  if (!response.ok) throw new Error("facility");
+  const data = await response.json();
+  if (!Array.isArray(data.points)) throw new Error("facility");
+  return { points: data.points, notice: data.notice, scope: FACILITY_REGIONS[region], region };
 }
 function layers() {
   return new Set([...document.querySelectorAll("#facility-layers input:checked")].map((i) => i.value));
@@ -291,6 +282,12 @@ function facilityRender() {
     return;
   }
   const pts = facilityData.points;
+  const cctv = pts.filter(p => p.kind === "cctv").length;
+  const light = pts.filter(p => p.kind === "light").length;
+  $("facility-cctv-note").textContent = on.has("cctv") ? "공개 목록 위치 " + cctv.toLocaleString("ko-KR") + "곳 · " + facilityData.scope : "레이어를 선택해 확인";
+  $("facility-light-note").textContent = on.has("light") ? "공개 목록 위치 " + light.toLocaleString("ko-KR") + "곳 · " + facilityData.scope : "레이어를 선택해 확인";
+  $("nearby-cctv").textContent = "CCTV 설치 위치 " + cctv.toLocaleString("ko-KR") + "곳";
+  $("nearby-light").textContent = "가로등·보안등 위치 " + light.toLocaleString("ko-KR") + "곳";
   const coords = [...pts.map((p) => p.coordinates), ...(facilityData.routes || []).flatMap((r) => r.coordinates)];
   if (!coords.length) {
     el("span", "표시할 시설 위치가 없어요", host, "map-chip");
@@ -306,35 +303,42 @@ function facilityRender() {
     const line = svg(s, "polyline", { points: r.coordinates.map((c) => map(c).join(",")).join(" "), fill: "none", stroke: i ? "#89e3dd" : "#af86ff", "stroke-width": 3, opacity: ".7" });
     if (i) line.setAttribute("stroke-dasharray", "7 6");
   }
-  let cctv = 0, light = 0;
   for (const p of pts) {
-    if (p.kind === "cctv") cctv++;
-    else light++;
     if (!on.has(p.kind)) continue;
     const [x, y] = map(p.coordinates);
     svg(s, "circle", { cx: x, cy: y, r: p.kind === "cctv" ? 4.5 : 2.5, class: "fac-" + p.kind });
   }
-  el("span", facilityData.scope + " · 공개 목록 위치", host, "map-chip");
+  el("span", (facilityData.region === "yeondong" ? "연동" : "서귀포") + " 공개 구간 · 시설 위치", host, "map-chip");
   const legend = el("div", "", host, "map-legend fac");
   if (on.has("cctv")) el("span", "CCTV", legend, "lg-cctv");
   if (on.has("light")) el("span", "조명", legend, "lg-light");
-  $("facility-cctv-note").textContent = on.has("cctv") ? "공개 목록 위치 " + cctv.toLocaleString("ko-KR") + "곳 · " + facilityData.scope : "레이어를 선택해 확인";
-  $("facility-light-note").textContent = on.has("light") ? "공개 목록 위치 " + light.toLocaleString("ko-KR") + "곳 · " + facilityData.scope : "레이어를 선택해 확인";
-  $("nearby-cctv").textContent = "CCTV 설치 위치 " + cctv.toLocaleString("ko-KR") + "곳";
-  $("nearby-light").textContent = "가로등·보안등 위치 " + light.toLocaleString("ko-KR") + "곳";
   if (on.has("issue")) el("p", "게시된 실제 제보는 아직 없어요. 처리 흐름 예시는 '주변 시설 목록 보기'에서 볼 수 있어요.", host, "map-note");
 }
 async function facilityShow() {
+  const region = $("facility-region").value;
+  if (!FACILITY_REGIONS[region]) return showView("facility", "select", false);
+  $("facility-scope").textContent = FACILITY_REGIONS[region] + " · 공개 목록 위치";
+  $("facility-nearby-scope").textContent = FACILITY_REGIONS[region] + " · 현재 게시된 실제 제보는 없어요.";
+  if (facilityData?.region === region) return facilityRender();
+  facilityAbort?.abort();
+  const aborter = facilityAbort = new AbortController();
+  const revision = ++facilityRevision;
+  facilityData = null;
+  for (const id of ["facility-cctv-note", "facility-light-note", "nearby-cctv", "nearby-light"])
+    $(id).textContent = "선택 구역의 시설을 불러오는 중이에요…";
   facilityRender();
   try {
-    await loadFacility();
+    const data = await loadFacility(region, aborter.signal);
+    if (revision !== facilityRevision || aborter.signal.aborted) return;
+    facilityData = data;
+    facilityRender();
   } catch {
+    if (revision !== facilityRevision || aborter.signal.aborted) return;
     $("facility-map").replaceChildren();
-    el("p", "시설 위치를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.", $("facility-map"), "error map-note");
-    $("facility-cctv-note").textContent = "불러오지 못함";
-    return;
+    el("p", "선택 구역의 시설 자료를 불러오지 못했어요. 다른 구역 자료로 대신하지 않아요. 구역을 다시 고르거나 잠시 뒤 시도해 주세요.", $("facility-map"), "error map-note");
+    for (const id of ["facility-cctv-note", "facility-light-note", "nearby-cctv", "nearby-light"])
+      $(id).textContent = "선택 구역 자료를 불러오지 못함";
   }
-  facilityRender();
 }
 
 /* 내 제보: 이번 페이지에서 접수한 제보만 */
@@ -409,6 +413,11 @@ const onView = {
   population: popRender,
   region: regionRender,
   facility: (view) => {
+    if (view === "select") {
+      facilityAbort?.abort();
+      facilityRevision++;
+      $("facility-region-open").disabled = !FACILITY_REGIONS[$("facility-region").value];
+    }
     if (view === "map" || view === "nearby") facilityShow();
   },
   my: (view) => {
@@ -419,7 +428,15 @@ const onView = {
 
 export function initScreens({ title, routeView, navigate }) {
   setTitle = title;
-  getRouteView = routeView;
+  $("facility-region").addEventListener("change", () => {
+    facilityAbort?.abort();
+    facilityRevision++;
+    facilityData = null;
+    $("facility-region-open").disabled = !FACILITY_REGIONS[$("facility-region").value];
+  });
+  $("facility-region-open").addEventListener("click", () => {
+    if (FACILITY_REGIONS[$("facility-region").value]) showView("facility", "map");
+  });
   regionInit();
   document.addEventListener("click", (event) => {
     const go = event.target.closest("[data-view-go]");
