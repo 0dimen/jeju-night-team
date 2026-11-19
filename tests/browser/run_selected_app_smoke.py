@@ -16,14 +16,16 @@ def run():
     if not all(keys):raise RuntimeError('두 지도 키가 필요합니다. 값은 출력하지 않습니다.')
     with socket.socket() as sock:sock.bind(('127.0.0.1',0));port=sock.getsockname()[1]
     base=f'http://127.0.0.1:{port}'
+    remote=os.environ.get('JEJU_TEST_BASE_URL','').rstrip('/')  # 배포 주소를 직접 시험할 때
+    if remote:base=remote
     env={k:v for k,v in os.environ.items() if not any(s in k for s in ('KEY','TOKEN','SECRET')) or k in ('VWORLD_API_KEY','TMAP_APP_KEY')}
     env['JEJU_OPEN_DATA_DIR']='/tmp/jeju-raw-data-not-present'
     cache=Path(os.environ.get('TMAP_PUBLIC_CACHE_DIR','/tmp/jeju-night-tmap-public-cache'));before=set(cache.glob('*.json'))
-    proc=subprocess.Popen([sys.executable,'-m','uvicorn','app:app','--host','127.0.0.1','--port',str(port),'--no-access-log'],env=env,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+    proc=None if remote else subprocess.Popen([sys.executable,'-m','uvicorn','app:app','--host','127.0.0.1','--port',str(port),'--no-access-log'],env=env,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
     try:
         for _ in range(150):
             try:
-                with urlopen(base+'/health',timeout=.2):break
+                with urlopen(base+'/health',timeout=10 if remote else .2):break
             except OSError:time.sleep(.1)
         else:raise RuntimeError('서버 시작 실패')
         with sync_playwright() as p:
@@ -75,8 +77,9 @@ def run():
         assert set(cache.glob('*.json'))==before
         return {'public_landmark_search':True,'selected_routes':count,'compiled_only_no_originals':True,'private_cache_files_added':0,'query_in_url':0,'keys_in_browser':0,'post_tile_requests':sum(1 for method,path in requests if method=='POST' and path=='/maps/vworld/tile'),'navigation_and_reload_cleared':True,'late_result_discarded_after_time_change':True,'search_failure_keeps_input':True,'widths':[320,390,430],'external_browser_requests':0,'javascript_errors':0}
     finally:
-        proc.terminate()
-        try:proc.wait(timeout=5)
-        except subprocess.TimeoutExpired:proc.kill()
+        if proc:
+            proc.terminate()
+            try:proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:proc.kill()
 if __name__=='__main__':
     result=run();Path('/tmp/jeju-selected-browser.json').write_text(json.dumps(result,ensure_ascii=False,indent=2));print(json.dumps(result,ensure_ascii=False,indent=2))

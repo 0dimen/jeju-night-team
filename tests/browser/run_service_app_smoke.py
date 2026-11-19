@@ -15,13 +15,15 @@ def run():
     shots=Path('docs/screenshots');shots.mkdir(exist_ok=True)
     with socket.socket() as sock:sock.bind(('127.0.0.1',0));port=sock.getsockname()[1]
     base=f'http://127.0.0.1:{port}'
+    remote=os.environ.get('JEJU_TEST_BASE_URL','').rstrip('/')  # 배포 주소를 직접 시험할 때
+    if remote:base=remote
     env={k:v for k,v in os.environ.items() if not any(s in k for s in ('KEY','TOKEN','SECRET')) or k in ('VWORLD_API_KEY','TMAP_APP_KEY')}
     env['JEJU_OPEN_DATA_DIR']='/tmp/jeju-raw-data-not-present'
-    proc=subprocess.Popen([sys.executable,'-m','uvicorn','app:app','--host','127.0.0.1','--port',str(port),'--no-access-log'],env=env,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+    proc=None if remote else subprocess.Popen([sys.executable,'-m','uvicorn','app:app','--host','127.0.0.1','--port',str(port),'--no-access-log'],env=env,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
     try:
         for _ in range(150):
             try:
-                with urlopen(base+'/health',timeout=.2):break
+                with urlopen(base+'/health',timeout=10 if remote else .2):break
             except OSError:time.sleep(.1)
         else:raise RuntimeError('서버 시작 실패')
         with sync_playwright() as p:
@@ -117,8 +119,9 @@ def run():
             browser.close()
         return {'lab_tools_removed_from_app':True,'soon_screens':2,'report_place_search':True,'report_submitted':True,'gps_denied_out_of_jeju_and_ok':True,'emergency_112_first':True,'data_sources':True,'widths':[320,390,430],'lab_separate':True,'external_browser_requests':0,'keys_in_browser':0,'javascript_errors':0,'screenshots':6}
     finally:
-        proc.terminate()
-        try:proc.wait(timeout=5)
-        except subprocess.TimeoutExpired:proc.kill()
+        if proc:
+            proc.terminate()
+            try:proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:proc.kill()
 if __name__=='__main__':
     result=run();Path('/tmp/jeju-service-browser.json').write_text(json.dumps(result,ensure_ascii=False,indent=2));print(json.dumps(result,ensure_ascii=False,indent=2))
