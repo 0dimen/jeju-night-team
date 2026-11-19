@@ -16,7 +16,7 @@
           aria-label="이전 화면으로 돌아가기"
           hidden
         >
-          ‹
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg>
         </button>
         <button id="brand-home" class="brand" aria-label="제주밤길 홈">
           <span class="brand-mark"
@@ -60,7 +60,7 @@
             </svg>
           </div>
           <button class="search" data-screen="route">
-            <span class="search-mark" aria-hidden="true">⌕</span> 어디로
+            <svg class="search-mark" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg> 어디로
             이동하시나요?
           </button>
           <div class="feature-grid">
@@ -110,11 +110,10 @@
             지워집니다.
           </p>
         </section>
-        <section id="route" class="screen" hidden>
+        <section id="route" class="screen" data-phase="input" hidden>
           <div class="section-top">
-            <span class="eyebrow">ROUTE COMPARISON</span>
             <h1>어디로 걸어갈까요?</h1>
-            <p>장소·날짜·시각을 확인하고 같은 목적지의 경로를 비교해요.</p>
+            <p>출발지와 목적지를 고르면 같은 목적지의 길을 비교해요.</p>
           </div>
           <ol class="route-progress" aria-label="경로 선택 순서">
             <li data-phase="input" aria-current="step">조건 입력</li>
@@ -127,77 +126,45 @@
               <summary>
                 이동 조건 입력<span>장소 · 출발 시각 · 비교 기준</span>
               </summary>
-              <p class="support">
-                출발지와 목적지를 고르고 비교할 조건을 선택해 주세요.
-              </p>
               <form id="live-place-form" autocomplete="off">
-                <label
+                <label class="search-mode"
                   >검색 방식<select id="live-search-mode">
                     <option value="place">장소명</option>
                     <option value="road">도로명 주소</option>
                     <option value="parcel">지번 주소</option>
                   </select></label
                 >
-                <label class="place-field"
-                  ><span class="field-kicker">출발지 · 필수</span
-                  ><input
-                    placeholder="출발 장소를 검색해 주세요"
-                    id="live-origin-query"
-                    maxlength="120"
-                    autocomplete="off"
-                /></label>
-                <button
-                  id="live-origin-search"
-                  class="search-place-button"
-                  type="button"
-                >
-                  출발지 찾기
-                </button>
-                <div id="live-origin-candidates" aria-live="polite"></div>
-                <p class="selected-place" id="live-origin-selected">
-                  출발지를 선택해 주세요.
-                </p>
-                <label class="place-field"
-                  ><span class="field-kicker">목적지 · 필수</span
-                  ><input
-                    placeholder="도착 장소나 주소를 검색해 주세요"
-                    id="live-destination-query"
-                    maxlength="120"
-                    autocomplete="off"
-                /></label>
-                <button
-                  id="live-destination-search"
-                  class="search-place-button"
-                  type="button"
-                >
-                  목적지 찾기
-                </button>
-                <div id="live-destination-candidates" aria-live="polite"></div>
-                <p class="selected-place" id="live-destination-selected">
-                  도착지를 선택해 주세요.
-                </p>
-                <div class="two-col">
-                  <label
-                    >출발 날짜 · 한국 시간<input
-                      id="live-date"
-                      type="date"
-                      required
-                  /></label>
-                  <label
-                    >출발 시각 · 24시간<input
-                      id="live-time"
-                      type="time"
-                      required
-                  /></label>
+                <div class="place-field">
+                  <svg class="field-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                  <label for="live-origin-query" class="field-kicker">출발지 · 필수</label>
+                  <div class="field-row">
+                    <input placeholder="출발 장소를 검색해 주세요" id="live-origin-query" maxlength="120" autocomplete="off" />
+                    <button id="live-origin-search" class="search-place-button" type="button">출발지 찾기</button>
+                  </div>
+                  <div id="live-origin-candidates" class="candidates" aria-live="polite"></div>
+                  <p class="selected-place" id="live-origin-selected">출발지를 선택해 주세요.</p>
                 </div>
-                <label
-                  >비교 기준<select id="live-preference">
-                    <option value="both">CCTV·조명 함께 비교</option>
-                    <option value="cctv">CCTV 인접 구간</option>
-                    <option value="light">조명 인접 구간</option>
-                    <option value="fastest">제공 예상 시간이 짧은 길</option>
-                  </select></label
-                >
+                <div class="place-field">
+                  <svg class="field-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24"><path d="M5 21V4h11l-2 4 2 4H5"/></svg>
+                  <label for="live-destination-query" class="field-kicker">목적지 · 필수</label>
+                  <div class="field-row">
+                    <input placeholder="도착 장소나 주소를 검색해 주세요" id="live-destination-query" maxlength="120" autocomplete="off" />
+                    <button id="live-destination-search" class="search-place-button" type="button">목적지 찾기</button>
+                  </div>
+                  <div id="live-destination-candidates" class="candidates" aria-live="polite"></div>
+                  <p class="selected-place" id="live-destination-selected">도착지를 선택해 주세요.</p>
+                </div>
+                <div class="two-col">
+                  <label>출발 날짜 · 한국 시간<input id="live-date" type="date" required /></label>
+                  <label>출발 시각 · 24시간<input id="live-time" type="time" required /></label>
+                </div>
+                <fieldset class="chip-group" id="live-preference">
+                  <legend>비교 기준</legend>
+                  <label class="chip"><input type="radio" name="live-preference" value="both" checked />CCTV·조명 함께</label>
+                  <label class="chip"><input type="radio" name="live-preference" value="cctv" />CCTV 인접 구간</label>
+                  <label class="chip"><input type="radio" name="live-preference" value="light" />조명 인접 구간</label>
+                  <label class="chip"><input type="radio" name="live-preference" value="fastest" />예상 시간 짧은 길</label>
+                </fieldset>
                 <details class="privacy-note">
                   <summary>위치 사용과 비교 범위</summary>
                   <p>
@@ -207,7 +174,7 @@
                   </p>
                 </details>
                 <button id="live-route-button" class="primary" type="submit">
-                  경로 비교하기
+                  두 경로 비교하기
                 </button>
                 <button id="live-clear" class="text-button" type="button">
                   입력 초기화
@@ -217,91 +184,96 @@
             <div id="live-route-result" aria-live="polite"></div>
           </div>
         </section>
-        <section id="report" class="screen" hidden>
-          <span class="eyebrow">WALKING ENVIRONMENT</span>
-          <h1>보행환경 제보</h1>
-          <ol class="report-progress" aria-label="제보 확인 순서">
-            <li data-report-step="1" aria-current="step">위치</li>
-            <li data-report-step="2">유형</li>
-            <li data-report-step="3">설명</li>
-            <li data-report-step="4">확인</li>
+        <section id="report" class="screen" data-step="1" hidden>
+          <ol class="report-progress" aria-label="제보 단계">
+            <li data-report-step="1" aria-current="step"><button type="button" data-goto-step="1">1 위치</button></li>
+            <li data-report-step="2"><button type="button" data-goto-step="2">2 유형</button></li>
+            <li data-report-step="3"><button type="button" data-goto-step="3">3 설명</button></li>
+            <li data-report-step="4"><button type="button" data-goto-step="4">4 확인</button></li>
           </ol>
-          <p>
-            위치와 문제를 알려 주시면 검토한 뒤 다음 경로 분석에 반영해요.
-            시범 운영 중이라 기관에는 전달되지 않아요.
-          </p>
-          <form id="report-form">
-            <div class="card form-card">
-              <button id="report-gps" class="secondary" type="button">
-                현재 위치 사용
-              </button>
-              <p class="support">
-                위치는 이 페이지에만 잠시 두고 저장하지 않아요. 권한을 허용하지
-                않아도 아래에서 장소를 검색해 고를 수 있어요.
-              </p>
-              <label class="place-field"
-                ><span class="field-kicker">문제 위치 · 필수</span
-                ><input
-                  id="report-place-query"
-                  maxlength="120"
-                  autocomplete="off"
-                  placeholder="가까운 장소나 주소를 검색해 주세요"
-              /></label>
-              <button
-                id="report-place-search"
-                class="search-place-button"
-                type="button"
-              >
-                위치 찾기
-              </button>
-              <div id="report-place-candidates" aria-live="polite"></div>
-              <p class="selected-place" id="report-place-selected">
-                문제 위치를 선택해 주세요.
-              </p>
-              <p class="support">
-                가장 가까운 장소를 골라 주세요. 정확한 시설 위치는 검토할 때
-                확인해요.
-              </p>
-              <label
-                >시설 유형<select id="report-facility">
-                  <option value="streetlight">가로등·보안등</option>
-                  <option value="cctv">CCTV</option>
-                  <option value="walkway">보행로</option>
-                  <option value="other">기타·확인 필요</option>
-                </select></label
-              ><label
-                >문제 유형<select id="report-problem">
-                  <option value="not_working">작동하지 않음</option>
-                  <option value="flickering">깜빡임</option>
-                  <option value="too_dark">어두움</option>
-                  <option value="damaged">파손</option>
-                  <option value="obstructed">통행 방해</option>
-                  <option value="other">기타·확인 필요</option>
-                </select></label
-              ><label
-                ><span class="report-description-title"
-                  >상황을 자세히 적어 주세요</span
-                >상세 설명 · 필수<textarea
-                  id="report-text"
-                  maxlength="5000"
-                  required
-                  placeholder="예: 탑동광장 입구 쪽 가로등이 꺼져 있었어요."
-                ></textarea>
-              </label>
-              <p class="support">이름·전화번호·집 주소는 적지 마세요.</p>
+          <div class="step-head">
+            <h1 id="report-heading">문제 위치를 알려 주세요</h1>
+            <p id="report-sub" class="support">
+              검토한 뒤 다음 경로 분석에 반영해요. 시범 운영 중이라 기관에는 전달되지 않아요.
+            </p>
+          </div>
+          <form id="report-form" novalidate>
+            <div class="report-step" data-step="1">
+              <div class="card form-card">
+                <button id="report-gps" class="secondary icon-label" type="button">
+                  <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                  현재 위치 사용
+                </button>
+                <p class="support">
+                  위치는 이 페이지에만 잠시 두고 저장하지 않아요. 권한을 허용하지
+                  않아도 아래에서 장소를 검색해 고를 수 있어요.
+                </p>
+                <div class="place-field">
+                  <svg class="field-icon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                  <label for="report-place-query" class="field-kicker">문제 위치 · 필수</label>
+                  <div class="field-row">
+                    <input id="report-place-query" maxlength="120" autocomplete="off" placeholder="가까운 장소나 주소를 검색해 주세요" />
+                    <button id="report-place-search" class="search-place-button" type="button">위치 찾기</button>
+                  </div>
+                  <div id="report-place-candidates" class="candidates" aria-live="polite"></div>
+                  <p class="selected-place" id="report-place-selected">문제 위치를 선택해 주세요.</p>
+                </div>
+              </div>
+              <div class="step-actions">
+                <button type="button" class="primary" id="report-step1-next">다음 · 유형 고르기</button>
+              </div>
             </div>
-            <button type="submit" class="primary" id="report-preview-button">
-              제보 내용 확인
-            </button>
+            <div class="report-step" data-step="2" hidden>
+              <fieldset class="chip-group">
+                <legend>시설 유형</legend>
+                <label class="chip"><input type="radio" name="report-facility" id="facility-streetlight" value="streetlight" checked />가로등·보안등</label>
+                <label class="chip"><input type="radio" name="report-facility" id="facility-cctv" value="cctv" />CCTV</label>
+                <label class="chip"><input type="radio" name="report-facility" id="facility-walkway" value="walkway" />보행로</label>
+                <label class="chip"><input type="radio" name="report-facility" id="facility-other" value="other" />기타·확인 필요</label>
+              </fieldset>
+              <fieldset class="chip-group">
+                <legend>문제 유형</legend>
+                <label class="chip"><input type="radio" name="report-problem" id="problem-not_working" value="not_working" checked />작동하지 않음</label>
+                <label class="chip"><input type="radio" name="report-problem" id="problem-flickering" value="flickering" />깜빡임</label>
+                <label class="chip"><input type="radio" name="report-problem" id="problem-too_dark" value="too_dark" />어두움</label>
+                <label class="chip"><input type="radio" name="report-problem" id="problem-damaged" value="damaged" />파손</label>
+                <label class="chip"><input type="radio" name="report-problem" id="problem-obstructed" value="obstructed" />통행 방해</label>
+                <label class="chip"><input type="radio" name="report-problem" id="problem-other" value="other" />기타·확인 필요</label>
+              </fieldset>
+              <div class="step-actions">
+                <button type="button" class="primary" id="report-step2-next">다음 · 설명 쓰기</button>
+              </div>
+            </div>
+            <div class="report-step" data-step="3" hidden>
+              <div class="card form-card">
+                <label for="report-text" class="field-kicker">문제 설명 · 필수</label>
+                <textarea id="report-text" maxlength="5000" placeholder="예: 탑동광장 입구 쪽 가로등이 꺼져 있었어요."></textarea>
+                <p class="counter" id="report-count">0 / 5000자</p>
+              </div>
+              <button type="button" class="place-row" data-goto-step="1">
+                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                <span><small>문제 위치 · 바꾸려면 누르세요</small><strong id="report-place-row">선택하지 않음</strong></span>
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>
+              </button>
+              <p class="info-card">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+                이름, 전화번호, 집 주소처럼 개인을 알아볼 수 있는 내용은 적지 마세요.
+              </p>
+              <div class="step-actions">
+                <button type="submit" class="primary" id="report-preview-button">제보 내용 확인</button>
+              </div>
+            </div>
           </form>
+          <div class="report-step" data-step="4" hidden>
+            <dl class="card summary-card" id="report-summary"></dl>
+          </div>
           <div id="report-result" aria-live="polite"></div>
-          <div id="report-confirm" hidden>
-            <label class="consent"
-              ><input type="checkbox" id="report-consent" />시범 운영 중인
-              접수이며 기관에 전달되지 않는다는 것을 확인했어요.</label
-            ><button type="button" id="report-submit" class="primary">
-              제보 접수하기
-            </button>
+          <div id="report-confirm" class="report-confirm" hidden>
+            <label class="consent"><input type="checkbox" id="report-consent" />시범 운영 중인
+              접수이며 기관에 전달되지 않는다는 것을 확인했어요.</label>
+            <div class="step-actions">
+              <button type="button" id="report-submit" class="primary">제보 접수하기</button>
+            </div>
           </div>
         </section>
         <section id="data" class="screen" hidden>

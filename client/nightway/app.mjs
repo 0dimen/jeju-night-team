@@ -74,10 +74,11 @@ function message(parent, text, cls) {
 }
 function routePhase(phase) {
   activeRoutePhase = phase;
+  $("route").dataset.phase = phase;
   if (current === "route")
     $("screen-title").textContent = {
       input: "이동 조건 입력",
-      compare: "경로 비교",
+      compare: "두 경로 비교",
       detail: "경로 상세",
       chosen: "선택한 이동 경로",
     }[phase];
@@ -94,12 +95,66 @@ function routePhase(phase) {
       chosen: "선택한 이동 경로",
     }[phase];
 }
+const reportLabels = {
+  streetlight: "가로등·보안등",
+  cctv: "CCTV",
+  walkway: "보행로",
+  other: "기타·확인 필요",
+  not_working: "작동하지 않음",
+  flickering: "깜빡임",
+  too_dark: "어두움",
+  damaged: "파손",
+  obstructed: "통행 방해",
+};
+const reportStepCopy = {
+  1: ["보행환경 제보", "문제 위치를 알려 주세요", "검토한 뒤 다음 경로 분석에 반영해요. 시범 운영 중이라 기관에는 전달되지 않아요."],
+  2: ["제보 유형 선택", "어떤 문제가 있었나요?", "시설과 문제 유형을 하나씩 골라 주세요."],
+  3: ["상세 설명 작성", "상황을 자세히 적어 주세요", "문제와 주변 위치를 설명하면 확인하기 쉬워요."],
+  4: ["제보 내용 확인", "제보 내용을 확인해 주세요", "접수하기 전에 위치·유형·설명을 한 번 더 봐 주세요."],
+};
+let activeReportStep = 1;
+function checkedValue(name) {
+  return document.querySelector(`input[name="${name}"]:checked`)?.value;
+}
 function reportStep(step) {
-  if(current==="report")$("screen-title").textContent={1:"보행환경 제보",2:"제보 유형 선택",3:"상세 설명 작성",4:"제보 내용 확인"}[step];
+  activeReportStep = step;
+  const [title, heading, sub] = reportStepCopy[step];
+  if (current === "report") $("screen-title").textContent = title;
+  $("report-heading").textContent = heading;
+  $("report-sub").textContent = sub;
+  $("report").dataset.step = String(step);
+  for (const panel of document.querySelectorAll(".report-step"))
+    panel.hidden = panel.dataset.step !== String(step);
   for (const item of document.querySelectorAll(".report-progress li")) {
-    if (item.dataset.reportStep === String(step))
-      item.setAttribute("aria-current", "step");
+    const n = Number(item.dataset.reportStep);
+    item.classList.toggle("done", n < step);
+    item.querySelector("button").disabled = n > step;
+    if (n === step) item.setAttribute("aria-current", "step");
     else item.removeAttribute("aria-current");
+  }
+  if (step !== 4) {
+    $("report-confirm").hidden = true;
+    $("report-result").replaceChildren();
+  }
+  if (step === 3)
+    $("report-place-row").textContent = reportPlace?.label || "선택하지 않음";
+  if (step === 4) {
+    const summary = $("report-summary");
+    summary.replaceChildren();
+    for (const [label, value] of [
+      ["문제 위치", reportPlace?.label || "선택하지 않음"],
+      [
+        "유형",
+        reportLabels[checkedValue("report-facility")] +
+          " · " +
+          reportLabels[checkedValue("report-problem")],
+      ],
+      ["상세 설명", $("report-text").value],
+    ]) {
+      const row = element("div", "", summary);
+      element("dt", label, row);
+      element("dd", value, row);
+    }
   }
 }
 function durationLabel(row) {
@@ -150,6 +205,7 @@ function wipe() {
   $("report-form").reset();
   clearReportPlace();
   reportStep(1);
+  updateReportCount();
   $("report-result").replaceChildren();
   $("report-confirm").hidden = true;
   $("report-consent").checked = false;
@@ -158,6 +214,7 @@ function wipe() {
   message($("receipt"), "이번 페이지에서 접수한 제보가 없어요.");
   for (const button of document.querySelectorAll("button"))
     button.disabled = false;
+  reportStep(1);
 }
 function navigate(screen) {
   if (current === "route" && screen !== "route") clearRoute();
@@ -170,7 +227,7 @@ function navigate(screen) {
     screen === "route"
       ? {
           input: "이동 조건 입력",
-          compare: "경로 비교",
+          compare: "두 경로 비교",
           detail: "경로 상세",
           chosen: "선택한 이동 경로",
         }[activeRoutePhase]
@@ -256,17 +313,7 @@ function showPreview(view, target) {
   target.replaceChildren();
   element("p", view.message, target);
   if (view.classification_candidate) {
-    const labels = {
-      streetlight: "가로등·보안등",
-      cctv: "CCTV",
-      walkway: "보행로",
-      other: "확인 필요",
-      not_working: "작동하지 않음",
-      flickering: "깜빡임",
-      too_dark: "어두움",
-      damaged: "파손",
-      obstructed: "통행 방해",
-    };
+    const labels = reportLabels;
     const c = view.classification_candidate;
     element(
       "p",
@@ -290,8 +337,8 @@ function reportInput() {
   return {
     text: $("report-text").value,
     user_choice: {
-      facility: $("report-facility").value,
-      problem: $("report-problem").value,
+      facility: checkedValue("report-facility"),
+      problem: checkedValue("report-problem"),
     },
     location: reportPlace,
   };
@@ -305,12 +352,18 @@ $("report-form").addEventListener("input", () => {
 $("report-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   if (!reportPlace) {
+    reportStep(1);
     message(
       $("report-result"),
       "문제 위치를 검색해 결과에서 선택해 주세요.",
       "error",
     );
-    reportStep(1);
+    return;
+  }
+  if (!$("report-text").value.trim()) {
+    reportStep(3);
+    message($("report-result"), "상황 설명을 적어 주세요.", "error");
+    $("report-text").focus();
     return;
   }
   const button = $("report-preview-button");
@@ -324,6 +377,7 @@ $("report-form").addEventListener("submit", async (event) => {
       user_choice: snapshot.user_choice,
     });
     if (view) {
+      reportStep(4);
       showPreview(view, $("report-result"));
       if (view.kind !== "emergency") {
         lastPreview = view;
@@ -388,6 +442,7 @@ $("report-submit").addEventListener("click", async () => {
       $("report-form").reset();
       clearReportPlace();
       $("report-result").replaceChildren();
+      updateReportCount();
       reportStep(1);
     } else if (view) showConversation(view, $("report-result"));
   } catch (error) {
@@ -397,48 +452,70 @@ $("report-submit").addEventListener("click", async () => {
   }
 });
 
+const ROUTE_STYLES = [
+  { color: "#af86ff", dash: null, name: "보라 실선" },
+  { color: "#89e3dd", dash: "7 6", name: "청록 점선" },
+  { color: "#ffdaa3", dash: "2 6", name: "주황 점선" },
+];
+function routeStyle(index) {
+  return ROUTE_STYLES[Math.min(index, ROUTE_STYLES.length - 1)];
+}
+function routeLetter(index) {
+  return String.fromCharCode(65 + index);
+}
+function distanceLabel(meters) {
+  return meters >= 1000
+    ? (meters / 1000).toFixed(1) + " km"
+    : Math.round(meters) + " m";
+}
+function minutesLabel(row) {
+  const seconds = row.provider_duration_seconds ?? row.duration_minutes * 60;
+  return Math.max(1, Math.round(seconds / 60)) + "분";
+}
+function svgNode(parent, tag, attrs, text) {
+  const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const [key, value] of Object.entries(attrs))
+    node.setAttribute(key, value);
+  if (text !== undefined) node.textContent = text;
+  parent.append(node);
+  return node;
+}
 function renderFacilityRoutes(view, target) {
   activeRouteTarget = target;
   target.replaceChildren();
   routePhase("compare");
-  element(
-    "span",
-    view.provider === "tmap"
-      ? "TMAP 보행 · 실제 자료"
-      : "공개 도로망 · 실제 자료",
-    target,
-    "result-source",
-  );
+  const count = view.routes.length;
   element(
     "h2",
-    view.routes.length > 1
-      ? "같은 목적지, 경로 비교"
-      : "경로 후보를 확인해 보세요",
+    count === 1
+      ? "경로 후보를 확인해 보세요"
+      : "같은 목적지, " + (["두", "세"][count - 2] || count) + " 가지 길",
     target,
     "result-heading",
   );
-  element("p", view.label, target, "support");
   element(
     "p",
-    "공개된 시설 위치로 계산한 비교예요. 지금 불이 켜져 있는지, 현장을 지나갈 수 있는지는 확인하지 않았어요.",
+    "거리와 예상 시간, CCTV·조명 위치 인접성을 비교해요.",
     target,
-    "notice",
+    "support result-sub",
   );
-  element("p", view.reason, target);
-  if (view.departure)
-    element(
-      "p",
-      "확인한 출발: " + view.departure + " · " + view.time_effect,
-      target,
-    );
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", "0 0 380 250");
-  svg.setAttribute("role", "img");
-  svg.classList.add("route-map");
-  svg.setAttribute(
-    "aria-label",
-    "공개 도로망 경로 좌표 도식. 배경지도·현재 위치 안내가 아닙니다.",
-  );
+  const frame = element("div", "", target, "map-frame");
+  const svg = svgNode(frame, "svg", {
+    viewBox: "0 0 380 250",
+    role: "img",
+    class: "route-map",
+    "aria-label":
+      "경로 좌표 도식. " +
+      view.routes
+        .map((row, i) => "경로 " + routeLetter(i) + " " + routeStyle(i).name)
+        .join(", ") +
+      ". 배경지도·현재 위치 안내가 아닙니다.",
+  });
+  const grid = svgNode(svg, "g", { class: "map-grid", "aria-hidden": "true" });
+  for (let x = 30; x < 380; x += 58)
+    svgNode(grid, "line", { x1: x, y1: 0, x2: x + 12, y2: 250 });
+  for (let y = 28; y < 250; y += 52)
+    svgNode(grid, "line", { x1: 0, y1: y, x2: 380, y2: y - 8 });
   const points = view.routes.flatMap((row) => row.coordinates),
     xs = points.map((p) => p[0]),
     ys = points.map((p) => p[1]);
@@ -449,38 +526,66 @@ function renderFacilityRoutes(view, target) {
   const lat = (((miny + maxy) / 2) * Math.PI) / 180,
     dx = (maxx - minx) * Math.cos(lat),
     dy = maxy - miny,
-    scale = Math.min(330 / Math.max(dx, 1e-8), 180 / Math.max(dy, 1e-8));
+    scale = Math.min(300 / Math.max(dx, 1e-8), 160 / Math.max(dy, 1e-8));
   const map = (p) => [
     (380 - dx * scale) / 2 + (p[0] - minx) * Math.cos(lat) * scale,
-    40 + (180 + dy * scale) / 2 - (p[1] - miny) * scale,
+    45 + (160 + dy * scale) / 2 - (p[1] - miny) * scale,
   ];
-  const text = document.createElementNS(svg.namespaceURI, "text");
-  text.setAttribute("x", "16");
-  text.setAttribute("y", "25");
-  text.setAttribute("fill", "#c4bcd9");
-  text.setAttribute("font-size", "13");
-  text.textContent = "실제 경로 좌표 도식 · 배경지도 없음";
-  svg.append(text);
-  for (const row of view.routes) {
-    const line = document.createElementNS(svg.namespaceURI, "polyline");
-    line.setAttribute(
-      "points",
-      row.coordinates.map((p) => map(p).join(",")).join(" "),
-    );
-    line.setAttribute("stroke", row.id === "SHORTEST" ? "#af86ff" : "#89e3dd");
-    line.setAttribute("fill", "none");
-    line.setAttribute("stroke-width", "5");
-    if (row.id !== "SHORTEST") line.setAttribute("stroke-dasharray", "7 6");
+  // 뒤 경로부터 그려 A가 맨 위에 오게 한다.
+  for (const [i, row] of [...view.routes.entries()].reverse()) {
+    const pts = row.coordinates.map((p) => map(p).join(",")).join(" ");
+    svgNode(svg, "polyline", { points: pts, class: "route-halo" });
+    const line = svgNode(svg, "polyline", {
+      points: pts,
+      stroke: routeStyle(i).color,
+      fill: "none",
+      "stroke-width": "5",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+    });
+    if (routeStyle(i).dash)
+      line.setAttribute("stroke-dasharray", routeStyle(i).dash);
     line.dataset.route = row.id;
-    svg.append(line);
   }
+  const first = view.routes[0].coordinates;
+  for (const [label, p, cls] of [
+    ["출발", first[0], "map-start"],
+    ["도착", first.at(-1), "map-end"],
+  ]) {
+    const [x, y] = map(p);
+    svgNode(svg, "circle", { cx: x, cy: y, r: 7, class: cls });
+    const tag = svgNode(svg, "g", { class: "map-tag" });
+    const tx = Math.min(Math.max(x - 16, 4), 344),
+      ty = y < 40 ? y + 12 : y - 30;
+    svgNode(tag, "rect", { x: tx, y: ty, width: 32, height: 20, rx: 6 });
+    svgNode(tag, "text", { x: tx + 16, y: ty + 14 }, label);
+  }
+  const chip = svgNode(svg, "g", { class: "map-tag map-chip" });
+  svgNode(chip, "rect", { x: 10, y: 10, width: 92, height: 22, rx: 11 });
+  svgNode(chip, "text", { x: 56, y: 25 }, "경로 좌표 도식");
+  const legend = element("div", "", frame, "map-legend");
+  legend.setAttribute("aria-hidden", "true");
+  for (const [i] of view.routes.entries()) {
+    const item = element("span", routeLetter(i), legend);
+    item.dataset.letter = routeLetter(i);
+  }
+  const cards = element("div", "", target, "route-options");
+  element(
+    "p",
+    "출처: " +
+      (view.provider === "tmap" ? "TMAP 보행 경로" : "OpenStreetMap 도로망") +
+      " · 공공데이터포털 CCTV·조명 위치(기준일은 아래 계산 근거)",
+    target,
+    "caption",
+  );
   const mapButton = element(
     "button",
     "지도에서 경로·시설 보기",
     target,
+    "secondary",
   );
   mapButton.type = "button";
-  const mapHost = element("div", "", target);
+  const mapHost = element("div", "", target, "vworld-host");
   const mapEpoch = generation;
   mapButton.addEventListener("click", async () => {
     mapButton.disabled = true;
@@ -492,7 +597,7 @@ function renderFacilityRoutes(view, target) {
       !mapAbort.signal.aborted;
     try {
       await drawVworld(view, mapHost, isCurrent, mapAbort.signal);
-      svg.toggleAttribute(
+      frame.toggleAttribute(
         "hidden",
         mapHost.textContent.includes("VWorld 배경지도 연결 완료"),
       );
@@ -515,22 +620,25 @@ function renderFacilityRoutes(view, target) {
       mapButton.disabled = false;
     }
   });
-  target.append(svg);
+  const about = element("div", "", target, "info-card");
   element(
     "p",
-    view.routes.length === 1
-      ? "보라 실선: 표시된 경로"
-      : view.provider === "tmap"
-        ? "보라 실선: 받은 후보 중 짧은 길 · 청록 점선: 다른 보행 옵션"
-        : "보라 실선: 최단 · 청록 점선: 시설 조건 우선",
-    target,
-    "support",
+    "공개된 시설 위치로 계산한 비교예요. 지금 불이 켜져 있는지, 현장을 지나갈 수 있는지는 확인하지 않았어요.",
+    about,
   );
-  const cards = element("div", "", target, "route-options");
+  if (view.reason) element("p", view.reason, about);
+  if (view.departure)
+    element(
+      "p",
+      "확인한 출발: " + view.departure + " · " + view.time_effect,
+      about,
+    );
+  if (view.label) element("p", view.label, about);
+  const detailBar = element("div", "", target, "step-actions route-cta");
   const showDetail = element(
     "button",
     "선택한 경로의 비교 근거 보기",
-    target,
+    detailBar,
     "primary",
   );
   showDetail.type = "button";
@@ -546,14 +654,15 @@ function renderFacilityRoutes(view, target) {
   }
   function select(row) {
     selected = row;
-    const letter = String.fromCharCode(65 + view.routes.indexOf(row));
+    const letter = routeLetter(view.routes.indexOf(row));
+    showDetail.textContent = "경로 " + letter + "의 비교 근거 보기";
     for (const button of cards.children)
       button.setAttribute(
         "aria-pressed",
         String(button.dataset.route === row.id),
       );
     for (const line of target.querySelectorAll("polyline[data-route]"))
-      line.setAttribute("opacity", line.dataset.route === row.id ? "1" : ".35");
+      line.setAttribute("opacity", line.dataset.route === row.id ? "1" : ".6");
     detail.replaceChildren();
     element("h2", "경로 " + letter + "의 비교 근거", detail);
     const metrics = element("div", "", detail, "details-grid");
@@ -610,7 +719,7 @@ function renderFacilityRoutes(view, target) {
         chosen.hidden = true;
         detail.hidden = true;
         routePhase("compare");
-        svg.scrollIntoView({ block: "start" });
+        frame.scrollIntoView({ block: "start" });
       });
       const edit = element("button", "조건 수정하기", chosen, "secondary");
       edit.type = "button";
@@ -622,13 +731,12 @@ function renderFacilityRoutes(view, target) {
     const button = element("button", "", cards, "route-card route-choice");
     button.type = "button";
     button.dataset.route = row.id;
-    element("span", String.fromCharCode(65 + i), button, "route-token");
+    button.dataset.letter = routeLetter(i);
+    element("span", routeLetter(i), button, "route-token");
     const content = element("div", "", button, "route-choice-body");
-    element(
-      "strong",
-      row.label + (row.id === view.recommended_route_id ? " · 추천 후보" : ""),
-      content,
-    );
+    const title = element("strong", row.label, content);
+    if (row.id === view.recommended_route_id)
+      element("span", "추천", title, "tag");
     element(
       "p",
       "CCTV " +
@@ -643,7 +751,7 @@ function renderFacilityRoutes(view, target) {
     );
     const short = element(
       "span",
-      row.distance_m + "m · " + durationLabel(row),
+      distanceLabel(row.distance_m) + " · " + minutesLabel(row),
       button,
     );
     short.dataset.shortMetric = "true";
@@ -843,7 +951,7 @@ $("live-place-form").addEventListener("submit", async (event) => {
       origin: liveLocations.origin,
       destination: liveLocations.destination,
       departure: $("live-date").value + "T" + $("live-time").value,
-      preference: $("live-preference").value,
+      preference: checkedValue("live-preference"),
     });
     if (
       view &&
@@ -875,13 +983,30 @@ for (const id of ["live-date", "live-time", "live-preference"])
   });
 
 $("live-place-form").addEventListener("input", () => routePhase("input"));
-$("report-form").addEventListener("focusin", (event) => {
-  const id = event.target.id;
-  if (id === "report-place-query") reportStep(1);
-  else if (id === "report-facility" || id === "report-problem") reportStep(2);
-  else if (id === "report-text") reportStep(3);
+function updateReportCount() {
+  $("report-count").textContent =
+    $("report-text").value.length.toLocaleString("ko-KR") + " / 5,000자";
+}
+$("report-text").addEventListener("input", updateReportCount);
+$("report-step1-next").addEventListener("click", () => {
+  if (!reportPlace) {
+    message(
+      $("report-result"),
+      "문제 위치를 검색해 결과에서 선택해 주세요.",
+      "error",
+    );
+    return;
+  }
+  reportStep(2);
 });
-$("report-form").addEventListener("submit", () => reportStep(4));
+$("report-step2-next").addEventListener("click", () => reportStep(3));
+document.addEventListener("click", (event) => {
+  const target = event.target.closest("[data-goto-step]");
+  if (!target || target.disabled) return;
+  const step = Number(target.dataset.gotoStep);
+  if (step === 4 && !lastPreview) return;
+  reportStep(step);
+});
 for (const field of ["origin", "destination"])
   $("live-" + field + "-query").addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
@@ -913,7 +1038,9 @@ $("screen-back").addEventListener("click", (event) => {
       $("route-input").open = true;
       $("route-input").scrollIntoView({ block: "start" });
     }
-  } else navigate("home");
+  } else if (current === "report" && activeReportStep > 1)
+    reportStep(activeReportStep - 1);
+  else navigate("home");
 });
 
 async function searchReportPlace() {
@@ -943,14 +1070,17 @@ async function searchReportPlace() {
       choice.type = "button";
       choice.addEventListener("click", () => {
         reportPlace = { name: place.name, lat: place.lat, lng: place.lng };
+        Object.defineProperty(reportPlace, "label", {
+          value: place.name + " · " + address,
+        });
         $("report-place-selected").textContent =
           "선택: " + place.name + " · " + address;
         target.replaceChildren();
+        $("report-result").replaceChildren();
         $("report-confirm").hidden = true;
         $("report-consent").checked = false;
         lastPreview = null;
         reportSnapshot = null;
-        reportStep(2);
       });
     }
   } catch {
@@ -968,13 +1098,14 @@ $("report-place-search").addEventListener("click", searchReportPlace);
 const JEJU_BOUNDS = { south: 33.1, north: 33.6, west: 126.1, east: 127.0 };
 function chooseReportPlace(place, label) {
   reportPlace = place;
+  Object.defineProperty(reportPlace, "label", { value: label });
   $("report-place-selected").textContent = "선택: " + label;
   $("report-place-candidates").replaceChildren();
+  $("report-result").replaceChildren();
   $("report-confirm").hidden = true;
   $("report-consent").checked = false;
   lastPreview = null;
   reportSnapshot = null;
-  reportStep(2);
 }
 $("report-gps").addEventListener("click", () => {
   const button = $("report-gps"),
