@@ -38,6 +38,17 @@ def match_enum(text, group, default='other'):
     return matches[0] if matches else default
 
 
+def resolve_with_choice(auto, choice):
+    """자동 분류가 모르는 칸(other)은 사용자가 고른 값을 따른다. 다른 값을 분명히 고른 칸만 충돌로 본다."""
+    choice = choice or {}
+    final = {}
+    for key in ('facility', 'problem'):
+        picked = choice.get(key)
+        final[key] = picked if auto[key] == 'other' and picked not in (None, 'other') else auto[key]
+    conflict = any(choice.get(k) not in (None, final[k]) for k in ('facility', 'problem'))
+    return final['facility'], final['problem'], conflict
+
+
 def classify(text, user_choice=None):
     text, masked = mask_personal_info(text)
     facility = match_enum(text, 'facility')
@@ -50,9 +61,10 @@ def classify(text, user_choice=None):
         value=choice.get(field)
         if value is not None and (not isinstance(value,str) or value not in enums[field]):
             raise ValueError('허용되지 않은 시설·문제 선택입니다.')
-    conflict = any(choice.get(k) not in (None, v) for k, v in [('facility', facility), ('problem', problem)])
+    unsure = 'other' in (facility, problem)
+    facility, problem, conflict = resolve_with_choice({'facility': facility, 'problem': problem}, choice)
     result = dict(facility=facility, problem=problem, summary=safe_report_summary(text)[:500],
-                  confidence=0.5 if conflict or 'other' in (facility, problem) else 0.85,
+                  confidence=0.5 if conflict or unsure else 0.85,
                   conflict_with_user_choice=conflict, personal_info_masked=masked,
                   emergency=emergency_check(text))
     return check_schema('report_classification', result)

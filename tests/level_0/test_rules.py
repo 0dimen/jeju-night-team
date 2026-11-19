@@ -140,3 +140,16 @@ def test_all_examples_and_actuals(request_data):
     check_schema('analysis_result',analyze(request_data))
     check_schema('explanation',template_explanation(analyze(request_data)))
     check_schema('report_classification',classify('가로등 깜빡임'))
+
+
+def test_unsure_auto_class_follows_user_choice():
+    result=classify('길에 뭔가 있어서 지나가기 힘들어요',{'facility':'walkway','problem':'obstructed'})
+    assert (result['facility'],result['problem'])==('walkway','obstructed')
+    assert not result['conflict_with_user_choice'] and result['confidence']==0.5
+
+
+def test_person_lying_on_road_is_emergency():
+    from agent.report.preview import preview_report
+    for text in ('사람이 길에 누워있어요','골목에 사람이 쓰러져 있어요'):
+        view=preview_report(text,{'facility':'walkway','problem':'obstructed'})
+        assert view['kind']=='emergency' and '119' in view['message'] and '112' in view['message']
