@@ -5,6 +5,10 @@ from urllib.request import urlopen
 from playwright.sync_api import sync_playwright
 
 
+def reveal(page,panel):
+    if page.locator('#'+panel).get_attribute('open') is None:page.locator('#'+panel+' > summary').click()
+
+
 def run():
     with socket.socket() as sock:sock.bind(('127.0.0.1',0));port=sock.getsockname()[1]
     base=f'http://127.0.0.1:{port}'
@@ -30,7 +34,7 @@ def run():
                     page.click(f'nav [data-screen={screen}]')
                     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),(width,screen)
             page.set_viewport_size({'width':390,'height':844});page.click('nav [data-screen=home]');page.screenshot(path='/tmp/jeju-nightway-home.png',full_page=True)
-            page.click('.feature-grid [data-screen=route]');page.select_option('#origin','제주시청');page.select_option('#destination','탑동광장');page.fill('#departure-date','2026-11-20');page.fill('#departure-time','23:00')
+            page.click('.feature-grid [data-screen=route]');reveal(page,'synthetic-tools');page.select_option('#origin','제주시청');page.select_option('#destination','탑동광장');page.fill('#departure-date','2026-11-20');page.fill('#departure-time','23:00')
             page.click('#compare-button');page.wait_for_selector('#route-result .route-card')
             assert page.locator('#route-result .route-card').count()==2
             assert page.locator('#route-result .route-card[aria-pressed=true]').get_attribute('data-route')=='B'
@@ -42,14 +46,14 @@ def run():
             page.route('**/agent/conversation',lambda route:route.fulfill(status=503,body='unavailable'))
             page.click('#compare-button');page.wait_for_selector('#route-result .error');assert page.input_value('#origin')=='제주시청'
             page.unroute('**/agent/conversation')
-            page.fill('#chat-input','누가 계속 따라와요');page.click('#chat-send');page.wait_for_selector('#chat-result .error');assert '112' in page.locator('#chat-result').inner_text()
+            reveal(page,'synthetic-tools');page.fill('#chat-input','누가 계속 따라와요');page.click('#chat-send');page.wait_for_selector('#chat-result .error');assert '112' in page.locator('#chat-result').inner_text()
             assert page.input_value('#origin')==''
-            page.fill('#chat-input','CCTV 자료 출처가 뭐야?');page.click('#chat-send');page.wait_for_selector('#chat-result h2')
+            reveal(page,'synthetic-tools');page.fill('#chat-input','CCTV 자료 출처가 뭐야?');page.click('#chat-send');page.wait_for_selector('#chat-result h2')
             assert '자료 설명' in page.locator('#chat-result').inner_text()
             page.click('nav [data-screen=report]');page.select_option('#report-location','탑동광장');page.fill('#report-text','가로등이 꺼져 있어요.');page.click('#report-preview-button');page.wait_for_selector('#report-confirm:not([hidden])')
             page.check('#report-consent');page.click('#report-submit');page.wait_for_selector('#my:not([hidden])');assert 'SYNTHETIC-RPT-' in page.locator('#receipt').inner_text() and '검토 대기' in page.locator('#receipt').inner_text()
             page.click('nav [data-screen=report]');page.select_option('#report-location','동문시장');page.fill('#report-text','CCTV와 가로등이 모두 고장 났어요');page.click('#report-preview-button');page.wait_for_timeout(300);assert page.locator('#report-confirm').is_hidden()
-            page.click('nav [data-screen=route]');page.select_option('#origin','동문시장');page.goto(base+'/health');page.go_back();page.wait_for_selector('#origin',state='attached');assert page.input_value('#origin')=='' and 'SYNTHETIC-RPT-' not in page.locator('#receipt').inner_text()
+            page.click('nav [data-screen=route]');reveal(page,'synthetic-tools');page.select_option('#origin','동문시장');page.goto(base+'/health');page.go_back();page.wait_for_selector('#origin',state='attached');assert page.input_value('#origin')=='' and 'SYNTHETIC-RPT-' not in page.locator('#receipt').inner_text()
             page.reload();assert page.input_value('#origin')==''
             assert page.evaluate('localStorage.length+sessionStorage.length')==0
             assert not external and not errors

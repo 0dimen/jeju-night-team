@@ -1,4 +1,4 @@
-import {drawVworld} from "/app/vworld.mjs";
+import { drawVworld } from "/app/vworld.mjs";
 import { createPageConversation } from "/demo/page_conversation.mjs";
 const $ = (id) => document.getElementById(id);
 const iconPaths = {
@@ -27,7 +27,16 @@ for (const button of document.querySelectorAll(
   }))
     svg.setAttribute(key, value);
   const path = document.createElementNS(svg.namespaceURI, "path");
-  path.setAttribute("d", iconPaths[button.dataset.screen] || iconPaths.route);
+  const label = button.textContent;
+  let glyph = iconPaths[button.dataset.screen] || iconPaths.route;
+  if (button.closest(".feature-grid")) {
+    if (button.dataset.screen === "route")
+      glyph = "M6 18a3 3 0 1 0 0 .01M18 6a3 3 0 1 0 0 .01M6 15V9h12";
+    else if (label.includes("지역 데이터")) glyph = iconPaths.route;
+    else if (label.includes("시설 이슈"))
+      glyph = "M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4";
+  }
+  path.setAttribute("d", glyph);
   svg.append(path);
   span.replaceChildren(svg);
 }
@@ -39,7 +48,10 @@ const points = {
 };
 const controller = createPageConversation();
 let researchState = {};
-let liveLocations={},liveRevision={origin:0,destination:0,settings:0};
+let activeRoutePhase = "input",
+  activeRouteTarget = null;
+let liveLocations = {},
+  liveRevision = { origin: 0, destination: 0, settings: 0 };
 let current = "home",
   generation = 0,
   pending = new Set(),
@@ -56,12 +68,67 @@ function message(parent, text, cls) {
   parent.replaceChildren();
   return element("p", text, parent, cls);
 }
-function clearLive(){
-  liveLocations={};liveRevision.origin++;liveRevision.destination++;liveRevision.settings++;
-  $("live-place-form")?.reset();$("live-route-result")?.replaceChildren();
-  for(const field of ["origin","destination"]){$("live-"+field+"-candidates")?.replaceChildren();const p=$("live-"+field+"-selected");if(p)p.textContent=(field==="origin"?"출발지":"도착지")+"를 선택해 주세요.";}
+function routePhase(phase) {
+  activeRoutePhase = phase;
+  if (current === "route")
+    $("screen-title").textContent = {
+      input: "이동 조건 입력",
+      compare: "경로 비교",
+      detail: "경로 상세",
+      chosen: "선택한 이동 경로",
+    }[phase];
+  for (const item of document.querySelectorAll(".route-progress li")) {
+    if (item.dataset.phase === phase) item.setAttribute("aria-current", "step");
+    else item.removeAttribute("aria-current");
+  }
+  const heading = document.querySelector("#route .section-top h1");
+  if (heading)
+    heading.textContent = {
+      input: "어디로 걸어갈까요?",
+      compare: "같은 목적지, 경로 비교",
+      detail: "경로의 비교 근거",
+      chosen: "선택한 이동 경로",
+    }[phase];
+}
+function reportStep(step) {
+  if(current==="report")$("screen-title").textContent={1:"보행환경 제보",2:"제보 유형 선택",3:"상세 설명 작성",4:"제보 내용 확인"}[step];
+  for (const item of document.querySelectorAll(".report-progress li")) {
+    if (item.dataset.reportStep === String(step))
+      item.setAttribute("aria-current", "step");
+    else item.removeAttribute("aria-current");
+  }
+}
+function durationLabel(row) {
+  const seconds = Math.round(
+    row.provider_duration_seconds ?? row.duration_minutes * 60,
+  );
+  return (
+    Math.floor(seconds / 60) +
+    "분" +
+    (seconds % 60 ? " " + (seconds % 60) + "초" : "")
+  );
+}
+function clearLive() {
+  liveLocations = {};
+  liveRevision.origin++;
+  liveRevision.destination++;
+  liveRevision.settings++;
+  $("live-place-form")?.reset();
+  $("live-route-result")?.replaceChildren();
+  for (const field of ["origin", "destination"]) {
+    $("live-" + field + "-candidates")?.replaceChildren();
+    const p = $("live-" + field + "-selected");
+    if (p)
+      p.textContent =
+        (field === "origin" ? "출발지" : "도착지") + "를 선택해 주세요.";
+  }
 }
 function clearRoute() {
+  routePhase("input");
+  activeRouteTarget = null;
+  $("route-input").open = true;
+  $("research-tools").open = false;
+  $("synthetic-tools").open = false;
   clearLive();
   researchState = {};
   $("research-chat-form")?.reset();
@@ -84,6 +151,7 @@ function wipe() {
   abortRequests();
   clearRoute();
   $("report-form").reset();
+  reportStep(1);
   $("report-result").replaceChildren();
   $("report-confirm").hidden = true;
   $("report-consent").checked = false;
@@ -98,6 +166,22 @@ function navigate(screen) {
   if (current === "route" && screen !== "route") clearRoute();
   abortRequests();
   current = screen;
+  $("screen-back").hidden = screen === "home";
+  $("brand-home").hidden = screen !== "home";
+  $("screen-title").hidden = screen === "home";
+  $("screen-title").textContent =
+    screen === "route"
+      ? {
+          input: "이동 조건 입력",
+          compare: "경로 비교",
+          detail: "경로 상세",
+          chosen: "선택한 이동 경로",
+        }[activeRoutePhase]
+      : {
+          report: "보행환경 제보",
+          data: "지역 데이터",
+          my: "이번 페이지의 제보",
+        }[screen] || "";
   for (const section of document.querySelectorAll(".screen"))
     section.hidden = section.id !== screen;
   for (const button of document.querySelectorAll("nav button")) {
@@ -105,9 +189,11 @@ function navigate(screen) {
       button.setAttribute("aria-current", "page");
     else button.removeAttribute("aria-current");
   }
-  document
-    .querySelector("#" + screen + " h1")
-    ?.scrollIntoView({ block: "start" });
+  if (screen === "home") window.scrollTo({ top: 0 });
+  else
+    document
+      .querySelector("#" + screen + " h1")
+      ?.scrollIntoView({ block: "start" });
 }
 document.addEventListener("click", (event) => {
   const target = event.target.closest("[data-screen]");
@@ -363,7 +449,9 @@ $("chat-form").addEventListener("submit", async (event) => {
       showConversation(view);
       if (view.kind === "emergency") {
         clearRoute();
+        $("synthetic-tools").open = true;
         message($("chat-result"), view.message, "error");
+        $("chat-result").scrollIntoView({ block: "start" });
       }
     }
   } catch (error) {
@@ -476,9 +564,27 @@ $("report-submit").addEventListener("click", async () => {
   }
 });
 
-function renderFacilityRoutes(view,target=$("facility-result")) {
+function renderFacilityRoutes(view, target = $("facility-result")) {
+  activeRouteTarget = target;
   target.replaceChildren();
-  element("h2", view.label, target);
+  routePhase("compare");
+  element(
+    "span",
+    view.provider === "tmap"
+      ? "TMAP 보행 · 실제 자료"
+      : "공개 도로망 · 실제 자료",
+    target,
+    "result-source",
+  );
+  element(
+    "h2",
+    view.routes.length > 1
+      ? "같은 목적지, 경로 비교"
+      : "경로 후보를 확인해 보세요",
+    target,
+    "result-heading",
+  );
+  element("p", view.label, target, "support");
   element(
     "p",
     "실제 공개 좌표·도로망으로 계산한 연구 후보입니다. 실시간 시설 상태나 안전을 보증하지 않습니다.",
@@ -486,10 +592,12 @@ function renderFacilityRoutes(view,target=$("facility-result")) {
     "notice",
   );
   element("p", view.reason, target);
-  if(view.departure) element("p", "확인한 출발: " + view.departure + " · " + view.time_effect, target);
-  for(const row of view.routes) {
-    if(row.walk_review) element("p", row.label + ": 보행 검토 " + row.walk_review.reviewed_segments + "/" + row.walk_review.total_segments + "구간. " + row.walk_review.message, target, "notice");
-  }
+  if (view.departure)
+    element(
+      "p",
+      "확인한 출발: " + view.departure + " · " + view.time_effect,
+      target,
+    );
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", "0 0 380 250");
   svg.setAttribute("role", "img");
@@ -533,31 +641,84 @@ function renderFacilityRoutes(view,target=$("facility-result")) {
     line.dataset.route = row.id;
     svg.append(line);
   }
-  const mapButton=element('button','VWorld 배경지도·시설 위치 불러오기',target);
-  mapButton.type='button';
-  const mapHost=element('div','',target);
-  const mapEpoch=generation;
-  mapButton.addEventListener('click',async()=>{
-    mapButton.disabled=true;
-    const mapAbort=new AbortController();pending.add(mapAbort);
-    const isCurrent=()=>mapEpoch===generation && mapHost.isConnected && !mapAbort.signal.aborted;
+  const mapButton = element(
+    "button",
+    "VWorld 배경지도·시설 위치 불러오기",
+    target,
+  );
+  mapButton.type = "button";
+  const mapHost = element("div", "", target);
+  const mapEpoch = generation;
+  mapButton.addEventListener("click", async () => {
+    mapButton.disabled = true;
+    const mapAbort = new AbortController();
+    pending.add(mapAbort);
+    const isCurrent = () =>
+      mapEpoch === generation &&
+      mapHost.isConnected &&
+      !mapAbort.signal.aborted;
     try {
-      await drawVworld(view,mapHost,isCurrent,mapAbort.signal);
-      const selected=target.querySelector('.route-card[aria-pressed=true]')?.dataset.route;
-      for(const line of mapHost.querySelectorAll('polyline[data-route]'))line.setAttribute('opacity',line.dataset.route===selected?'1':'.35');
-    }catch {if(isCurrent())message(mapHost,'VWorld 배경지도를 불러오지 못했습니다. 키·도메인·연결을 확인해 주세요. 좌표 도식과 경로 수치는 유지됩니다.','error');}
-    finally {pending.delete(mapAbort);mapButton.disabled=false;}
+      await drawVworld(view, mapHost, isCurrent, mapAbort.signal);
+      svg.toggleAttribute(
+        "hidden",
+        mapHost.textContent.includes("VWorld 배경지도 연결 완료"),
+      );
+      const selected = target.querySelector(".route-card[aria-pressed=true]")
+        ?.dataset.route;
+      for (const line of mapHost.querySelectorAll("polyline[data-route]"))
+        line.setAttribute(
+          "opacity",
+          line.dataset.route === selected ? "1" : ".35",
+        );
+    } catch {
+      if (isCurrent())
+        message(
+          mapHost,
+          "VWorld 배경지도를 불러오지 못했습니다. 키·도메인·연결을 확인해 주세요. 좌표 도식과 경로 수치는 유지됩니다.",
+          "error",
+        );
+    } finally {
+      pending.delete(mapAbort);
+      mapButton.disabled = false;
+    }
   });
   target.append(svg);
   element(
     "p",
-    view.provider === "tmap" ? "보라 실선: 받은 후보 중 짧은 길 · 청록 점선: 다른 보행 옵션" : "보라 실선: 최단 · 청록 점선: 시설 조건 우선",
+    view.routes.length === 1
+      ? "보라 실선: 표시된 경로"
+      : view.provider === "tmap"
+        ? "보라 실선: 받은 후보 중 짧은 길 · 청록 점선: 다른 보행 옵션"
+        : "보라 실선: 최단 · 청록 점선: 시설 조건 우선",
     target,
     "support",
   );
-  const cards = element("div", "", target),
-    detail = element("div", "", target, "card");
+  const cards = element("div", "", target, "route-options");
+  const showDetail = element(
+    "button",
+    "선택한 경로의 비교 근거 보기",
+    target,
+    "primary",
+  );
+  showDetail.type = "button";
+  const detail = element("div", "", target, "card route-detail");
+  detail.hidden = true;
+  const chosen = element("div", "", target, "chosen-route");
+  chosen.hidden = true;
+  let selected;
+  function changeConditions() {
+    routePhase("input");
+    if (view.region === "custom") {
+      $("route-input").open = true;
+      $("route-input").scrollIntoView({ block: "start" });
+    } else {
+      $("research-tools").open = true;
+      $("facility-form").scrollIntoView({ block: "start" });
+    }
+  }
   function select(row) {
+    selected = row;
+    const letter = String.fromCharCode(65 + view.routes.indexOf(row));
     for (const button of cards.children)
       button.setAttribute(
         "aria-pressed",
@@ -566,17 +727,17 @@ function renderFacilityRoutes(view,target=$("facility-result")) {
     for (const line of target.querySelectorAll("polyline[data-route]"))
       line.setAttribute("opacity", line.dataset.route === row.id ? "1" : ".35");
     detail.replaceChildren();
-    element("h2", row.label + "의 비교 근거", detail);
-    element(
-      "p",
-      "CCTV " + row.cctv_percent + "% · 조명 " + row.light_percent + "%",
-      detail,
-    );
-    element(
-      "p",
-      "거리 " + row.distance_m + "m · 추정 " + row.duration_minutes + "분",
-      detail,
-    );
+    element("h2", "경로 " + letter + "의 비교 근거", detail);
+    const metrics = element("div", "", detail, "details-grid");
+    for (const [label, value] of [
+      ["거리", row.distance_m.toLocaleString("ko-KR") + "m"],
+      ["예상 시간", durationLabel(row)],
+      ["CCTV 인접 구간", row.cctv_percent + "%"],
+      ["조명 인접 구간", row.light_percent + "%"],
+    ]) {
+      const box = element("div", label, metrics, "metric");
+      element("strong", value, box);
+    }
     const base = view.routes[0];
     element(
       "p",
@@ -588,40 +749,117 @@ function renderFacilityRoutes(view,target=$("facility-result")) {
         (row.light_percent - base.light_percent).toFixed(2) +
         "%p",
       detail,
-    );
-  }
-  for (const row of view.routes) {
-    const button = element("button", "", cards, "route-card");
-    button.type = "button";
-    button.dataset.route = row.id;
-    element(
-      "strong",
-      row.label + (row.id === view.recommended_route_id ? " · 추천 후보" : "") + (row.eligible_for_recommendation === false ? " · 우회 한도 초과, 비교용" : ""),
-      button,
+      "support",
     );
     element(
       "p",
-      row.distance_m +
-        "m · 약 " +
-        row.duration_minutes +
-        "분 · CCTV " +
+      "설치 위치 기준의 인접 비율입니다. 현재 작동·촬영 범위·현장 통행은 확인하지 않았습니다.",
+      detail,
+      "notice",
+    );
+    const confirm = element("button", "이 경로 선택하기", detail, "primary");
+    confirm.type = "button";
+    confirm.addEventListener("click", () => {
+      routePhase("chosen");
+      chosen.hidden = false;
+      chosen.replaceChildren();
+      element("span", "이번 페이지의 선택", chosen, "result-source");
+      element("h2", "경로 " + letter + "를 선택했어요", chosen);
+      element(
+        "p",
+        row.label + " · " + row.distance_m + "m · 약 " + durationLabel(row),
+        chosen,
+      );
+      element(
+        "p",
+        "실시간 길 안내나 현장 통행 확인을 시작한 것은 아닙니다. 선택은 페이지를 떠나면 지워집니다.",
+        chosen,
+        "support",
+      );
+      const again = element("button", "경로 다시 비교", chosen, "primary");
+      again.type = "button";
+      again.addEventListener("click", () => {
+        chosen.hidden = true;
+        detail.hidden = true;
+        routePhase("compare");
+        svg.scrollIntoView({ block: "start" });
+      });
+      const edit = element("button", "조건 수정하기", chosen, "secondary");
+      edit.type = "button";
+      edit.addEventListener("click", changeConditions);
+      chosen.scrollIntoView({ block: "start" });
+    });
+  }
+  for (const [i, row] of view.routes.entries()) {
+    const button = element("button", "", cards, "route-card route-choice");
+    button.type = "button";
+    button.dataset.route = row.id;
+    element("span", String.fromCharCode(65 + i), button, "route-token");
+    const content = element("div", "", button, "route-choice-body");
+    element(
+      "strong",
+      row.label + (row.id === view.recommended_route_id ? " · 추천 후보" : ""),
+      content,
+    );
+    element(
+      "p",
+      "CCTV " +
         row.cctv_percent +
         "% · 조명 " +
         row.light_percent +
-        "%",
+        "%" +
+        (row.eligible_for_recommendation === false
+          ? " · 우회 한도 초과, 비교용"
+          : ""),
+      content,
+    );
+    const short = element(
+      "span",
+      row.distance_m + "m · " + durationLabel(row),
       button,
     );
-    button.addEventListener("click", () => select(row));
+    short.dataset.shortMetric = "true";
+    button.addEventListener("click", () => {
+      select(row);
+      chosen.hidden = true;
+      routePhase(detail.hidden ? "compare" : "detail");
+    });
   }
   select(
     view.routes.find((row) => row.id === view.recommended_route_id) ||
       view.routes[0],
   );
+  showDetail.addEventListener("click", () => {
+    detail.hidden = false;
+    routePhase("detail");
+    detail.scrollIntoView({ block: "start" });
+  });
+  const edit = element("button", "이동 조건 수정", target, "text-button");
+  edit.type = "button";
+  edit.addEventListener("click", changeConditions);
   const sources = element("details", "", target);
   element("summary", "계산식·자료·미확인 범위", sources);
+  for (const row of view.routes) {
+    if (row.walk_review)
+      element(
+        "p",
+        row.label +
+          ": 보행 검토 " +
+          row.walk_review.reviewed_segments +
+          "/" +
+          row.walk_review.total_segments +
+          "구간. " +
+          row.walk_review.message,
+        sources,
+        "support",
+      );
+  }
+
   element(
     "p",
-    view.provider === "tmap" ? "TMAP 옵션별 경로를 받은 뒤 비교합니다. 시설 우선 조건은 제공사 경로 생성에 쓰이지 않습니다. 비교 비용 = 형상 길이 × [1 + 조명가중치×(1−조명 인접비율) + CCTV가중치×(1−CCTV 인접비율)]. 빠른 길은 제공 예상 시간 기준입니다." : "도로 조각 비용 = 길이 × [1 + 조명가중치×(1−조명 인접비율) + CCTV가중치×(1−CCTV 인접비율)]",
+    view.provider === "tmap"
+      ? "TMAP 옵션별 경로를 받은 뒤 비교합니다. 시설 우선 조건은 제공사 경로 생성에 쓰이지 않습니다. 비교 비용 = 형상 길이 × [1 + 조명가중치×(1−조명 인접비율) + CCTV가중치×(1−CCTV 인접비율)]. 빠른 길은 제공 예상 시간 기준입니다."
+      : "도로 조각 비용 = 길이 × [1 + 조명가중치×(1−조명 인접비율) + CCTV가중치×(1−CCTV 인접비율)]",
     sources,
   );
   element(
@@ -662,10 +900,19 @@ function renderFacilityRoutes(view,target=$("facility-result")) {
     element("p", limitation, sources, "support");
   for (const [label, url] of [
     [
-      view.provider === "tmap" ? "경로: TMAP 보행자 경로안내" : "OpenStreetMap contributors · ODbL",
-      view.provider === "tmap" ? "https://tmap-skopenapi.readme.io/reference/보행자-경로안내" : "https://www.openstreetmap.org/copyright",
+      view.provider === "tmap"
+        ? "경로: TMAP 보행자 경로안내"
+        : "OpenStreetMap contributors · ODbL",
+      view.provider === "tmap"
+        ? "https://tmap-skopenapi.readme.io/reference/보행자-경로안내"
+        : "https://www.openstreetmap.org/copyright",
     ],
-    [view.provider === "tmap" ? "TMAP 제공사 안내" : "지도 오류 수정", view.provider === "tmap" ? "https://openapi.sk.com/" : "https://www.openstreetmap.org/fixthemap"],
+    [
+      view.provider === "tmap" ? "TMAP 제공사 안내" : "지도 오류 수정",
+      view.provider === "tmap"
+        ? "https://openapi.sk.com/"
+        : "https://www.openstreetmap.org/fixthemap",
+    ],
   ]) {
     const a = element("a", label, sources);
     a.href = url;
@@ -673,6 +920,7 @@ function renderFacilityRoutes(view,target=$("facility-result")) {
     a.rel = "noopener noreferrer";
     element("br", "", sources);
   }
+  target.scrollIntoView({ block: "start" });
 }
 $("facility-form").addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -703,69 +951,269 @@ $("facility-form").addEventListener("submit", async (event) => {
 });
 
 $("research-chat-reset").addEventListener("click", () => {
-  abortRequests();researchState={};$("research-chat-form").reset();$("research-chat-result").replaceChildren();$("facility-result").replaceChildren();
+  abortRequests();
+  researchState = {};
+  $("research-chat-form").reset();
+  $("research-chat-result").replaceChildren();
+  $("facility-result").replaceChildren();
 });
 $("research-chat-form").addEventListener("submit", async (event) => {
-  event.preventDefault();const button=$("research-chat-send");button.disabled=true;
+  event.preventDefault();
+  const button = $("research-chat-send");
+  button.disabled = true;
   try {
-    const view=await post("/research/agent/conversation", {text:$("research-chat-input").value,state:researchState});
-    if(!view)return;
-    researchState=view.state || {};
+    const view = await post("/research/agent/conversation", {
+      text: $("research-chat-input").value,
+      state: researchState,
+    });
+    if (!view) return;
+    researchState = view.state || {};
     $("facility-result").replaceChildren();
-    if(view.kind==='facility_routes') {renderFacilityRoutes(view);message($("research-chat-result"),view.message);}
-    else if(view.kind==='data_question') showData(view,$("research-chat-result"));
-    else if(view.kind==='report_preview') showPreview(view,$("research-chat-result"));
-    else message($("research-chat-result"),view.message || '공개 구간 입력을 확인해 주세요.',view.kind==='emergency'?'error':undefined);
-    $("research-chat-input").value='';
-  } catch(error) {message($("research-chat-result"),'공개 자료 대화를 처리하지 못했습니다. 입력은 유지했습니다. 합성 경로로 대신하지 않았습니다.','error');}
-  finally {button.disabled=false;}
-});
-
-fetch('/runtime/status',{cache:'no-store'})
-  .then(response=>{if(!response.ok)throw new Error('status');return response.json();})
-  .then(info=>{
-    const status=document.getElementById('runtime-connection');
-    status.textContent=(info.facility_data_connected?'공개 경로 자료 연결됨':'공개 경로 자료 미연결')+' · 규칙형 에이전트 연결됨'+(info.built_at?' · 준비 시각 '+new Date(info.built_at).toLocaleString('ko-KR'): '');
-  }).catch(()=>{document.getElementById('runtime-connection').textContent='연결 상태를 확인하지 못했습니다. 다시 접속해 주세요.';});
-
-$("tmap-button").addEventListener("click", async()=>{
-  const button=$("tmap-button");button.disabled=true;
-  try {
-    const view=await post('/research/routes/tmap',{region:$("facility-region").value,preference:$("facility-preference").value,cctv_source:$("facility-source").value,light_radius:Number($("facility-light-radius").value),cctv_radius:Number($("facility-cctv-radius").value),weight:Number($("facility-weight").value),max_detour:Number($("facility-detour").value)});
-    if(view)renderFacilityRoutes(view);
-  }catch {message($("facility-result"),'TMAP 보행 후보를 불러오지 못했습니다. 키·이용 권한·한도·시설 자료 연결을 확인해 주세요. 합성 경로로 대신하지 않았습니다.','error');}
-  finally {button.disabled=false;}
-});
-
-for(const field of ['origin','destination']){
-  const input=$('live-'+field+'-query');
-  input.addEventListener('input',()=>{delete liveLocations[field];liveRevision[field]++;$('live-'+field+'-candidates').replaceChildren();$('live-'+field+'-selected').textContent='검색 결과에서 위치를 다시 선택해 주세요.';$('live-route-result').replaceChildren();});
-  $('live-'+field+'-search').addEventListener('click',async()=>{
-    const button=$('live-'+field+'-search'),target=$('live-'+field+'-candidates'),revision=++liveRevision[field];
-    button.disabled=true;delete liveLocations[field];$('live-'+field+'-selected').textContent='검색 결과에서 위치를 선택해 주세요.';$('live-route-result').replaceChildren();
-    try {
-      const view=await post('/maps/places/search',{query:input.value,mode:$('live-search-mode').value});
-      if(!view || revision!==liveRevision[field])return;
-      target.replaceChildren();element('p',view.message,target);
-      for(const place of view.candidates){
-        const choice=element('button',place.name+' · '+(place.road_address || place.parcel_address),target,'route-card');choice.type='button';
-        choice.addEventListener('click',()=>{liveLocations[field]={lat:place.lat,lng:place.lng};$('live-'+field+'-selected').textContent='선택: '+place.name+' · '+(place.road_address || place.parcel_address);target.replaceChildren();$('live-route-result').replaceChildren();});
+    if (view.kind === "facility_routes") {
+      renderFacilityRoutes(view);
+      message($("research-chat-result"), view.message);
+    } else if (view.kind === "data_question")
+      showData(view, $("research-chat-result"));
+    else if (view.kind === "report_preview")
+      showPreview(view, $("research-chat-result"));
+    else {
+      if (view.kind === "emergency") {
+        clearRoute();
+        $("research-tools").open = true;
       }
-    }catch {if(revision===liveRevision[field])message(target,'장소 검색을 처리하지 못했습니다. 입력은 유지했습니다.','error');}
-    finally {button.disabled=false;}
+      message(
+        $("research-chat-result"),
+        view.message || "공개 구간 입력을 확인해 주세요.",
+        view.kind === "emergency" ? "error" : undefined,
+      );
+    }
+    $("research-chat-input").value = "";
+  } catch (error) {
+    message(
+      $("research-chat-result"),
+      "공개 자료 대화를 처리하지 못했습니다. 입력은 유지했습니다. 합성 경로로 대신하지 않았습니다.",
+      "error",
+    );
+  } finally {
+    button.disabled = false;
+  }
+});
+
+fetch("/runtime/status", { cache: "no-store" })
+  .then((response) => {
+    if (!response.ok) throw new Error("status");
+    return response.json();
+  })
+  .then((info) => {
+    const status = document.getElementById("runtime-connection");
+    status.textContent =
+      (info.facility_data_connected
+        ? "공개 경로 자료 연결됨"
+        : "공개 경로 자료 미연결") +
+      " · 규칙형 에이전트 연결됨" +
+      (info.built_at
+        ? " · 준비 시각 " + new Date(info.built_at).toLocaleString("ko-KR")
+        : "");
+  })
+  .catch(() => {
+    document.getElementById("runtime-connection").textContent =
+      "연결 상태를 확인하지 못했습니다. 다시 접속해 주세요.";
+  });
+
+$("tmap-button").addEventListener("click", async () => {
+  const button = $("tmap-button");
+  button.disabled = true;
+  try {
+    const view = await post("/research/routes/tmap", {
+      region: $("facility-region").value,
+      preference: $("facility-preference").value,
+      cctv_source: $("facility-source").value,
+      light_radius: Number($("facility-light-radius").value),
+      cctv_radius: Number($("facility-cctv-radius").value),
+      weight: Number($("facility-weight").value),
+      max_detour: Number($("facility-detour").value),
+    });
+    if (view) renderFacilityRoutes(view);
+  } catch {
+    message(
+      $("facility-result"),
+      "TMAP 보행 후보를 불러오지 못했습니다. 키·이용 권한·한도·시설 자료 연결을 확인해 주세요. 합성 경로로 대신하지 않았습니다.",
+      "error",
+    );
+  } finally {
+    button.disabled = false;
+  }
+});
+
+for (const field of ["origin", "destination"]) {
+  const input = $("live-" + field + "-query");
+  input.addEventListener("input", () => {
+    delete liveLocations[field];
+    liveRevision[field]++;
+    $("live-" + field + "-candidates").replaceChildren();
+    $("live-" + field + "-selected").textContent =
+      "검색 결과에서 위치를 다시 선택해 주세요.";
+    $("live-route-result").replaceChildren();
+  });
+  $("live-" + field + "-search").addEventListener("click", async () => {
+    const button = $("live-" + field + "-search"),
+      target = $("live-" + field + "-candidates"),
+      revision = ++liveRevision[field];
+    button.disabled = true;
+    delete liveLocations[field];
+    $("live-" + field + "-selected").textContent =
+      "검색 결과에서 위치를 선택해 주세요.";
+    $("live-route-result").replaceChildren();
+    try {
+      const view = await post("/maps/places/search", {
+        query: input.value,
+        mode: $("live-search-mode").value,
+      });
+      if (!view || revision !== liveRevision[field]) return;
+      target.replaceChildren();
+      element("p", view.message, target);
+      for (const place of view.candidates) {
+        const choice = element(
+          "button",
+          place.name + " · " + (place.road_address || place.parcel_address),
+          target,
+          "route-card",
+        );
+        choice.type = "button";
+        choice.addEventListener("click", () => {
+          liveLocations[field] = { lat: place.lat, lng: place.lng };
+          $("live-" + field + "-selected").textContent =
+            "선택: " +
+            place.name +
+            " · " +
+            (place.road_address || place.parcel_address);
+          target.replaceChildren();
+          $("live-route-result").replaceChildren();
+        });
+      }
+    } catch {
+      if (revision === liveRevision[field])
+        message(
+          target,
+          "장소 검색을 처리하지 못했습니다. 입력은 유지했습니다.",
+          "error",
+        );
+    } finally {
+      button.disabled = false;
+    }
   });
 }
-$('live-search-mode').addEventListener('change',()=>{for(const f of ['origin','destination']){delete liveLocations[f];liveRevision[f]++;$('live-'+f+'-candidates').replaceChildren();$('live-'+f+'-selected').textContent='검색 방식이 바뀌었습니다. 위치를 다시 선택해 주세요.';}$('live-route-result').replaceChildren();});
-$('live-clear').addEventListener('click',()=>{abortRequests();clearLive();});
-$('live-place-form').addEventListener('submit',async(event)=>{
-  event.preventDefault();const target=$('live-route-result'),button=$('live-route-button');
-  if(!liveLocations.origin || !liveLocations.destination){message(target,'출발지와 도착지를 검색한 뒤 결과에서 각각 선택해 주세요.','error');return;}
-  const originRevision=liveRevision.origin,destinationRevision=liveRevision.destination,settingsRevision=liveRevision.settings;button.disabled=true;
+$("live-search-mode").addEventListener("change", () => {
+  for (const f of ["origin", "destination"]) {
+    delete liveLocations[f];
+    liveRevision[f]++;
+    $("live-" + f + "-candidates").replaceChildren();
+    $("live-" + f + "-selected").textContent =
+      "검색 방식이 바뀌었습니다. 위치를 다시 선택해 주세요.";
+  }
+  $("live-route-result").replaceChildren();
+});
+$("live-clear").addEventListener("click", () => {
+  abortRequests();
+  clearLive();
+});
+$("live-place-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const target = $("live-route-result"),
+    button = $("live-route-button");
+  if (!liveLocations.origin || !liveLocations.destination) {
+    message(
+      target,
+      "출발지와 도착지를 검색한 뒤 결과에서 각각 선택해 주세요.",
+      "error",
+    );
+    return;
+  }
+  const originRevision = liveRevision.origin,
+    destinationRevision = liveRevision.destination,
+    settingsRevision = liveRevision.settings;
+  button.disabled = true;
   try {
-    const view=await post('/research/routes/selected',{origin:liveLocations.origin,destination:liveLocations.destination,departure:$('live-date').value+'T'+$('live-time').value,preference:$('live-preference').value});
-    if(view && originRevision===liveRevision.origin && destinationRevision===liveRevision.destination && settingsRevision===liveRevision.settings)renderFacilityRoutes(view,target);
-  }catch {if(originRevision===liveRevision.origin && destinationRevision===liveRevision.destination && settingsRevision===liveRevision.settings)message(target,'선택한 위치의 경로·시설 비교를 처리하지 못했습니다. 위치·시각·키·한도를 확인해 주세요. 입력은 유지했습니다. 합성 경로로 대신하지 않았습니다.','error');}
-  finally {button.disabled=false;}
+    const view = await post("/research/routes/selected", {
+      origin: liveLocations.origin,
+      destination: liveLocations.destination,
+      departure: $("live-date").value + "T" + $("live-time").value,
+      preference: $("live-preference").value,
+    });
+    if (
+      view &&
+      originRevision === liveRevision.origin &&
+      destinationRevision === liveRevision.destination &&
+      settingsRevision === liveRevision.settings
+    )
+      renderFacilityRoutes(view, target);
+  } catch {
+    if (
+      originRevision === liveRevision.origin &&
+      destinationRevision === liveRevision.destination &&
+      settingsRevision === liveRevision.settings
+    )
+      message(
+        target,
+        "선택한 위치의 경로·시설 비교를 처리하지 못했습니다. 위치·시각·키·한도를 확인해 주세요. 입력은 유지했습니다. 합성 경로로 대신하지 않았습니다.",
+        "error",
+      );
+  } finally {
+    button.disabled = false;
+  }
 });
 
-for(const id of ['live-date','live-time','live-preference'])$(id).addEventListener('input',()=>{liveRevision.settings++;$('live-route-result').replaceChildren();});
+for (const id of ["live-date", "live-time", "live-preference"])
+  $(id).addEventListener("input", () => {
+    liveRevision.settings++;
+    $("live-route-result").replaceChildren();
+  });
+
+$("live-place-form").addEventListener("input", () => routePhase("input"));
+$("report-form").addEventListener("focusin", (event) => {
+  const id = event.target.id;
+  if (id === "report-location") reportStep(1);
+  else if (id === "report-facility" || id === "report-problem") reportStep(2);
+  else if (id === "report-text") reportStep(3);
+});
+$("report-form").addEventListener("submit", () => reportStep(4));
+for (const id of ["research-chat-send", "research-chat-reset", "tmap-button"])
+  $(id).classList.add("secondary");
+for (const field of ["origin", "destination"])
+  $("live-" + field + "-query").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      $("live-" + field + "-search").click();
+    }
+  });
+
+$("screen-back").addEventListener("click", (event) => {
+  event.stopPropagation();
+  if (
+    current === "route" &&
+    activeRouteTarget &&
+    activeRoutePhase !== "input"
+  ) {
+    const detail = activeRouteTarget.querySelector(".route-detail"),
+      chosen = activeRouteTarget.querySelector(".chosen-route");
+    if (activeRoutePhase === "chosen") {
+      chosen.hidden = true;
+      detail.hidden = false;
+      routePhase("detail");
+      detail.scrollIntoView({ block: "start" });
+    } else if (activeRoutePhase === "detail") {
+      detail.hidden = true;
+      routePhase("compare");
+      activeRouteTarget.scrollIntoView({ block: "start" });
+    } else {
+      routePhase("input");
+      if (activeRouteTarget.id === "live-route-result") {
+        $("route-input").open = true;
+        $("route-input").scrollIntoView({ block: "start" });
+      } else {
+        $("research-tools").open = true;
+        $("facility-form").scrollIntoView({ block: "start" });
+      }
+    }
+  } else navigate("home");
+});
