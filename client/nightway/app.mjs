@@ -1012,6 +1012,7 @@ $("report-gps").addEventListener("click", () => {
         return;
       }
       const meters = Math.round(accuracy);
+      $("report-place-query").value = "";
       chooseReportPlace(
         { name: "현재 위치", lat, lng },
         "현재 위치 · 정확도 약 " + meters + "m",
