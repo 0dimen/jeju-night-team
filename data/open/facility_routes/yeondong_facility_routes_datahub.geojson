@@ -1,0 +1,194 @@
+{
+ "type": "FeatureCollection",
+ "properties": {
+  "synthetic": false,
+  "source_name": "OpenStreetMap contributors 도로망으로 직접 계산한 보행 경로",
+  "source_url": "https://www.openstreetmap.org/copyright",
+  "observed_at": "2026-11-19T07:09:58+00:00",
+  "license_note": "© OpenStreetMap contributors, ODbL1.0. 공개 서비스 채택 전 출처 표시·이용 조건 확인",
+  "attribution_url": "https://www.openstreetmap.org/copyright",
+  "fix_map_url": "https://www.openstreetmap.org/fixthemap",
+  "rights_confirmed": false,
+  "coordinate_system_confirmed": true,
+  "coordinate_evidence": "OSM 노드의 WGS84 경도·위도. RFC7946",
+  "operationally_adopted": false,
+  "onsite_checked": false,
+  "calculation": {
+   "segment": "삼무공원~누웨마루거리",
+   "same_route": true,
+   "weights_used": {
+    "light": 1.0,
+    "cctv": 1.0
+   },
+   "parameters": {
+    "light_radius_m": 15,
+    "cctv_radius_m": 50,
+    "light_weight": 1.0,
+    "cctv_weight": 1.0,
+    "max_detour": 1.5
+   },
+   "endpoint_snap_m": [
+    0.1,
+    15.0
+   ],
+   "graph": {
+    "nodes": 903,
+    "edges": 1122,
+    "osm_base": "2026-11-19T07:08:06Z"
+   },
+   "light_file": "jeju_city_streetlights_20241010_axisfixed.csv",
+   "cctv": {
+    "file": "jeju_cctv_20221215.csv",
+    "source_rows": 479,
+    "selected_rows": 473,
+    "include_purposes": [
+     "생활방범",
+     "교통단속",
+     "어린이보호",
+     "시설물관리"
+    ],
+    "policy_version": "cctv-purpose-v2",
+    "basis_dates": [
+     "2022-12-15",
+     "2023-04-11",
+     "2024-07-29"
+    ]
+   },
+   "routes": {
+    "shortest": {
+     "length_m": 352.4,
+     "duration_minutes": 4.7,
+     "light_fraction": 0.6032,
+     "cctv_fraction": 0.1358
+    },
+    "facility_preferred": {
+     "length_m": 352.4,
+     "duration_minutes": 4.7,
+     "light_fraction": 0.6032,
+     "cctv_fraction": 0.1358
+    }
+   },
+   "osrm_reference": [
+    {
+     "id": "R1",
+     "distance_m": 338.3,
+     "duration_min": 4.51,
+     "points": 8
+    },
+    {
+     "id": "R2",
+     "distance_m": 455.4,
+     "duration_min": 6.07,
+     "points": 10
+    }
+   ],
+   "meaning": "연구용 비교. 시설 위치 인접 비율이며 안전 확률·밝기·작동 상태가 아님"
+  }
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "SHORTEST",
+    "label": "최단 경로",
+    "duration_minutes": 4.7,
+    "duration_basis": "경로 길이를 보행 4.5km/h로 나눈 계산값, 현장 실측 아님",
+    "length_m": 352.4,
+    "light_fraction": 0.6032,
+    "cctv_fraction": 0.1358,
+    "walkability_checked": true,
+    "walkability_check_basis": "OSM highway 태그 중 OSRM 보행 프로필과 같은 종류만 사용. 지도상 정보만 확인",
+    "onsite_checked": false
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.4915043,
+      33.4914364
+     ],
+     [
+      126.4914839,
+      33.4909269
+     ],
+     [
+      126.4908433,
+      33.4909402
+     ],
+     [
+      126.4908329,
+      33.4904529
+     ],
+     [
+      126.4908188,
+      33.4900638
+     ],
+     [
+      126.4908122,
+      33.4898825
+     ],
+     [
+      126.4907885,
+      33.4892862
+     ],
+     [
+      126.4907677,
+      33.4888014
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "FACILITY",
+    "label": "시설 선호 경로",
+    "duration_minutes": 4.7,
+    "duration_basis": "경로 길이를 보행 4.5km/h로 나눈 계산값, 현장 실측 아님",
+    "length_m": 352.4,
+    "light_fraction": 0.6032,
+    "cctv_fraction": 0.1358,
+    "walkability_checked": true,
+    "walkability_check_basis": "OSM highway 태그 중 OSRM 보행 프로필과 같은 종류만 사용. 지도상 정보만 확인",
+    "onsite_checked": false
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      126.4915043,
+      33.4914364
+     ],
+     [
+      126.4914839,
+      33.4909269
+     ],
+     [
+      126.4908433,
+      33.4909402
+     ],
+     [
+      126.4908329,
+      33.4904529
+     ],
+     [
+      126.4908188,
+      33.4900638
+     ],
+     [
+      126.4908122,
+      33.4898825
+     ],
+     [
+      126.4907885,
+      33.4892862
+     ],
+     [
+      126.4907677,
+      33.4888014
+     ]
+    ]
+   }
+  }
+ ]
+}

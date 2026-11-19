@@ -1,0 +1,188 @@
+{
+ "type": "FeatureCollection",
+ "properties": {
+  "synthetic": false,
+  "source_name": "OpenStreetMap contributors / FOSSGIS OSRM 보행 경로",
+  "source_url": "https://routing.openstreetmap.de/about.html",
+  "observed_at": "2026-11-19T05:37:38+00:00",
+  "license_note": "© OpenStreetMap contributors, ODbL1.0; FOSSGIS서비스 조건 별도. 공개 서비스 채택 전 확인",
+  "attribution_url": "https://www.openstreetmap.org/copyright",
+  "fix_map_url": "https://www.openstreetmap.org/fixthemap",
+  "rights_confirmed": false,
+  "coordinate_system_confirmed": true,
+  "coordinate_evidence": "제공 GeoJSON 경도·위도 및 범위 확인. RFC7946",
+  "operationally_adopted": false,
+  "onsite_checked": false,
+  "collection": {
+   "segment": "서귀포 중앙로62번길~매일올레시장",
+   "collected_at": "2026-11-19T05:37:38+00:00",
+   "start": {
+    "query": "중앙로62번길",
+    "lat": 33.2525331,
+    "lon": 126.5645101,
+    "display_name": "중앙로62번길, 중앙동, 서귀포시, 제주특별자치도, 63590, 대한민국",
+    "category": "highway",
+    "type": "residential",
+    "osm": "way/255200232"
+   },
+   "end": {
+    "query": "서귀포매일올레시장",
+    "lat": 33.2501766,
+    "lon": 126.5635697,
+    "display_name": "서귀포매일올레시장, 중앙로54번길, 중앙동, 서귀포시, 제주특별자치도, 63595, 대한민국",
+    "category": "amenity",
+    "type": "marketplace",
+    "osm": "way/375049019"
+   },
+   "snap_distance_m": [
+    0,
+    20.6
+   ],
+   "snapped_endpoints": [
+    [
+     126.56451,
+     33.252533
+    ],
+    [
+     126.56379,
+     33.250198
+    ]
+   ],
+   "alternative": {
+    "kind": "via_public_streetlight",
+    "via_lon": 126.5638382,
+    "via_lat": 33.25117194,
+    "via_offset_from_base_m": 61.6,
+    "via_source_file": "seogwipo_streetlights_20250725.csv",
+    "note": "조사용 임의 우회로. 서비스가 제안한 동등 대안이나 시설이 많은 길·안전 추천이 아님"
+   },
+   "routes": [
+    {
+     "id": "R1",
+     "distance_m": 298,
+     "duration_min": 3.97,
+     "points": 9
+    },
+    {
+     "id": "R2",
+     "distance_m": 407,
+     "duration_min": 5.42,
+     "points": 10
+    }
+   ],
+   "caveats": "지도상 보행 프로필 경로. 현장·현재 통행·점등 상태 미확인. rights_confirmed=false"
+  }
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "R1",
+    "duration_minutes": 3.9716666666666667,
+    "duration_basis": "FOSSGIS OSRM routed-foot 제공 추정값, 현장 실측 아님",
+    "provider_distance_m": 298,
+    "walkability_checked": true,
+    "walkability_check_basis": "보행 전용 프로필 및 모든 단계 mode=walking 확인. 지도상 정보만 확인",
+    "onsite_checked": false
+   },
+   "geometry": {
+    "coordinates": [
+     [
+      126.56451,
+      33.252533
+     ],
+     [
+      126.564621,
+      33.252158
+     ],
+     [
+      126.564769,
+      33.251657
+     ],
+     [
+      126.564752,
+      33.251502
+     ],
+     [
+      126.564698,
+      33.251231
+     ],
+     [
+      126.56432,
+      33.25078
+     ],
+     [
+      126.563773,
+      33.250409
+     ],
+     [
+      126.563782,
+      33.250255
+     ],
+     [
+      126.56379,
+      33.250198
+     ]
+    ],
+    "type": "LineString"
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "R2",
+    "duration_minutes": 5.425,
+    "duration_basis": "FOSSGIS OSRM routed-foot 제공 추정값, 현장 실측 아님",
+    "provider_distance_m": 407,
+    "walkability_checked": true,
+    "walkability_check_basis": "보행 전용 프로필 및 모든 단계 mode=walking 확인. 지도상 정보만 확인",
+    "onsite_checked": false
+   },
+   "geometry": {
+    "coordinates": [
+     [
+      126.56451,
+      33.252533
+     ],
+     [
+      126.564621,
+      33.252158
+     ],
+     [
+      126.563667,
+      33.251862
+     ],
+     [
+      126.563283,
+      33.251429
+     ],
+     [
+      126.563425,
+      33.251325
+     ],
+     [
+      126.563782,
+      33.251108
+     ],
+     [
+      126.56432,
+      33.25078
+     ],
+     [
+      126.563773,
+      33.250409
+     ],
+     [
+      126.563782,
+      33.250255
+     ],
+     [
+      126.56379,
+      33.250198
+     ]
+    ],
+    "type": "LineString"
+   }
+  }
+ ]
+}

@@ -2,3 +2,5 @@
 *.png binary
 *.pdf binary
 *.parquet binary
+# 공개 원본은 받은 바이트 그대로 보존한다(CP949·CRLF 포함). 줄바꿈을 변환하지 않는다.
+data/open/**/*.csv -text

@@ -1,0 +1,46 @@
+{
+ "source_file": "jeju_city_streetlights_20241010.csv",
+ "source_sha256": "c43889cfaa9aa4dd6744ee618e9f77c2c88004de8a8c2d1c9b7738cb7540ce71",
+ "output_file": "jeju_city_streetlights_20241010_axisfixed.csv",
+ "rows": 52019,
+ "swapped_rows": 16155,
+ "swapped_by_dong": {
+  "한림읍": 4232,
+  "한경면": 3,
+  "구좌읍": 4848,
+  "우도면": 770,
+  "조천읍": 5661,
+  "추자면": 641
+ },
+ "rule": "위도 칸이 126~127이고 경도 칸이 33~34.1인 행만 두 값을 교환",
+ "cleanup_before": {
+  "source_rows": 52019,
+  "candidate_rows": 35864,
+  "held_rows": 16155,
+  "held_reason_counts": {
+   "좌표 축 교환 의심·수정 보류": 16150,
+   "미기재·지원하지 않는 시설 종류": 5
+  },
+  "basis_dates": {
+   "행별 기준일 없음": 35864
+  },
+  "duplicate_coordinate_extra_rows": 29,
+  "automatic_axis_corrections": 0,
+  "automatic_merges": 0
+ },
+ "cleanup_after": {
+  "source_rows": 52019,
+  "candidate_rows": 52014,
+  "held_rows": 5,
+  "held_reason_counts": {
+   "미기재·지원하지 않는 시설 종류": 5
+  },
+  "basis_dates": {
+   "행별 기준일 없음": 52014
+  },
+  "duplicate_coordinate_extra_rows": 29,
+  "automatic_axis_corrections": 0,
+  "automatic_merges": 0
+ },
+ "caveat": "열 뒤바뀜만 복구. 개별 좌표의 정확도·현재 설치 여부·점등 상태는 미확인"
+}

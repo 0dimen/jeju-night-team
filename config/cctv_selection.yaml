@@ -1,7 +1,12 @@
-# 사용자 선택: 2026-11-18 생활방범 우선. 기타 목적은 자동 추가하지 않는다.
-version: cctv-purpose-v1
+# 사용자 선택: 2026-11-19 사람이 다니는 공간을 찍는 공공 CCTV 네 목적을 포함한다.
+# (2026-11-18 v1은 생활방범만. 공개 목록의 생활방범이 극히 적어 범위를 넓힘)
+# 재난재해·쓰레기단속·교통정보수집·기타는 포함하지 않는다. 결과는 '방범 CCTV'가 아니라 '공공 CCTV'로 표현한다.
+version: cctv-purpose-v2
 include_purposes:
   - 생활방범
+  - 교통단속
+  - 어린이보호
+  - 시설물관리
 source_url: https://jejudatahub.net/data/view/data/846
 # 자료 선택과 사용 조건·실제 서비스 공개는 별도다.
 rights_confirmed: false

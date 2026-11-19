@@ -1,0 +1,144 @@
+[
+ {
+  "segment": "삼무공원~누웨마루거리",
+  "same_route": true,
+  "weights_used": {
+   "light": 1.0,
+   "cctv": 1.0
+  },
+  "parameters": {
+   "light_radius_m": 15,
+   "cctv_radius_m": 50,
+   "light_weight": 1.0,
+   "cctv_weight": 1.0,
+   "max_detour": 1.5
+  },
+  "endpoint_snap_m": [
+   0.1,
+   15.0
+  ],
+  "graph": {
+   "nodes": 903,
+   "edges": 1122,
+   "osm_base": "2026-11-19T07:08:06Z"
+  },
+  "light_file": "jeju_city_streetlights_20241010_axisfixed.csv",
+  "cctv": {
+   "file": "jeju_cctv_20221215.csv",
+   "source_rows": 479,
+   "selected_rows": 473,
+   "include_purposes": [
+    "생활방범",
+    "교통단속",
+    "어린이보호",
+    "시설물관리"
+   ],
+   "policy_version": "cctv-purpose-v2",
+   "basis_dates": [
+    "2022-12-15",
+    "2023-04-11",
+    "2024-07-29"
+   ]
+  },
+  "routes": {
+   "shortest": {
+    "length_m": 352.4,
+    "duration_minutes": 4.7,
+    "light_fraction": 0.6032,
+    "cctv_fraction": 0.1358
+   },
+   "facility_preferred": {
+    "length_m": 352.4,
+    "duration_minutes": 4.7,
+    "light_fraction": 0.6032,
+    "cctv_fraction": 0.1358
+   }
+  },
+  "osrm_reference": [
+   {
+    "id": "R1",
+    "distance_m": 338.3,
+    "duration_min": 4.51,
+    "points": 8
+   },
+   {
+    "id": "R2",
+    "distance_m": 455.4,
+    "duration_min": 6.07,
+    "points": 10
+   }
+  ],
+  "meaning": "연구용 비교. 시설 위치 인접 비율이며 안전 확률·밝기·작동 상태가 아님"
+ },
+ {
+  "segment": "서귀포 중앙로62번길~매일올레시장",
+  "same_route": true,
+  "weights_used": {
+   "light": 1.0,
+   "cctv": 1.0
+  },
+  "parameters": {
+   "light_radius_m": 15,
+   "cctv_radius_m": 50,
+   "light_weight": 1.0,
+   "cctv_weight": 1.0,
+   "max_detour": 1.5
+  },
+  "endpoint_snap_m": [
+   16.8,
+   6.3
+  ],
+  "graph": {
+   "nodes": 1575,
+   "edges": 1820,
+   "osm_base": "2026-11-19T07:09:04Z"
+  },
+  "light_file": "seogwipo_streetlights_20250725.csv",
+  "cctv": {
+   "file": "jeju_cctv_20221215.csv",
+   "source_rows": 479,
+   "selected_rows": 473,
+   "include_purposes": [
+    "생활방범",
+    "교통단속",
+    "어린이보호",
+    "시설물관리"
+   ],
+   "policy_version": "cctv-purpose-v2",
+   "basis_dates": [
+    "2022-12-15",
+    "2023-04-11",
+    "2024-07-29"
+   ]
+  },
+  "routes": {
+   "shortest": {
+    "length_m": 307.6,
+    "duration_minutes": 4.1,
+    "light_fraction": 0.6234,
+    "cctv_fraction": 0.3692
+   },
+   "facility_preferred": {
+    "length_m": 307.6,
+    "duration_minutes": 4.1,
+    "light_fraction": 0.6234,
+    "cctv_fraction": 0.3692
+   }
+  },
+  "osrm_reference": [
+   {
+    "id": "R1",
+    "distance_m": 298,
+    "duration_min": 3.97,
+    "points": 9
+   },
+   {
+    "id": "R2",
+    "distance_m": 407,
+    "duration_min": 5.42,
+    "points": 10
+   }
+  ],
+  "meaning": "연구용 비교. 시설 위치 인접 비율이며 안전 확률·밝기·작동 상태가 아님"
+ }
+]
