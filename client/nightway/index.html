@@ -398,16 +398,19 @@
               <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
               <span>월별 합계에서 특정 길의 혼잡도나 야간 보행자 수를 확인할 수 없어요.</span>
             </p>
-            <div class="step-actions"><button type="button" class="primary" id="region-detail-button" data-view-go="detail">연동의 자료 상세 보기</button></div>
+            <div class="step-actions two" id="region-detail-actions">
+              <button type="button" class="primary" id="region-detail-button">첫 번째 지역 자료 상세</button>
+              <button type="button" class="primary" id="region-detail-button-second">두 번째 지역 자료 상세</button>
+            </div>
           </div>
           <div class="view" data-view="detail" data-title="지역 자료 상세" hidden>
             <div class="step-head">
-              <h1 id="region-detail-title">연동 자료 상세</h1>
+              <h1 id="region-detail-title">지역 자료 상세</h1>
               <p>지역의 위치와 제공되는 자료를 확인하세요.</p>
             </div>
             <div class="map-frame jeju-frame" data-jeju-map="detail"></div>
             <div class="card bars-card">
-              <h2>최근 12개월 방문인구</h2>
+              <h2>선택 월까지 최대 12개월 방문인구</h2>
               <p class="caption" id="region-trend-sub"></p>
               <div id="region-trend"></div>
             </div>

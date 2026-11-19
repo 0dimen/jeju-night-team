@@ -162,6 +162,7 @@ async function popRender(view) {
 }
 
 /* 지역 비교 */
+let regionDetailName = null;
 function josa(word, withBatchim, without) {
   const code = word.charCodeAt(word.length - 1) - 0xac00;
   return word + (code >= 0 && code % 28 ? withBatchim : without);
@@ -202,6 +203,14 @@ async function regionInit() {
   $("region-compare").addEventListener("click", () => {
     if (selectedRegions().length === 2) showView("region", "compare");
   });
+  for (const [index, id] of ["region-detail-button", "region-detail-button-second"].entries()) {
+    $(id).addEventListener("click", () => {
+      const region = selectedRegions()[index];
+      if (!region) return;
+      regionDetailName = region.name;
+      showView("region", "detail");
+    });
+  }
   regionButton();
 }
 function regionButton() {
@@ -227,13 +236,17 @@ function regionRender(view) {
       el("div", "", more).append(el("dt", r.name), el("dd", v ? "거주 " + man(v[0]) + " · 근무 " + man(v[1]) : "자료 없음"));
     }
     $("region-detail-button").textContent = a.name + "의 자료 상세 보기";
+    $("region-detail-button-second").textContent = b.name + "의 자료 상세 보기";
   }
   if (view === "detail") {
-    $("region-detail-title").textContent = a.name + " 자료 상세";
-    jejuMap(document.querySelector('[data-jeju-map="detail"]'), { label: "위치 도식" });
-    const series = popData.months.slice(-12).filter((m) => a.values[m]);
-    $("region-trend-sub").textContent = monthLabel(series[0]) + " ~ " + monthLabel(series.at(-1)) + " · 월 누적 방문인구";
-    renderBars($("region-trend"), series.map((m) => ({ name: monthLabel(m), value: a.values[m][2] })));
+    const region = [a, b].find(r => r.name === regionDetailName) || a;
+    $("region-detail-title").textContent = region.name + " 자료 상세";
+    jejuMap(document.querySelector('[data-jeju-map="detail"]'), { label: region.name + " · 위치 도식(실제 경계 아님)" });
+    const series = popData.months.filter(m => m <= month).slice(-12).filter(m => region.values[m]);
+    $("region-trend-sub").textContent = series.length
+      ? monthLabel(series[0]) + " ~ " + monthLabel(series.at(-1)) + " · 월 누적 방문인구"
+      : "선택 월까지 최근 12개월에 제공된 자료가 없어요.";
+    renderBars($("region-trend"), series.map(m => ({ name: monthLabel(m), value: region.values[m][2] })));
   }
 }
 
