@@ -103,3 +103,15 @@ def demo_page(asset: str = 'demo.html'):
     return FileResponse(Path(__file__).resolve().parents[1]/'client'/asset,headers={
         'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff',
         'Content-Security-Policy':"default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"})
+
+
+@app.get('/app', include_in_schema=False)
+@app.get('/app/{asset}', include_in_schema=False)
+def nightway_app(asset: str = 'index.html'):
+    from pathlib import Path
+    from fastapi.responses import FileResponse
+    if asset not in {'index.html','style.css','tokens.css','app.mjs'}:
+        raise HTTPException(404, '파일이 없습니다.')
+    return FileResponse(Path(__file__).resolve().parents[1]/'client'/'nightway'/asset, headers={
+        'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
+        'Content-Security-Policy':"default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"})

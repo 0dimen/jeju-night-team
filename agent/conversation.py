@@ -4,7 +4,7 @@ from datetime import date,datetime
 import math
 import re
 from agent.common import load_yaml,check_schema
-from agent.intent import parse,out_of_scope_action
+from agent.intent import parse,out_of_scope_action,outside_service_action,PLACES
 from agent.report import emergency_check
 
 
@@ -14,6 +14,8 @@ def page_turn(text,state=None):
                 'state':{},'stored':False}
     if text.strip() in ('취소','초기화','대화 초기화'):
         return {'kind':'reset','message':'이 페이지의 대화와 위치 상태를 비웠습니다.','state':{},'stored':False}
+    if outside_service_action(text):
+        return {'kind':'unsupported','message':'시청 등 외부 기관에 대신 수리 요청하거나 접수하지 않습니다. 앱의 제보 검토와 행정기관 수리 처리는 별개입니다.','state':{},'stored':False}
     if out_of_scope_action(text):
         return {'kind':'unsupported','message':'예약·예매를 실행하지 않습니다. 보행 경로 비교·시설 제보·자료 출처 질문을 지원합니다.','state':{},'stored':False}
     intent=parse(text)
@@ -21,7 +23,10 @@ def page_turn(text,state=None):
         return {'kind':'delegate','text':text,'state':{},'stored':False}
     if intent['kind']=='report':
         from agent.report.preview import preview_report
-        return {**preview_report(text),'state':{}}
+        preview=preview_report(text)
+        preview['questions'].append({'field':'location','message':'제보할 정확한 지점을 지도에서 확인해 주세요. 모르면 근처 표지판 등 단서를 적어 주세요.'})
+        preview['needs_clarification']=True
+        return {**preview,'state':{}}
     if not isinstance(state,(dict,type(None))):raise ValueError('페이지 상태 형식 확인')
     source=state or {}
     # 알 수 없는 상태·이전 대화 원문은 되돌려 주지 않는다.
@@ -40,6 +45,13 @@ def page_turn(text,state=None):
     route=intent['kind']=='route' or bool(re.search(r'집으로|초등학교|대학교',text)) or current.get('awaiting_route') is True
     if not route:return {'kind':'delegate','text':text,'state':{},'stored':False}
     current['awaiting_route']=True
+    # 추가 질문에 장소명만 답하면 이미 정한 출발지를 덮어쓰지 않는다.
+    if source.get('awaiting_route') is True and text.strip() in PLACES:
+        missing_location=next((field for field in ('destination','origin') if field not in request),None)
+        if missing_location:
+            lat,lng=PLACES[text.strip()]
+            intent['request'].pop('origin',None);intent['request'].pop('destination',None)
+            intent['request'][missing_location]={'name':text.strip(),'lat':lat,'lng':lng}
     for field in ('origin','destination'):
         if field in intent['request']:request[field]=intent['request'][field]
     request.setdefault('preferences',intent['request'].get('preferences',['none']))
@@ -55,6 +67,7 @@ def page_turn(text,state=None):
         found_hour=re.search(r'(?<!\d)(\d{1,2})\s*시(?:\s*(\d{1,2})\s*분)?',text)
         if found_hour:
             h,m=int(found_hour[1]),int(found_hour[2] or 0)
+            if re.search(r'시\s*반',text):m=30
             if not(0<=h<24 and 0<=m<60):raise ValueError('시각 범위 확인')
             current.update(hour=h,minute=m)
             current.pop('period',None)
@@ -63,6 +76,11 @@ def page_turn(text,state=None):
         request.pop('departure',None)
     if '오전' in text:current['period']='am'
     elif '오후' in text:current['period']='pm'
+    elif isinstance(current.get('hour'),int):
+        h=current['hour']
+        if ('밤' in text or '저녁' in text) and 5<=h<=11:current['period']='pm'
+        elif ('새벽' in text and 1<=h<=6) or ('아침' in text and 5<=h<=11):current['period']='am'
+        elif '낮' in text and h==12:current['period']='pm'
     if 'date' in current:date.fromisoformat(current['date'])
     if 'hour' in current:
         h=current['hour'];m=current.get('minute',0)

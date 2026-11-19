@@ -11,6 +11,12 @@ def preview_report(text,user_choice=None):
     masked,_=mask_personal_info(text)
     enums=load_yaml('registry/enums.yaml');compact=normalized(masked)
     questions=[]
+    # 정상 조명 언급과 보도 장애물을 함께 적은 경우의 별도 후보. 저장 분류는 변경하지 않는다.
+    if any(term in compact for term in ('보도에박스','보도블록')):
+        if any(term in compact for term in ('박스가쌓','차도로내려','튀어나온','발이걸')):
+            candidate.update(facility='walkway',problem='obstructed' if '박스' in compact else 'damaged',confidence=0.5)
+            questions.append({'field':'meaning','message':'보행로 장애물·단차 문제 후보입니다. 실제 문제와 위치를 확인해 주세요.'})
+
     for field,label in [('facility','시설'),('problem','문제')]:
         mentions=[key for key,terms in enums[field].items()
                   if any(normalized(term) in compact for term in terms)]

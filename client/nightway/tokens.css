@@ -1,0 +1,18 @@
+:root {
+  --jn-bg: #101125;
+  --jn-nav-bg: #151830;
+  --jn-surface: #1d213c;
+  --jn-surface-raised: #29294b;
+  --jn-field-bg: #151831;
+  --jn-text: #f6f3ff;
+  --jn-text-muted: #c4bcd9;
+  --jn-accent: #d6b9ff;
+  --jn-gradient-primary: linear-gradient(135deg, #7a4dce, #582db0);
+  --jn-selected-bg: #332654;
+  --jn-selected-border: #b390f7;
+  --jn-border: #4c456c;
+  --jn-border-control: #8a7cab;
+  --jn-focus: #e1c6ff;
+  --jn-route-a: #af86ff;
+  --jn-route-b: #89e3dd;
+}
