@@ -29,3 +29,17 @@ def covered_length(points, facilities, radius):
             covered += max(0., right-max(left, end))
             end = max(end, right)
     return covered, total
+
+
+def indexed_covered_length(points,facilities,radius):
+    """원 합집합 길이와 같은 식. 각 선분 주변 격자만 조회해 긴 경로 계산을 제한한다."""
+    if isinstance(radius,bool) or not isinstance(radius,Real) or not isfinite(radius) or radius<=0:raise ValueError('반경은 양수')
+    cell=max(float(radius),25.0);grid={}
+    for f in facilities:grid.setdefault((int(f['x']//cell),int(f['y']//cell)),[]).append(f)
+    total=covered=0.0
+    for a,b in zip(points,points[1:]):
+        near=[]
+        for x in range(int((min(a[0],b[0])-radius)//cell),int((max(a[0],b[0])+radius)//cell)+1):
+            for y in range(int((min(a[1],b[1])-radius)//cell),int((max(a[1],b[1])+radius)//cell)+1):near.extend(grid.get((x,y),()))
+        c,length=covered_length([a,b],near,radius);covered+=c;total+=length
+    return covered,total

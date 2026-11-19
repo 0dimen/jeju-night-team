@@ -56,14 +56,14 @@ def cache_path(router,option):
     return Path(os.environ.get('TMAP_PUBLIC_CACHE_DIR','/tmp/jeju-night-tmap-public-cache'))/(digest+'.json')
 
 
-def fetch_route(router,option):
+def fetch_route(router,option,allow_cache=True):
     global _last_call,_blocked_until
     if option not in OPTIONS:raise ValueError('보행 옵션 확인')
     key=os.environ.get('TMAP_APP_KEY','').strip()
     if not key:raise TmapUnavailable('보행 API 키 미설정')
-    path=cache_path(router,option)
+    path=cache_path(router,option) if allow_cache else None
     with _lock:
-        if path.exists() and time.time()-path.stat().st_mtime<3600:
+        if path is not None and path.exists() and time.time()-path.stat().st_mtime<3600:
             # 캐시에는 공개 구간의 정규화한 숫자·좌표만 보관한다.
             try:
                 saved=json.loads(path.read_text());result=normalized(saved['geojson'],router,option);result['cached']=True;result['fetched_at']=datetime.fromtimestamp(path.stat().st_mtime,timezone.utc).isoformat();return result
@@ -86,16 +86,20 @@ def fetch_route(router,option):
             result=normalized(json.loads(raw),router,option)
         except (httpx.HTTPError,ValueError,KeyError,TypeError):raise TmapUnavailable('보행 API 응답 형식·연결 확인 필요') from None
         geojson={'type':'FeatureCollection','features':[{'properties':{'totalDistance':result['provider_distance_m'],'totalTime':result['provider_duration_seconds']},'geometry':{'type':'LineString','coordinates':result['coordinates']}}]}
-        path.parent.mkdir(parents=True,exist_ok=True)
-        path.write_text(json.dumps({'geojson':geojson},separators=(',',':')))
+        if path is not None:
+            path.parent.mkdir(parents=True,exist_ok=True)
+            path.write_text(json.dumps({'geojson':geojson},separators=(',',':')))
         result['cached']=False;result['fetched_at']=datetime.now(timezone.utc).isoformat();return result
 
 
 def coverage(router,coords,radius,kind):
     xy=[project(router.graph,p) for p in coords]
     # 배포용 자료의 시설 생략 범위 밖에서는 0%라고 표시하지 않는다.
-    bounds=[v['xy'] for v in router.graph['nodes'].values()]
-    x0=min(p[0] for p in bounds);x1=max(p[0] for p in bounds);y0=min(p[1] for p in bounds);y1=max(p[1] for p in bounds)
+    bounds=[v['xy'] for v in router.graph.get('nodes',{}).values()]
+    if getattr(router,'coverage_scope',None)=='jeju':
+        x0,y0=project(router.graph,(125,32));x1,y1=project(router.graph,(128,34))
+    else:
+        x0=min(p[0] for p in bounds);x1=max(p[0] for p in bounds);y0=min(p[1] for p in bounds);y1=max(p[1] for p in bounds)
     if any(not(x0<=x<=x1 and y0<=y<=y1) for x,y in xy):
         raise ValueError('공개 연구 시설 자료의 보장 범위 밖 경로입니다.')
     minx=min(p[0] for p in xy)-radius;maxx=max(p[0] for p in xy)+radius
@@ -104,7 +108,8 @@ def coverage(router,coords,radius,kind):
     for p in getattr(router,kind):
         x,y=project(router.graph,p)
         if minx<=x<=maxx and miny<=y<=maxy:facilities.append({'x':x,'y':y})
-    covered,total=covered_length(xy,facilities,radius)
+    from agent.geometry import indexed_covered_length
+    covered,total=indexed_covered_length(xy,facilities,radius)
     return round(covered/total*100,2)
 
 
@@ -114,7 +119,7 @@ def compare(router,preference='both',light_radius=15,cctv_radius=50,weight=4,max
     candidates=[];failures=[]
     for option,label in OPTIONS.items():
         try:
-            row=fetch_route(router,option)
+            row=fetch_route(router,option,allow_cache=False) if getattr(router,'private_request',False) else fetch_route(router,option)
             row['cctv_percent']=coverage(router,row['coordinates'],cctv_radius,'cctv')
             row['light_percent']=coverage(router,row['coordinates'],light_radius,'lights')
         except (TmapUnavailable,ValueError):failures.append(option);continue

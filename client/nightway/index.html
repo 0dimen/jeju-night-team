@@ -169,13 +169,35 @@
             </form>
             <form id="research-chat-form">
               <h3>공개 구간을 대화로 찾기</h3>
-              <p>예: 연동 공개 구간을 CCTV 위주로, 2026-11-20 오후 9시에 출발할게요. 집·임의 주소는 아직 지원하지 않습니다.</p>
+              <p>예: 연동 공개 구간을 티맵으로 CCTV 위주로, 2026-11-20 오후 9시에 출발할게요. 집·임의 주소는 아직 지원하지 않습니다.</p>
               <label>질문 또는 추가 답변<input id="research-chat-input" maxlength="5000" required autocomplete="off" /></label>
               <button id="research-chat-send" type="submit">공개 구간 질문 보내기</button>
               <button id="research-chat-reset" type="button">공개 대화 초기화</button>
             </form>
             <div id="research-chat-result" aria-live="polite"></div>
             <div id="facility-result" aria-live="polite"></div>
+          </div>
+          <div class="card form-card">
+            <h2>장소를 선택해서 실제 길 찾기</h2>
+            <p>검색어는 VWorld에, 선택 좌표는 TMAP에 보내 계산합니다. 앱 서버는 검색·위치·경로를 저장하지 않습니다. 외부 제공사의 처리 정책은 별도입니다. 페이지를 떠나면 선택을 지웁니다.</p>
+            <form id="live-place-form" autocomplete="off">
+              <label>검색 방식<select id="live-search-mode"><option value="place">장소명</option><option value="road">도로명 주소</option><option value="parcel">지번 주소</option></select></label>
+              <label>출발지 검색<input id="live-origin-query" maxlength="120" autocomplete="off" /></label>
+              <button id="live-origin-search" type="button">출발지 검색</button>
+              <div id="live-origin-candidates" aria-live="polite"></div>
+              <p id="live-origin-selected">출발지를 선택해 주세요.</p>
+              <label>도착지·집 검색<input id="live-destination-query" maxlength="120" autocomplete="off" /></label>
+              <button id="live-destination-search" type="button">도착지 검색</button>
+              <div id="live-destination-candidates" aria-live="polite"></div>
+              <p id="live-destination-selected">도착지를 선택해 주세요.</p>
+              <label>출발 날짜 · 한국 시간<input id="live-date" type="date" required /></label>
+              <label>출발 시각 · 24시간<input id="live-time" type="time" required /></label>
+              <label>우선 조건<select id="live-preference"><option value="both">CCTV·조명 함께 비교</option><option value="cctv">CCTV 인접 구간</option><option value="light">조명 인접 구간</option><option value="fastest">제공 예상 시간이 짧은 길</option></select></label>
+              <p>제주 범위에서 직선 5m~20km를 지원합니다. 선택 결과의 주소를 확인해 주세요. 시설 상태·현장 통행 확인은 별도입니다.</p>
+              <button id="live-route-button" type="submit">선택 좌표를 TMAP으로 보내 비교</button>
+              <button id="live-clear" type="button">선택 위치 지우기</button>
+            </form>
+            <div id="live-route-result" aria-live="polite"></div>
           </div>
           <h2>합성 경로·대화 시연</h2>
           <form id="route-form">

@@ -102,7 +102,7 @@ def demo_page(asset: str = 'demo.html'):
         raise HTTPException(404, '파일이 없습니다.')
     return FileResponse(Path(__file__).resolve().parents[1]/'client'/asset,headers={
         'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff',
-        'Content-Security-Policy':"default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"})
+        'Content-Security-Policy':"default-src 'self'; img-src 'self' blob:; connect-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"})
 
 
 @app.get('/app', include_in_schema=False)
@@ -114,7 +114,7 @@ def nightway_app(asset: str = 'index.html'):
         raise HTTPException(404, '파일이 없습니다.')
     return FileResponse(Path(__file__).resolve().parents[1]/'client'/'nightway'/asset, headers={
         'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
-        'Content-Security-Policy':"default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"})
+        'Content-Security-Policy':"default-src 'self'; img-src 'self' blob:; connect-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"})
 
 
 from typing import Literal
@@ -145,10 +145,13 @@ def facility_routes(body: FacilityRouteBody,response: Response):
 @app.post('/research/agent/conversation')
 def research_conversation(body: ConversationBody,response: Response):
     from agent.research_conversation import research_turn
+    from agent.data.tmap_routes import TmapUnavailable
     response.headers['Cache-Control']='no-store'
     response.headers['Pragma']='no-cache'
     try:
         return research_turn(body.text,body.state)
+    except TmapUnavailable:
+        raise HTTPException(503,'TMAP 보행 후보를 확인하지 못했습니다. 키·한도·시설 자료를 확인해 주세요. 합성 경로로 대신하지 않습니다.') from None
     except FileNotFoundError as exc:
         raise HTTPException(503,'공개 데이터가 없습니다. 합성 경로로 대신하지 않습니다.') from exc
     except (ValueError,TypeError,KeyError,ValidationError) as exc:
@@ -237,3 +240,65 @@ def tmap_routes(body:FacilityRouteBody,response:Response):
         raise HTTPException(503,'TMAP 보행 후보를 불러오지 못했습니다. 키·이용 권한·한도·시설 자료 연결을 확인해 주세요. 합성 경로로 대신하지 않습니다.') from None
     except (ValueError,KeyError,TypeError):
         raise HTTPException(422,'공개 구간과 보행 비교 설정을 확인해 주세요.') from None
+
+
+class PlaceSearchBody(BaseModel):
+    query: str=Field(min_length=1,max_length=120)
+    mode: Literal['place','road','parcel']='place'
+
+
+@app.post('/maps/places/search')
+def place_search(body:PlaceSearchBody,response:Response):
+    from agent.maps.search import search_places,SearchUnavailable
+    response.headers['Cache-Control']='no-store'
+    try:
+        candidates=search_places(body.query,body.mode)
+        return {'kind':'place_candidates','candidates':candidates,'stored':False,
+                'message':'주소와 위치를 확인하고 지점을 선택해 주세요.' if candidates else '제주 범위에서 검색 결과를 찾지 못했습니다. 더 구체적인 이름이나 도로명 주소를 입력해 주세요.'}
+    except SearchUnavailable:
+        raise HTTPException(503,'장소 검색을 처리하지 못했습니다. 키·연결·검색 방식을 확인해 주세요.') from None
+    except ValueError:
+        raise HTTPException(422,'제주 장소명이나 주소를 확인해 주세요.') from None
+
+
+class SelectedPoint(BaseModel):
+    lat: float=Field(ge=32,le=34)
+    lng: float=Field(ge=125,le=128)
+
+
+class SelectedRouteBody(BaseModel):
+    origin: SelectedPoint
+    destination: SelectedPoint
+    departure: str=Field(pattern=r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$')
+    preference: Literal['fastest','cctv','light','both']='both'
+    cctv_source: Literal['standard','datahub']='standard'
+    light_radius: float=Field(default=15,gt=0,le=80)
+    cctv_radius: float=Field(default=50,gt=0,le=200)
+    weight: float=Field(default=4,ge=0,le=16)
+    max_detour: float=Field(default=1.5,ge=1,le=2)
+
+
+@app.post('/research/routes/selected')
+def selected_routes(body:SelectedRouteBody,response:Response):
+    from agent.data.selected_routes import selected_compare
+    from agent.data.tmap_routes import TmapUnavailable
+    response.headers['Cache-Control']='no-store'
+    response.headers['Pragma']='no-cache'
+    try:
+        return selected_compare([body.origin.lng,body.origin.lat],[body.destination.lng,body.destination.lat],body.departure,body.cctv_source,body.preference,body.light_radius,body.cctv_radius,body.weight,body.max_detour)
+    except (TmapUnavailable,FileNotFoundError):
+        raise HTTPException(503,'선택한 위치의 경로·시설 자료를 확인하지 못했습니다. 키·한도·자료 연결을 확인해 주세요. 합성 경로로 대신하지 않습니다.') from None
+    except (ValueError,KeyError,TypeError):
+        raise HTTPException(422,'제주 위치·날짜·24시간 시각과 지원 거리(직선 5m~20km)를 확인해 주세요.') from None
+
+
+class MapTileBody(BaseModel):
+    z:int=Field(ge=10,le=19)
+    x:int=Field(ge=0)
+    y:int=Field(ge=0)
+
+
+@app.post('/maps/vworld/tile')
+def private_map_tile(body:MapTileBody):
+    # 페이지 한정 위치의 타일 번호도 브라우저 요청 URL에 남기지 않는다.
+    return vworld_tile(body.z,body.x,body.y)

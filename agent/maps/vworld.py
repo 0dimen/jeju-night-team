@@ -1,5 +1,5 @@
 """서버 키로 제주 타일만 요청. 키·제공사 오류 본문·URL을 반환하지 않는다."""
-import math,os,time,logging
+import math,os,time,logging,re
 from threading import BoundedSemaphore,Lock
 from collections import deque
 import httpx
@@ -10,6 +10,8 @@ class RedactMapKey(logging.Filter):
         if key:
             record.msg=record.getMessage().replace(key,'[REDACTED]')
             record.args=()
+        record.msg=re.sub(r'https://api\.vworld\.kr/req/wmts/\S+','https://api.vworld.kr/req/wmts/[REDACTED]',record.getMessage())
+        record.args=()
         return True
 
 

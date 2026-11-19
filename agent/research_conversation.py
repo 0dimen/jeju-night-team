@@ -6,7 +6,7 @@ from agent.report import emergency_check
 from agent.data.research_router import get_router
 
 PAIRS={'yeondong':('삼무공원','누웨마루'), 'seogwipo':('중앙로','올레시장')}
-SCOPE='연동 공개 구간 또는 서귀포 공개 구간 중 골라 주세요. 집·임의 주소·반대 방향은 아직 지원하지 않습니다.'
+SCOPE='연동 공개 구간 또는 서귀포 공개 구간 중 골라 주세요. 집·임의 주소·반대 방향은 이 공개 구간 대화에서 지원하지 않습니다.'
 
 
 def research_turn(text,state=None):
@@ -19,11 +19,15 @@ def research_turn(text,state=None):
         return result
     if not isinstance(state,(dict,type(None))):raise ValueError('상태 확인')
     state=state or {};region=state.get('region')
+    route_provider=state.get('route_provider','osm')
+    if route_provider not in ('osm','tmap'):route_provider='osm'
+    if '티맵' in text or 'tmap' in text.lower():route_provider='tmap'
+    elif '공개 도로망' in text or 'osm' in text.lower():route_provider='osm'
     explicit=None
     for key,(start,end) in PAIRS.items():
         if (start in text and end in text and text.index(start)<text.index(end)) or ('공개 구간' in text and ('연동' if key=='yeondong' else '서귀포') in text):explicit=key
     # 이전 지역이 있더라도 새 주소나 역방향 요청을 무시하지 않는다.
-    followup=bool(re.fullmatch(r'[\d\sT:.,\-년월일시오전후분반새벽아침낮저녁밤출발할게요에은는으로위주가로등조명빠른최단길선호함께그리고둘다변경해줘CCTVcctv]+',text.strip()))
+    followup=bool(re.fullmatch(r'[\d\sT:.,\-년월일시오전후분반새벽아침낮저녁밤출발할게요에은는으로위주가로등조명빠른최단길선호함께그리고둘다변경해줘CCTVcctvTMAPtmap티맵공개도로망osm]+',text.strip()))
     if re.search(r'집|대학교|초등학교|공항|시청',text):explicit=None;region=None
     if explicit:region=explicit
     elif region not in PAIRS or not followup:
@@ -42,11 +46,14 @@ def research_turn(text,state=None):
     request={'origin':{'name':start,'lng':router.start[0],'lat':router.start[1]},'destination':{'name':end,'lng':router.goal[0],'lat':router.goal[1]},'preferences':['none']}
     previous.update(request=request,awaiting_route=True)
     # 장소 해석은 이 모듈에서 검증된 공개 구간만 사용한다.
-    temporal=re.sub(r'삼무공원|누웨마루|중앙로|올레시장','',text)
+    temporal=re.sub(r'삼무공원|누웨마루|중앙로|올레시장|티맵|TMAP|tmap|공개 도로망|OSM|osm','',text)
     result=page_turn(temporal,previous)
-    public_state={'region':region,'preference':preference,'page':{k:v for k,v in result.get('state',{}).items() if k in ('date','hour','minute','period')}}
+    public_state={'region':region,'preference':preference,'route_provider':route_provider,'page':{k:v for k,v in result.get('state',{}).items() if k in ('date','hour','minute','period')}}
     if result['kind']!='route_ready':return {**result,'state':public_state}
-    calculated=router.route(preference)
+    if route_provider=='tmap':
+        from agent.data.tmap_routes import compare
+        calculated=compare(router,preference)
+    else:calculated=router.route(preference)
     return {**calculated,'state':public_state,'stored':False,'departure':result['request']['departure'],
             'message':'확인한 날짜·시각으로 공개 구간 후보를 계산했습니다.',
             'time_effect':'날짜·시각은 확인했지만 현재 시설 위치 계산에는 시간별 밝기·통행 상태가 반영되지 않습니다.'}

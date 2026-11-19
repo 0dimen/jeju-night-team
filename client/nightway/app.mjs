@@ -39,6 +39,7 @@ const points = {
 };
 const controller = createPageConversation();
 let researchState = {};
+let liveLocations={},liveRevision={origin:0,destination:0,settings:0};
 let current = "home",
   generation = 0,
   pending = new Set(),
@@ -55,7 +56,13 @@ function message(parent, text, cls) {
   parent.replaceChildren();
   return element("p", text, parent, cls);
 }
+function clearLive(){
+  liveLocations={};liveRevision.origin++;liveRevision.destination++;liveRevision.settings++;
+  $("live-place-form")?.reset();$("live-route-result")?.replaceChildren();
+  for(const field of ["origin","destination"]){$("live-"+field+"-candidates")?.replaceChildren();const p=$("live-"+field+"-selected");if(p)p.textContent=(field==="origin"?"출발지":"도착지")+"를 선택해 주세요.";}
+}
 function clearRoute() {
+  clearLive();
   researchState = {};
   $("research-chat-form")?.reset();
   $("research-chat-result")?.replaceChildren();
@@ -469,8 +476,7 @@ $("report-submit").addEventListener("click", async () => {
   }
 });
 
-function renderFacilityRoutes(view) {
-  const target = $("facility-result");
+function renderFacilityRoutes(view,target=$("facility-result")) {
   target.replaceChildren();
   element("h2", view.label, target);
   element(
@@ -533,13 +539,14 @@ function renderFacilityRoutes(view) {
   const mapEpoch=generation;
   mapButton.addEventListener('click',async()=>{
     mapButton.disabled=true;
-    const isCurrent=()=>mapEpoch===generation && mapHost.isConnected;
+    const mapAbort=new AbortController();pending.add(mapAbort);
+    const isCurrent=()=>mapEpoch===generation && mapHost.isConnected && !mapAbort.signal.aborted;
     try {
-      await drawVworld(view,mapHost,isCurrent);
+      await drawVworld(view,mapHost,isCurrent,mapAbort.signal);
       const selected=target.querySelector('.route-card[aria-pressed=true]')?.dataset.route;
       for(const line of mapHost.querySelectorAll('polyline[data-route]'))line.setAttribute('opacity',line.dataset.route===selected?'1':'.35');
     }catch {if(isCurrent())message(mapHost,'VWorld 배경지도를 불러오지 못했습니다. 키·도메인·연결을 확인해 주세요. 좌표 도식과 경로 수치는 유지됩니다.','error');}
-    finally {mapButton.disabled=false;}
+    finally {pending.delete(mapAbort);mapButton.disabled=false;}
   });
   target.append(svg);
   element(
@@ -729,3 +736,36 @@ $("tmap-button").addEventListener("click", async()=>{
   }catch {message($("facility-result"),'TMAP 보행 후보를 불러오지 못했습니다. 키·이용 권한·한도·시설 자료 연결을 확인해 주세요. 합성 경로로 대신하지 않았습니다.','error');}
   finally {button.disabled=false;}
 });
+
+for(const field of ['origin','destination']){
+  const input=$('live-'+field+'-query');
+  input.addEventListener('input',()=>{delete liveLocations[field];liveRevision[field]++;$('live-'+field+'-candidates').replaceChildren();$('live-'+field+'-selected').textContent='검색 결과에서 위치를 다시 선택해 주세요.';$('live-route-result').replaceChildren();});
+  $('live-'+field+'-search').addEventListener('click',async()=>{
+    const button=$('live-'+field+'-search'),target=$('live-'+field+'-candidates'),revision=++liveRevision[field];
+    button.disabled=true;delete liveLocations[field];$('live-'+field+'-selected').textContent='검색 결과에서 위치를 선택해 주세요.';$('live-route-result').replaceChildren();
+    try {
+      const view=await post('/maps/places/search',{query:input.value,mode:$('live-search-mode').value});
+      if(!view || revision!==liveRevision[field])return;
+      target.replaceChildren();element('p',view.message,target);
+      for(const place of view.candidates){
+        const choice=element('button',place.name+' · '+(place.road_address || place.parcel_address),target,'route-card');choice.type='button';
+        choice.addEventListener('click',()=>{liveLocations[field]={lat:place.lat,lng:place.lng};$('live-'+field+'-selected').textContent='선택: '+place.name+' · '+(place.road_address || place.parcel_address);target.replaceChildren();$('live-route-result').replaceChildren();});
+      }
+    }catch {if(revision===liveRevision[field])message(target,'장소 검색을 처리하지 못했습니다. 입력은 유지했습니다.','error');}
+    finally {button.disabled=false;}
+  });
+}
+$('live-search-mode').addEventListener('change',()=>{for(const f of ['origin','destination']){delete liveLocations[f];liveRevision[f]++;$('live-'+f+'-candidates').replaceChildren();$('live-'+f+'-selected').textContent='검색 방식이 바뀌었습니다. 위치를 다시 선택해 주세요.';}$('live-route-result').replaceChildren();});
+$('live-clear').addEventListener('click',()=>{abortRequests();clearLive();});
+$('live-place-form').addEventListener('submit',async(event)=>{
+  event.preventDefault();const target=$('live-route-result'),button=$('live-route-button');
+  if(!liveLocations.origin || !liveLocations.destination){message(target,'출발지와 도착지를 검색한 뒤 결과에서 각각 선택해 주세요.','error');return;}
+  const originRevision=liveRevision.origin,destinationRevision=liveRevision.destination,settingsRevision=liveRevision.settings;button.disabled=true;
+  try {
+    const view=await post('/research/routes/selected',{origin:liveLocations.origin,destination:liveLocations.destination,departure:$('live-date').value+'T'+$('live-time').value,preference:$('live-preference').value});
+    if(view && originRevision===liveRevision.origin && destinationRevision===liveRevision.destination && settingsRevision===liveRevision.settings)renderFacilityRoutes(view,target);
+  }catch {if(originRevision===liveRevision.origin && destinationRevision===liveRevision.destination && settingsRevision===liveRevision.settings)message(target,'선택한 위치의 경로·시설 비교를 처리하지 못했습니다. 위치·시각·키·한도를 확인해 주세요. 입력은 유지했습니다. 합성 경로로 대신하지 않았습니다.','error');}
+  finally {button.disabled=false;}
+});
+
+for(const id of ['live-date','live-time','live-preference'])$(id).addEventListener('input',()=>{liveRevision.settings++;$('live-route-result').replaceChildren();});

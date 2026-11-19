@@ -49,3 +49,15 @@ def test_missing_data_is_503_not_demo(monkeypatch,tmp_path):
     monkeypatch.setenv('JEJU_OPEN_DATA_DIR',str(tmp_path))
     r=c.post('/research/agent/conversation',json={'text':'연동 공개 구간 2026-11-20 오후 9시'})
     assert r.status_code==503 and '합성 경로로 대신하지 않습니다' in r.text
+
+
+def test_natural_tmap_selection_preserves_date_flow(monkeypatch):
+    calls=[]
+    def compare(router,preference):
+        calls.append(preference);return {**router.route(preference),'provider':'tmap'}
+    monkeypatch.setattr('agent.data.tmap_routes.compare',compare)
+    a=turn('연동 공개 구간 티맵으로 CCTV 위주로 3시')
+    assert a['missing']==['date']
+    b=turn('2026-11-20',a['state']);assert b['missing']==['period']
+    result=turn('오후',b['state']);assert result['provider']=='tmap' and calls==['cctv']
+    back=turn('공개 도로망으로 변경해줘',result['state']);assert back['kind']=='facility_routes' and back.get('provider')!='tmap'

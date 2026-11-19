@@ -34,3 +34,16 @@ def test_compiled_api_without_original_and_no_raw_routes(tmp_path,monkeypatch):
     assert c.get('/').status_code==200
     for path in ('/runtime/facilities/yeondong_standard.json','/data/open/jeju_cctv_mois_standard.csv','/.env'):
         assert c.get(path).status_code==404
+
+
+def test_global_facilities_match_original_selection(tmp_path,monkeypatch):
+    import json
+    from agent.data.selected_routes import load_facilities
+    build(tmp_path)
+    for source,count in [('standard',937),('datahub',473)]:
+        monkeypatch.delenv('JEJU_COMPILED_DATA_DIR',raising=False)
+        original=load_facilities(source)
+        monkeypatch.setenv('JEJU_COMPILED_DATA_DIR',str(tmp_path))
+        compiled=load_facilities(source)
+        assert len(compiled[0])==89933 and len(compiled[1])==count
+        assert json.dumps(original,sort_keys=True)==json.dumps(compiled,sort_keys=True)
