@@ -177,6 +177,17 @@ def landing():
     return RedirectResponse('/app',status_code=307,headers={'Cache-Control':'no-store'})
 
 
+@app.get('/data/population')
+def population_stats():
+    """제주데이터허브 748번에서 만든 읍면동·월별 거주·근무·방문인구 집계(scripts/build_population_stats.py)."""
+    from pathlib import Path
+    from fastapi.responses import FileResponse
+    path=Path(__file__).resolve().parents[1]/'data'/'population'/'jeju_emd_population_monthly.json'
+    if not path.is_file():
+        raise HTTPException(503,'유동인구 집계 자료가 없습니다. 지어낸 값으로 대신하지 않습니다.')
+    return FileResponse(path,media_type='application/json',headers={'Cache-Control':'public, max-age=3600'})
+
+
 @app.get('/runtime/status')
 def runtime_status(response: Response):
     import json,os

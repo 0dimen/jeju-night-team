@@ -5,7 +5,7 @@
   "functions": {
     "app.py": {
       "maxDuration": 60,
-      "includeFiles": "{runtime/facilities/**,client/**,config/**,contracts/**,registry/**,data/route_examples/**,lexicon/**}",
+      "includeFiles": "{runtime/facilities/**,client/**,config/**,contracts/**,registry/**,data/route_examples/**,lexicon/**,data/population/**}",
       "excludeFiles": "{data/open/**,data/raw/**,.venv/**,tests/**,experiments/**,review/**,docs/**,*.pdf,*.zip,.git/**,**/*.env,**/.env*,**/*secrets*}"
     }
   },

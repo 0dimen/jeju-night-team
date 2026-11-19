@@ -1,4 +1,4 @@
-// 유동인구·지역 비교·시설 지도·내 제보 화면. 자료가 없는 수치는 화면에 '예시'로 표시한다.
+// 유동인구·지역 비교·시설 지도·내 제보 화면. 유동인구는 제주데이터허브 748번 실제 월별 집계를 쓴다.
 const $ = (id) => document.getElementById(id);
 const NS = "http://www.w3.org/2000/svg";
 
@@ -63,14 +63,14 @@ export function hasViews(screen) {
   return Boolean($(screen)?.querySelector(":scope > .view"));
 }
 
-/* 제주 지도 도식(예시) */
+/* 제주 위치 도식(실제 경계 아님) */
 const AREAS = {
   north: { name: "제주시", d: "M190 58 L262 44 L282 74 L262 96 L206 98 Z", level: "high" },
   mid: { name: "제주시 동부", d: "M140 82 L190 60 L210 100 L190 130 L154 124 Z", level: "mid" },
   west: { name: "서귀포시 서부", d: "M100 116 L144 96 L156 126 L150 152 L106 152 Z", level: "mid" },
   east: { name: "서귀포시", d: "M218 108 L274 98 L282 116 L228 128 Z", level: "low" },
 };
-function jejuMap(host, { highlight = null, label = "예시 지도" } = {}) {
+function jejuMap(host, { highlight = null, label = "위치 도식" } = {}) {
   host.replaceChildren();
   const s = svg(host, "svg", { viewBox: "0 0 350 220", class: "route-map jeju-map", role: "img", "aria-label": "제주 지역 도식 · " + label });
   svg(s, "path", { d: "M24 160 L64 130 L134 102 L194 80 L264 60 L314 64 L330 86 L308 102 L286 128 L220 142 L164 166 L104 170 L54 168 Z", class: "island" });
@@ -84,52 +84,114 @@ function jejuMap(host, { highlight = null, label = "예시 지도" } = {}) {
   el("span", label, host, "map-chip bottom");
 }
 
-/* 유동인구 */
-function popRender(view) {
+/* 유동인구·지역 비교: 제주데이터허브 748번 자료의 읍면동·월별 실제 집계 */
+let popData = null,
+  popLoading = null;
+function loadPopulation() {
+  popLoading ||= fetch("/data/population", { cache: "no-store" })
+    .then((r) => {
+      if (!r.ok) throw new Error("population");
+      return r.json();
+    })
+    .then((d) => (popData = d))
+    .catch((error) => {
+      popLoading = null;
+      throw error;
+    });
+  return popLoading;
+}
+function monthLabel(m) {
+  const [y, mo] = m.split("-");
+  return y + "년 " + Number(mo) + "월";
+}
+function man(v) {
+  return v == null ? "자료 없음" : Math.round(v / 10000).toLocaleString("ko-KR") + "만";
+}
+function fillMonths(select) {
+  if (select.dataset.filled) return;
+  select.replaceChildren();
+  for (const m of [...popData.months].reverse()) el("option", monthLabel(m), select).value = m;
+  select.dataset.filled = "1";
+}
+function renderBars(host, rows) {
+  host.replaceChildren();
+  const max = Math.max(1, ...rows.map((r) => r.value ?? 0));
+  for (const r of rows) {
+    const row = el("div", "", host, "bar-row");
+    const head = el("div", "", row, "bar-head");
+    el("span", r.name, head);
+    el("strong", man(r.value), head);
+    const track = el("div", "", row, "bar-track");
+    el("div", "", track, "bar-fill").style.width = Math.round(((r.value ?? 0) / max) * 90) + "%";
+  }
+}
+async function popRender(view) {
   const unit = document.querySelector('input[name="pop-unit"]:checked')?.value || "읍면동";
   for (const dd of document.querySelectorAll('[data-pop="unit"]')) dd.textContent = unit;
-  if (view === "overview") jejuMap(document.querySelector('[data-jeju-map="overview"]'));
+  if (view === "overview") jejuMap(document.querySelector('[data-jeju-map="overview"]'), { label: "위치 도식" });
+  try {
+    await loadPopulation();
+  } catch {
+    if (view === "distribution") el("p", "유동인구 자료를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.", $("pop-bars"), "error");
+    return;
+  }
+  fillMonths($("pop-month"));
+  $("pop-range").textContent = monthLabel(popData.months[0]) + " ~ " + monthLabel(popData.months.at(-1));
   if (view === "distribution") {
     const area = $("pop-area").value,
       month = $("pop-month").value;
-    $("pop-dist-title").textContent = area + " 월별 방문 분포";
-    $("pop-dist-sub").textContent = month + " · " + unit + " 단위 · 예시";
-    jejuMap(document.querySelector('[data-jeju-map="distribution"]'), {
-      highlight: area === "서귀포시" ? "east" : "north",
-      label: "예시 분포",
-    });
+    let rows;
+    if (unit === "시 전체") {
+      $("pop-dist-title").textContent = "제주시·서귀포시 방문인구";
+      rows = ["제주시", "서귀포시"].map((city) => {
+        const list = popData.regions.filter((r) => r.city === city && r.values[month]);
+        return { name: city, value: list.length ? list.reduce((sum, r) => sum + r.values[month][2], 0) : null };
+      });
+    } else {
+      $("pop-dist-title").textContent = area + " 읍면동별 방문인구";
+      rows = popData.regions
+        .filter((r) => r.city === area)
+        .map((r) => ({ name: r.name, value: r.values[month]?.[2] ?? null }))
+        .sort((x, y) => (y.value ?? -1) - (x.value ?? -1))
+        .slice(0, 10);
+    }
+    $("pop-dist-sub").textContent = monthLabel(month) + " · 월 누적(매시 측정 합) · " + (unit === "시 전체" ? "시 합계" : "상위 10곳");
+    renderBars($("pop-bars"), rows);
+    $("pop-unit-note").textContent = popData.unit_note;
   }
 }
 
-/* 지역 비교: 방문객 수는 예시 값 */
-const REGIONS = [
-  { id: "yeon", name: "연동", city: "제주시", visits: 12430, area: "north" },
-  { id: "nohyeong", name: "노형동", city: "제주시", visits: 9860, area: "mid" },
-  { id: "ido2", name: "이도2동", city: "제주시", visits: 8120, area: "north" },
-  { id: "samdo2", name: "삼도2동", city: "제주시", visits: 6540, area: "mid" },
-];
+/* 지역 비교 */
 function josa(word, withBatchim, without) {
   const code = word.charCodeAt(word.length - 1) - 0xac00;
   return word + (code >= 0 && code % 28 ? withBatchim : without);
 }
 function selectedRegions() {
-  return [...document.querySelectorAll('#region-choices input:checked')].map((i) => REGIONS.find((r) => r.id === i.value));
+  return [...document.querySelectorAll("#region-choices input:checked")]
+    .map((i) => popData?.regions.find((r) => r.name === i.value))
+    .filter(Boolean);
 }
-function regionInit() {
+async function regionInit() {
   const host = $("region-choices");
-  for (const r of REGIONS) {
+  try {
+    await loadPopulation();
+  } catch {
+    el("p", "지역 자료를 불러오지 못했어요. 잠시 뒤 다시 시도해 주세요.", host, "error");
+    return;
+  }
+  fillMonths($("region-month"));
+  for (const r of popData.regions) {
     const card = el("label", "", host, "select-card");
     const input = el("input", undefined, card);
     input.type = "checkbox";
-    input.value = r.id;
-    input.checked = r.id === "yeon" || r.id === "nohyeong";
+    input.value = r.name;
+    input.checked = r.name === "연동" || r.name === "노형동";
     icon(card, "pin", 22);
     el("strong", r.name, card);
     el("small", r.city, card);
   }
   host.addEventListener("change", (event) => {
-    const checked = selectedRegions();
-    if (checked.length > 2) event.target.checked = false;
+    if (selectedRegions().length > 2) event.target.checked = false;
     regionButton();
   });
   $("region-compare").addEventListener("click", () => {
@@ -149,24 +211,22 @@ function regionRender(view) {
   const month = $("region-month").value;
   if (view === "compare") {
     $("region-compare-title").textContent = josa(a.name, "과", "와") + " " + b.name + " 비교";
-    $("region-compare-sub").textContent = month + " · 월별 방문 규모 예시";
-    const bars = $("region-bars");
-    bars.replaceChildren();
-    const max = Math.max(a.visits, b.visits);
+    $("region-compare-sub").textContent = monthLabel(month) + " · 월 누적 방문인구(매시 측정 합)";
+    renderBars($("region-bars"), [a, b].map((r) => ({ name: r.name, value: r.values[month]?.[2] ?? null })));
+    const more = $("region-more");
+    more.replaceChildren();
     for (const r of [a, b]) {
-      const row = el("div", "", bars, "bar-row");
-      const head = el("div", "", row, "bar-head");
-      el("span", r.name, head);
-      el("strong", r.visits.toLocaleString("ko-KR"), head);
-      const track = el("div", "", row, "bar-track");
-      const fill = el("div", "", track, "bar-fill");
-      fill.style.width = Math.round((r.visits / max) * 90) + "%";
+      const v = r.values[month];
+      el("div", "", more).append(el("dt", r.name), el("dd", v ? "거주 " + man(v[0]) + " · 근무 " + man(v[1]) : "자료 없음"));
     }
     $("region-detail-button").textContent = a.name + "의 자료 상세 보기";
   }
   if (view === "detail") {
     $("region-detail-title").textContent = a.name + " 자료 상세";
-    jejuMap(document.querySelector('[data-jeju-map="detail"]'), { highlight: a.area, label: "예시 지도" });
+    jejuMap(document.querySelector('[data-jeju-map="detail"]'), { label: "위치 도식" });
+    const series = popData.months.slice(-12).filter((m) => a.values[m]);
+    $("region-trend-sub").textContent = monthLabel(series[0]) + " ~ " + monthLabel(series.at(-1)) + " · 월 누적 방문인구";
+    renderBars($("region-trend"), series.map((m) => ({ name: monthLabel(m), value: a.values[m][2] })));
   }
 }
 

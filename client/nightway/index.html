@@ -301,7 +301,8 @@
               <dl>
                 <div><dt>집계 주기</dt><dd>월별</dd></div>
                 <div><dt>공간 단위</dt><dd data-pop="unit">읍면동</dd></div>
-                <div><dt>화면 구분</dt><dd>예시 자료</dd></div>
+                <div><dt>기간</dt><dd id="pop-range">2017년 1월 ~ 2021년 5월</dd></div>
+                <div><dt>출처</dt><dd>제주데이터허브 · 제주빅데이터센터 활용</dd></div>
               </dl>
             </div>
             <div class="step-actions"><button type="button" class="primary" data-view-go="settings">조회 조건 설정</button></div>
@@ -314,7 +315,7 @@
             <label class="field-row select-row">
               <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-calendar" /></svg>
               <span class="field-text"><small>기준 월</small>
-                <select id="pop-month"><option value="2026년 9월">2026년 9월 · 예시</option><option value="2026년 8월">2026년 8월 · 예시</option><option value="2026년 7월">2026년 7월 · 예시</option></select></span>
+                <select id="pop-month"><option value="2021-05">2021년 5월</option></select></span>
               <svg class="ico chev" width="18" height="18" aria-hidden="true"><use href="#i-chev" /></svg>
             </label>
             <label class="field-row select-row">
@@ -339,22 +340,20 @@
           <div class="view" data-view="distribution" data-title="분포와 출처" hidden>
             <div class="step-head">
               <h1 id="pop-dist-title">제주시 월별 방문 분포</h1>
-              <p id="pop-dist-sub">2026년 9월 · 읍면동 단위 · 예시</p>
+              <p id="pop-dist-sub">자료를 불러오고 있어요…</p>
             </div>
-            <div class="map-frame jeju-frame" data-jeju-map="distribution"></div>
-            <div class="card chip-card">
-              <h2>분포 범례</h2>
-              <div class="chip-row static">
-                <span class="chip legend-high">방문 규모 높음</span>
-                <span class="chip legend-mid">중간</span>
-                <span class="chip legend-low">낮음</span>
-              </div>
+            <div class="card bars-card">
+              <h2>방문인구 · 월 누적(매시 측정 합)</h2>
+              <div id="pop-bars"></div>
+              <p class="caption" id="pop-unit-note"></p>
             </div>
             <div class="card rows-card">
               <h2>출처 정보</h2>
               <dl>
-                <div><dt>출처 후보</dt><dd>제주관광빅데이터플랫폼</dd></div>
-                <div><dt>시각·시간대</dt><dd>월별 자료에서 제공 안 됨</dd></div>
+                <div><dt>자료</dt><dd>제주데이터허브 「유동인구에 따른 카드 매출액 변화」 매쉬업결과(제주특별자치도, 제주빅데이터센터 활용)</dd></div>
+                <div><dt>값의 뜻</dt><dd>매시 정각 측정 인구를 한 달 동안 더한 값. 사람 수(명)가 아님</dd></div>
+                <div><dt>시각·시간대</dt><dd>월별 자료라 시간대·야간 값은 없음</dd></div>
+                <div><dt>이용 조건</dt><dd>포털 표기 없음(확인 중)</dd></div>
               </dl>
             </div>
             <div class="step-actions"><button type="button" class="primary" data-screen="region">지역별 방문 규모 비교</button></div>
@@ -373,7 +372,7 @@
             <label class="field-row select-row">
               <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-calendar" /></svg>
               <span class="field-text"><small>기준 월</small>
-                <select id="region-month"><option value="2026년 9월">2026년 9월 · 예시</option><option value="2026년 8월">2026년 8월 · 예시</option></select></span>
+                <select id="region-month"><option value="2021-05">2021년 5월</option></select></span>
               <svg class="ico chev" width="18" height="18" aria-hidden="true"><use href="#i-chev" /></svg>
             </label>
             <div class="step-actions"><button type="button" class="primary" id="region-compare">선택한 2개 지역 비교</button></div>
@@ -381,10 +380,10 @@
           <div class="view" data-view="compare" data-title="지역별 방문 규모" hidden>
             <div class="step-head">
               <h1 id="region-compare-title">연동과 노형동 비교</h1>
-              <p id="region-compare-sub">2026년 9월 · 월별 방문 규모 예시</p>
+              <p id="region-compare-sub">자료를 불러오고 있어요…</p>
             </div>
             <div class="card bars-card">
-              <h2>방문객 수 예시 · 명</h2>
+              <h2>방문인구 · 월 누적(매시 측정 합)</h2>
               <div id="region-bars"></div>
             </div>
             <div class="card rows-card">
@@ -393,6 +392,7 @@
                 <div><dt>공간 단위</dt><dd>읍면동</dd></div>
                 <div><dt>기준 기간</dt><dd>선택 월 전체</dd></div>
               </dl>
+              <dl id="region-more"></dl>
             </div>
             <p class="info-card">
               <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
@@ -406,10 +406,15 @@
               <p>지역의 위치와 제공되는 자료를 확인하세요.</p>
             </div>
             <div class="map-frame jeju-frame" data-jeju-map="detail"></div>
+            <div class="card bars-card">
+              <h2>최근 12개월 방문인구</h2>
+              <p class="caption" id="region-trend-sub"></p>
+              <div id="region-trend"></div>
+            </div>
             <div class="card rows-card">
               <h2>지역 데이터</h2>
               <dl>
-                <div><dt>방문객 집계</dt><dd>월별 자료 · 예시</dd></div>
+                <div><dt>방문인구 집계</dt><dd>월별 실제 집계 · 2017년 1월 ~ 2021년 5월</dd></div>
                 <div><dt>시간대별 원본</dt><dd>자료 없음</dd></div>
                 <div><dt>가로등·CCTV 위치</dt><dd>공개 목록 연결</dd></div>
               </dl>

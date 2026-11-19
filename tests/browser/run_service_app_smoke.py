@@ -102,6 +102,22 @@ def run():
             page.check('#report-consent');page.click('#report-submit')
             expect(page.locator('#receipt')).to_contain_text('현재 위치',timeout=20000)
             context.clear_permissions()
+            # 유동인구·지역 비교: 실제 집계(제주데이터허브 748번), '예시'·지어낸 값 없음
+            page.click('nav [data-screen=home]');page.click('.feature-grid [data-screen=population]')
+            page.click('#population [data-view-go=settings]');page.select_option('#pop-month','2021-05');page.select_option('#pop-area','제주시')
+            page.click('#population [data-view-go=distribution]')
+            expect(page.locator('#pop-bars .bar-row').first).to_be_visible(timeout=20000)
+            assert page.locator('#pop-bars .bar-row').count()==10 and '만' in page.locator('#pop-bars').inner_text()
+            expect(page.locator('#pop-unit-note')).to_contain_text('사람 수(명)가 아니며')
+            assert '예시' not in page.locator('#population').inner_text()
+            page.screenshot(path=str(shots/'service-population.png'),full_page=True)
+            page.click('nav [data-screen=home]');page.click('.feature-grid [data-screen=region]')
+            expect(page.locator('#region-choices input')).to_have_count(43,timeout=20000)
+            page.select_option('#region-month','2021-05');page.click('#region-compare')
+            expect(page.locator('#region-bars .bar-row')).to_have_count(2)
+            bars=page.locator('#region-bars').inner_text();assert '연동' in bars and '1,474만' in bars and '12,430' not in bars,bars
+            assert '예시' not in page.locator('#region').inner_text()
+            page.screenshot(path=str(shots/'service-region.png'),full_page=True)
             # 데이터 화면
             page.click('nav [data-screen=data]');page.click('#data-sources > summary')
             expect(page.locator('#data-sources')).to_contain_text('행정안전부');assert '합성' not in page.locator('#data').inner_text()
@@ -117,7 +133,7 @@ def run():
             page.goto(base+'/lab');page.wait_for_selector('#research-tools',state='attached');assert page.locator('#synthetic-tools').count()==1
             assert not external and not leaks and not errors,(external,leaks,errors)
             browser.close()
-        return {'lab_tools_removed_from_app':True,'soon_screens':2,'report_place_search':True,'report_submitted':True,'gps_denied_out_of_jeju_and_ok':True,'emergency_112_first':True,'data_sources':True,'widths':[320,390,430],'lab_separate':True,'external_browser_requests':0,'keys_in_browser':0,'javascript_errors':0,'screenshots':6}
+        return {'lab_tools_removed_from_app':True,'population_real_data':True,'report_place_search':True,'report_submitted':True,'gps_denied_out_of_jeju_and_ok':True,'emergency_112_first':True,'data_sources':True,'widths':[320,390,430],'lab_separate':True,'external_browser_requests':0,'keys_in_browser':0,'javascript_errors':0,'screenshots':6}
     finally:
         if proc:
             proc.terminate()
