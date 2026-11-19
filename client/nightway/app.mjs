@@ -381,7 +381,11 @@ $("report-submit").addEventListener("click", async () => {
       const receipt = $("receipt");
       receipt.replaceChildren();
       element("h2", "제보가 접수됐어요", receipt);
-      element("p", "접수번호: " + view.report.id, receipt);
+      element(
+        "p",
+        "접수번호: " + String(view.report.id).replace(/^SYNTHETIC-/, ""),
+        receipt,
+      );
       element("p", "위치: " + reportSnapshot.location.name, receipt);
       element("span", "검토 대기", receipt, "badge");
       element(
