@@ -8,5 +8,8 @@
       "includeFiles": "{runtime/facilities/**,client/**,config/**,contracts/**,registry/**,data/route_examples/**,lexicon/**}",
       "excludeFiles": "{data/open/**,data/raw/**,.venv/**,tests/**,experiments/**,review/**,docs/**,*.pdf,*.zip,.git/**,**/*.env,**/.env*,**/*secrets*}"
     }
-  }
+  },
+  "regions": [
+    "icn1"
+  ]
 }
