@@ -155,7 +155,6 @@ function wipe() {
   $("report-consent").checked = false;
   lastPreview = null;
   reportSnapshot = null;
-  $("data-result").replaceChildren();
   message($("receipt"), "이번 페이지에서 접수한 제보가 없어요.");
   for (const button of document.querySelectorAll("button"))
     button.disabled = false;
@@ -287,17 +286,6 @@ function showConversation(view, target) {
       view.kind === "emergency" ? "error" : undefined,
     );
 }
-$("source-button").addEventListener("click", async () => {
-  try {
-    const view = await post("/agent/conversation", {
-      text: "CCTV 자료의 출처와 기준일이 뭐야?",
-      state: {},
-    });
-    if (view) showData(view, $("data-result"));
-  } catch (error) {
-    message($("data-result"), error.message, "error");
-  }
-});
 function reportInput() {
   return {
     text: $("report-text").value,

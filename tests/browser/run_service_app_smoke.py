@@ -71,8 +71,8 @@ def run():
             expect(page.locator('#report-result')).to_contain_text('112',timeout=20000)
             assert page.locator('#report-confirm').is_hidden()
             # 데이터 화면
-            page.click('nav [data-screen=data]');page.click('#source-button')
-            expect(page.locator('#data-result')).to_contain_text('출처',timeout=20000)
+            page.click('nav [data-screen=data]');page.click('#data-sources > summary')
+            expect(page.locator('#data-sources')).to_contain_text('행정안전부');assert '합성' not in page.locator('#data').inner_text()
             for width in (320,390,430):
                 page.set_viewport_size({'width':width,'height':844})
                 for screen in ('home','route','report','data','my'):
