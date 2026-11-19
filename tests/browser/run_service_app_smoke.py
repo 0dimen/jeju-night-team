@@ -70,6 +70,21 @@ def run():
             page.fill('#report-text','누가 계속 따라와요');page.click('#report-preview-button')
             expect(page.locator('#report-result')).to_contain_text('112',timeout=20000)
             assert page.locator('#report-confirm').is_hidden()
+            # GPS: 거부 → 안내, 제주 밖 → 안내, 제주 안 → 선택 후 접수
+            page.click('nav [data-screen=report]');page.click('#report-gps')
+            expect(page.locator('#report-place-candidates .error')).to_contain_text('권한',timeout=20000)
+            context.grant_permissions(['geolocation'],origin=base)
+            context.set_geolocation({'latitude':37.5665,'longitude':126.978,'accuracy':20})
+            page.click('#report-gps');expect(page.locator('#report-place-candidates .error')).to_contain_text('제주 밖',timeout=20000)
+            context.set_geolocation({'latitude':33.517,'longitude':126.525,'accuracy':25})
+            page.click('#report-gps');expect(page.locator('#report-place-selected')).to_contain_text('현재 위치 · 정확도 약 25m',timeout=20000)
+            page.select_option('#report-facility','walkway');page.select_option('#report-problem','obstructed')
+            page.fill('#report-text','보도에 박스가 쌓여 있어서 차도로 내려가야 했어요');page.click('#report-preview-button')
+            expect(page.locator('#report-confirm')).to_be_visible(timeout=20000)
+            page.screenshot(path=str(shots/'service-report-gps.png'),full_page=True)
+            page.check('#report-consent');page.click('#report-submit')
+            expect(page.locator('#receipt')).to_contain_text('위치: 현재 위치',timeout=20000)
+            context.clear_permissions()
             # 데이터 화면
             page.click('nav [data-screen=data]');page.click('#data-sources > summary')
             expect(page.locator('#data-sources')).to_contain_text('행정안전부');assert '합성' not in page.locator('#data').inner_text()
@@ -85,7 +100,7 @@ def run():
             page.goto(base+'/lab');page.wait_for_selector('#research-tools',state='attached');assert page.locator('#synthetic-tools').count()==1
             assert not external and not leaks and not errors,(external,leaks,errors)
             browser.close()
-        return {'lab_tools_removed_from_app':True,'soon_screens':2,'report_place_search':True,'report_submitted':True,'emergency_112_first':True,'data_sources':True,'widths':[320,390,430],'lab_separate':True,'external_browser_requests':0,'keys_in_browser':0,'javascript_errors':0,'screenshots':6}
+        return {'lab_tools_removed_from_app':True,'soon_screens':2,'report_place_search':True,'report_submitted':True,'gps_denied_out_of_jeju_and_ok':True,'emergency_112_first':True,'data_sources':True,'widths':[320,390,430],'lab_separate':True,'external_browser_requests':0,'keys_in_browser':0,'javascript_errors':0,'screenshots':6}
     finally:
         proc.terminate()
         try:proc.wait(timeout=5)

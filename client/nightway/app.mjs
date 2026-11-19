@@ -965,6 +965,78 @@ async function searchReportPlace() {
   }
 }
 $("report-place-search").addEventListener("click", searchReportPlace);
+const JEJU_BOUNDS = { south: 33.1, north: 33.6, west: 126.1, east: 127.0 };
+function chooseReportPlace(place, label) {
+  reportPlace = place;
+  $("report-place-selected").textContent = "선택: " + label;
+  $("report-place-candidates").replaceChildren();
+  $("report-confirm").hidden = true;
+  $("report-consent").checked = false;
+  lastPreview = null;
+  reportSnapshot = null;
+  reportStep(2);
+}
+$("report-gps").addEventListener("click", () => {
+  const button = $("report-gps"),
+    target = $("report-place-candidates"),
+    revision = ++reportRevision;
+  reportPlace = null;
+  $("report-place-selected").textContent = "현재 위치를 확인하고 있어요…";
+  if (!navigator.geolocation) {
+    $("report-place-selected").textContent = "문제 위치를 선택해 주세요.";
+    message(
+      target,
+      "이 브라우저에서는 현재 위치를 쓸 수 없어요. 아래에서 장소를 검색해 주세요.",
+      "error",
+    );
+    return;
+  }
+  button.disabled = true;
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      button.disabled = false;
+      if (revision !== reportRevision) return;
+      const { latitude: lat, longitude: lng, accuracy } = position.coords;
+      if (
+        lat < JEJU_BOUNDS.south ||
+        lat > JEJU_BOUNDS.north ||
+        lng < JEJU_BOUNDS.west ||
+        lng > JEJU_BOUNDS.east
+      ) {
+        $("report-place-selected").textContent = "문제 위치를 선택해 주세요.";
+        message(
+          target,
+          "현재 위치가 제주 밖이에요. 제주 안의 장소를 검색해 골라 주세요.",
+          "error",
+        );
+        return;
+      }
+      const meters = Math.round(accuracy);
+      chooseReportPlace(
+        { name: "현재 위치", lat, lng },
+        "현재 위치 · 정확도 약 " + meters + "m",
+      );
+      if (meters > 100)
+        message(
+          target,
+          "위치 정확도가 낮아요. 설명에 가까운 건물이나 표지판을 함께 적어 주세요.",
+        );
+    },
+    (error) => {
+      button.disabled = false;
+      if (revision !== reportRevision) return;
+      $("report-place-selected").textContent = "문제 위치를 선택해 주세요.";
+      message(
+        target,
+        error.code === error.PERMISSION_DENIED
+          ? "위치 권한이 꺼져 있어요. 아래에서 장소를 검색해 골라 주세요."
+          : "현재 위치를 확인하지 못했어요. 아래에서 장소를 검색해 골라 주세요.",
+        "error",
+      );
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 },
+  );
+});
 $("report-place-query").addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     event.preventDefault();
