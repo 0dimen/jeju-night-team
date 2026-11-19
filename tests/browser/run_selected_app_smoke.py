@@ -6,6 +6,11 @@ from urllib.parse import quote
 from playwright.sync_api import sync_playwright,expect
 
 
+def reveal(page,field):
+    """출발지·목적지·시각 행은 눌러야 입력칸이 열린다."""
+    if page.locator(f'#live-{field}-panel').is_hidden():page.click(f'#live-{field}-toggle')
+
+
 def run():
     keys=[os.environ.get(k) for k in ('VWORLD_API_KEY','TMAP_APP_KEY')]
     if not all(keys):raise RuntimeError('두 지도 키가 필요합니다. 값은 출력하지 않습니다.')
@@ -34,10 +39,10 @@ def run():
             context.route('**/*',guard);page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
             page.goto(base+'/app');page.click('nav [data-screen=route]')
             for field,query in [('origin','삼무공원'),('destination','누웨마루거리')]:
-                page.fill('#live-'+field+'-query',query);page.click('#live-'+field+'-search')
+                reveal(page,field);page.fill('#live-'+field+'-query',query);page.click('#live-'+field+'-search')
                 page.wait_for_selector('#live-'+field+'-candidates button');page.locator('#live-'+field+'-candidates button').first.click()
                 expect(page.locator('#live-'+field+'-selected')).to_contain_text('선택:')
-            page.fill('#live-date','2026-11-20');page.fill('#live-time','21:00');page.click('#live-route-button')
+            reveal(page,'time');page.fill('#live-date','2026-11-20');page.fill('#live-time','21:00');page.click('#live-route-button')
             page.wait_for_selector('#live-route-result .route-card',timeout=60000)
             assert '2026-11-20T21:00' in page.locator('#live-route-result').inner_text()
             page.locator('#live-route-result').get_by_role('button',name='지도에서 경로·시설 보기').click()
@@ -57,7 +62,7 @@ def run():
             assert page.locator('#live-route-result .route-card').count()==0
             page.unroute('**/research/routes/selected')
             page.route('**/maps/places/search',lambda route:route.fulfill(status=503,json={'detail':'SYNTHETIC failure'}))
-            page.fill('#live-origin-query','SYNTHETIC 재검색');page.click('#live-origin-search');page.wait_for_selector('#live-origin-candidates .error')
+            reveal(page,'origin');page.fill('#live-origin-query','SYNTHETIC 재검색');page.click('#live-origin-search');page.wait_for_selector('#live-origin-candidates .error')
             assert page.input_value('#live-origin-query')=='SYNTHETIC 재검색'
             page.unroute('**/maps/places/search')
             assert not any(key in page.content() for key in keys)

@@ -123,7 +123,7 @@ def lab_page(asset: str = 'index.html'):
 def nightway_app(asset: str = 'index.html'):
     from pathlib import Path
     from fastapi.responses import FileResponse
-    if asset not in {'index.html','style.css','tokens.css','app.mjs','vworld.mjs'}:
+    if asset not in {'index.html','style.css','tokens.css','app.mjs','vworld.mjs','screens.mjs'}:
         raise HTTPException(404, '파일이 없습니다.')
     return FileResponse(Path(__file__).resolve().parents[1]/'client'/'nightway'/asset, headers={
         'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
