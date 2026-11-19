@@ -63,3 +63,17 @@ def test_nearest_node_and_input_checks():
         score_edges(graph, [], 0, 'light')
     with pytest.raises(ValueError):
         build_graph([{'type': 'node', 'id': 1, 'lon': 126.5, 'lat': 33.5}], CENTER)
+
+
+def test_missing_osm_node_does_not_create_bridge():
+    data=elements()
+    data[4]['nodes']=[1,999,2]
+    graph=build_graph(data,CENTER)
+    assert all(edge['way']!=10 for edge in graph['edges'])
+    assert plan_routes(graph,1,2)['shortest']['nodes']==[1,3,4,2]
+
+
+def test_explicit_pedestrian_oneway_not_reversed():
+    data=elements();data[4]['tags']['oneway:foot']='yes'
+    graph=build_graph(data,CENTER)
+    assert plan_routes(graph,2,1,light_weight=0,cctv_weight=0)['shortest']['nodes']==[2,4,3,1]

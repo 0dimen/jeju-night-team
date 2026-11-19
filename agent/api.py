@@ -115,3 +115,28 @@ def nightway_app(asset: str = 'index.html'):
     return FileResponse(Path(__file__).resolve().parents[1]/'client'/'nightway'/asset, headers={
         'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
         'Content-Security-Policy':"default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"})
+
+
+from typing import Literal
+
+
+class FacilityRouteBody(BaseModel):
+    region: Literal['yeondong','seogwipo']
+    preference: Literal['fastest','cctv','light','both'] = 'both'
+    cctv_source: Literal['standard','datahub'] = 'standard'
+    light_radius: float = Field(default=15,gt=0,le=80)
+    cctv_radius: float = Field(default=50,gt=0,le=200)
+    weight: float = Field(default=4,ge=0,le=16)
+    max_detour: float = Field(default=1.5,ge=1,le=2)
+
+
+@app.post('/research/routes/facilities')
+def facility_routes(body: FacilityRouteBody,response: Response):
+    from agent.data.research_router import get_router
+    response.headers['Cache-Control']='no-store'
+    try:
+        return get_router(body.region,body.cctv_source).route(body.preference,body.light_radius,body.cctv_radius,body.weight,body.max_detour)
+    except FileNotFoundError as exc:
+        raise HTTPException(503,'공개 연구 데이터가 없는 실행 환경입니다. 합성 결과로 대신하지 않습니다. 데이터 폴더를 별도 연결해 주세요.') from exc
+    except (ValueError,KeyError,StopIteration) as exc:
+        raise HTTPException(422,'연구 설정 또는 공개 데이터 형식을 확인해 주세요.') from exc

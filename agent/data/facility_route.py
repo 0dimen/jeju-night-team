@@ -9,7 +9,7 @@ from math import cos, hypot, isfinite, radians
 
 from agent.geometry import covered_length
 
-# FOSSGIS OSRM 보행 프로필이 다니는 도로 종류와 같게 맞춘다. 자동차 전용(motorway·trunk)은 제외.
+# 연구용 보행 태그 필터. 전체 OSRM 규칙·실제 통행을 재현한 것은 아니다. 자동차 전용 종류는 제외.
 FOOT_HIGHWAYS = frozenset({
     'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', 'tertiary_link',
     'unclassified', 'residential', 'road', 'living_street', 'service', 'track', 'path',
@@ -37,9 +37,9 @@ def build_graph(elements, center):
     for element in elements:
         if element.get('type') != 'way' or not walkable(element.get('tags', {})):
             continue
-        refs = [ref for ref in element.get('nodes', []) if ref in coords]
+        refs = element.get('nodes', [])
         for a, b in zip(refs, refs[1:]):
-            if a == b:
+            if a == b or a not in coords or b not in coords:
                 continue
             for node in (a, b):
                 if node not in graph['nodes']:
@@ -51,8 +51,14 @@ def build_graph(elements, center):
             index = len(graph['edges'])
             graph['edges'].append({'a': a, 'b': b, 'length': length, 'way': element['id'],
                                    'light': 0.0, 'cctv': 0.0})
-            graph['adjacency'].setdefault(a, []).append((b, index))
-            graph['adjacency'].setdefault(b, []).append((a, index))
+            tags=element.get('tags', {})
+            direction=tags.get('oneway:foot')
+            graph['adjacency'].setdefault(a, [])
+            graph['adjacency'].setdefault(b, [])
+            if direction != '-1' and tags.get('foot:forward') != 'no':
+                graph['adjacency'][a].append((b,index))
+            if direction not in ('yes','1','true') and tags.get('foot:backward') != 'no':
+                graph['adjacency'][b].append((a,index))
     if not graph['edges']:
         raise ValueError('보행 가능한 도로가 없습니다.')
     return graph

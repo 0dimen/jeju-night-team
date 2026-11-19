@@ -26,7 +26,7 @@
                 d="m3 19 6-7 4 5 3-3 5 5M8 22h10M4 3v5M1.5 5.5h5M16 2a5 5 0 0 0 5 7 5 5 0 1 1-5-7Z"
               /></svg></span
           ><span>제주밤길<small>JEJU NIGHTWAY</small></span></button
-        ><span class="mode">합성 시연</span>
+        ><span class="mode">연구 시연</span>
       </header>
       <main>
         <section id="home" class="screen">
@@ -73,8 +73,7 @@
             </button>
           </div>
           <p class="notice">
-            현재 연결은 합성 경로·시설입니다. 실제 지도 길찾기나 안전 보장이
-            아닙니다. 실제 집 주소는 입력하지 마세요.
+            공개 구간의 시설 경로 연구와 합성 대화 시연을 제공합니다. 현재 밝기·작동·안전을 보증하지 않습니다. 실제 집 주소는 입력하지 마세요.
           </p>
         </section>
         <section id="route" class="screen" hidden>
@@ -82,6 +81,93 @@
             <h1>어디로 걸어갈까요?</h1>
             <p>장소·날짜·시각을 확인하고 같은 목적지의 경로를 비교해요.</p>
           </div>
+          <div class="card" id="actual-route-panel">
+            <h2>공개 데이터로 길 찾기</h2>
+            <p>
+              도로망에서 시설 인접 구간이 많은 후보를 자동으로 찾습니다. 현재 두
+              공개 구간만 지원하는 연구 시연입니다.
+            </p>
+            <form id="facility-form">
+              <label
+                >비교 구간<select id="facility-region">
+                  <option value="yeondong">
+                    삼무공원~누웨마루 공중화장실 지도 지점
+                  </option>
+                  <option value="seogwipo">
+                    중앙로 일대~매일올레시장 지도 지점
+                  </option>
+                </select></label
+              ><label
+                >우선할 조건<select id="facility-preference">
+                  <option value="both">CCTV·조명 함께</option>
+                  <option value="cctv">CCTV 인접 구간</option>
+                  <option value="light">조명 인접 구간</option>
+                  <option value="fastest">가장 짧은 길</option>
+                </select></label
+              >
+              <details>
+                <summary>연구 설정·자료 선택</summary>
+                <label
+                  >CCTV 원본<select id="facility-source">
+                    <option value="standard">
+                      행정안전부 표준 · 2025년 자료
+                    </option>
+                    <option value="datahub">제주데이터허브 · 과거 자료</option>
+                  </select></label
+                >
+                <div class="two-col">
+                  <label
+                    >조명 반경(m)<input
+                      id="facility-light-radius"
+                      type="number"
+                      value="15"
+                      min="1"
+                      max="80"
+                      required /></label
+                  ><label
+                    >CCTV 반경(m)<input
+                      id="facility-cctv-radius"
+                      type="number"
+                      value="50"
+                      min="1"
+                      max="200"
+                      required
+                  /></label>
+                </div>
+                <div class="two-col">
+                  <label
+                    >시설 가중치<input
+                      id="facility-weight"
+                      type="number"
+                      value="4"
+                      min="0"
+                      max="16"
+                      step="0.5"
+                      required /></label
+                  ><label
+                    >최단 대비 거리 상한(배)<input
+                      id="facility-detour"
+                      type="number"
+                      value="1.5"
+                      min="1"
+                      max="2"
+                      step="0.1"
+                      required
+                  /></label>
+                </div>
+                <p class="support">
+                  반경·가중치·우회 한도는 시험용 설정입니다. 실제 밝기나 안전
+                  기준이 아닙니다. CCTV는
+                  생활방범·교통단속·어린이보호·시설물관리 목적을 포함합니다.
+                </p>
+              </details>
+              <button id="facility-button" type="submit" class="primary">
+                공개 자료로 자동 경로 찾기
+              </button>
+            </form>
+            <div id="facility-result" aria-live="polite"></div>
+          </div>
+          <h2>합성 경로·대화 시연</h2>
           <form id="route-form">
             <div class="card form-card">
               <label
@@ -223,11 +309,11 @@
             <dl>
               <div>
                 <dt>CCTV</dt>
-                <dd>합성 시설 위치로 계산</dd>
+                <dd>공개 목록4목적 · 설치 위치 정보</dd>
               </div>
               <div>
-                <dt>조명·실제 밝기</dt>
-                <dd>자료 없음</dd>
+                <dt>조명 위치·실제 밝기</dt>
+                <dd>위치 자료 연결 · 밝기·점등 미확인</dd>
               </div>
               <div>
                 <dt>시간대별 보행량</dt>
@@ -241,7 +327,7 @@
             <p>월별 방문 통계를 지금 걷는 사람 수로 표시하지 않습니다.</p>
           </div>
           <button id="source-button" class="secondary">
-            에이전트의 출처 설명 보기
+            기본 합성 에이전트의 출처 설명 보기
           </button>
           <div id="data-result" aria-live="polite"></div>
         </section>

@@ -31,14 +31,14 @@ def run():
                     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),(width,screen)
             page.set_viewport_size({'width':390,'height':844});page.click('nav [data-screen=home]');page.screenshot(path='/tmp/jeju-nightway-home.png',full_page=True)
             page.click('.feature-grid [data-screen=route]');page.select_option('#origin','제주시청');page.select_option('#destination','탑동광장');page.fill('#departure-date','2026-11-20');page.fill('#departure-time','23:00')
-            page.click('#compare-button');page.wait_for_selector('.route-card')
-            assert page.locator('.route-card').count()==2
-            assert page.locator('.route-card[aria-pressed=true]').get_attribute('data-route')=='B'
-            page.click('.route-card[data-route=A]');assert page.locator('.route-card[aria-pressed=true]').get_attribute('data-route')=='A'
-            assert '경로 A' in page.locator('.route-map').get_attribute('aria-label')
+            page.click('#compare-button');page.wait_for_selector('#route-result .route-card')
+            assert page.locator('#route-result .route-card').count()==2
+            assert page.locator('#route-result .route-card[aria-pressed=true]').get_attribute('data-route')=='B'
+            page.click('#route-result .route-card[data-route=A]');assert page.locator('#route-result .route-card[aria-pressed=true]').get_attribute('data-route')=='A'
+            assert '경로 A' in page.locator('#route-result .route-map').get_attribute('aria-label')
             page.screenshot(path='/tmp/jeju-nightway-route.png',full_page=True)
             page.check('[name=preference][value=none]');page.click('#compare-button');page.wait_for_timeout(300)
-            assert page.locator('.route-card').first.get_attribute('data-route')=='A'
+            assert page.locator('#route-result .route-card').first.get_attribute('data-route')=='A'
             page.route('**/agent/conversation',lambda route:route.fulfill(status=503,body='unavailable'))
             page.click('#compare-button');page.wait_for_selector('#route-result .error');assert page.input_value('#origin')=='제주시청'
             page.unroute('**/agent/conversation')

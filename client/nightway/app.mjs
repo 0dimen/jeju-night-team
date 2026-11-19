@@ -66,6 +66,8 @@ function abortRequests() {
   pending.clear();
 }
 function wipe() {
+  document.getElementById("facility-form")?.reset();
+  document.getElementById("facility-result")?.replaceChildren();
   abortRequests();
   clearRoute();
   $("report-form").reset();
@@ -458,5 +460,213 @@ $("report-submit").addEventListener("click", async () => {
     message($("report-result"), error.message, "error");
   } finally {
     button.disabled = false;
+  }
+});
+
+function renderFacilityRoutes(view) {
+  const target = $("facility-result");
+  target.replaceChildren();
+  element("h2", view.label, target);
+  element(
+    "p",
+    "실제 공개 좌표·도로망으로 계산한 연구 후보입니다. 실시간 시설 상태나 안전을 보증하지 않습니다.",
+    target,
+    "notice",
+  );
+  element("p", view.reason, target);
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 380 250");
+  svg.setAttribute("role", "img");
+  svg.classList.add("route-map");
+  svg.setAttribute(
+    "aria-label",
+    "공개 도로망 경로 좌표 도식. 배경지도·현재 위치 안내가 아닙니다.",
+  );
+  const points = view.routes.flatMap((row) => row.coordinates),
+    xs = points.map((p) => p[0]),
+    ys = points.map((p) => p[1]);
+  const minx = Math.min(...xs),
+    maxx = Math.max(...xs),
+    miny = Math.min(...ys),
+    maxy = Math.max(...ys);
+  const lat = (((miny + maxy) / 2) * Math.PI) / 180,
+    dx = (maxx - minx) * Math.cos(lat),
+    dy = maxy - miny,
+    scale = Math.min(330 / Math.max(dx, 1e-8), 180 / Math.max(dy, 1e-8));
+  const map = (p) => [
+    (380 - dx * scale) / 2 + (p[0] - minx) * Math.cos(lat) * scale,
+    40 + (180 + dy * scale) / 2 - (p[1] - miny) * scale,
+  ];
+  const text = document.createElementNS(svg.namespaceURI, "text");
+  text.setAttribute("x", "16");
+  text.setAttribute("y", "25");
+  text.setAttribute("fill", "#c4bcd9");
+  text.setAttribute("font-size", "13");
+  text.textContent = "실제 경로 좌표 도식 · 배경지도 없음";
+  svg.append(text);
+  for (const row of view.routes) {
+    const line = document.createElementNS(svg.namespaceURI, "polyline");
+    line.setAttribute(
+      "points",
+      row.coordinates.map((p) => map(p).join(",")).join(" "),
+    );
+    line.setAttribute("stroke", row.id === "SHORTEST" ? "#af86ff" : "#89e3dd");
+    line.setAttribute("fill", "none");
+    line.setAttribute("stroke-width", "5");
+    if (row.id !== "SHORTEST") line.setAttribute("stroke-dasharray", "7 6");
+    line.dataset.route = row.id;
+    svg.append(line);
+  }
+  target.append(svg);
+  element(
+    "p",
+    "보라 실선: 최단 · 청록 점선: 시설 조건 우선",
+    target,
+    "support",
+  );
+  const cards = element("div", "", target),
+    detail = element("div", "", target, "card");
+  function select(row) {
+    for (const button of cards.children)
+      button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.route === row.id),
+      );
+    for (const line of svg.querySelectorAll("polyline"))
+      line.setAttribute("opacity", line.dataset.route === row.id ? "1" : ".35");
+    detail.replaceChildren();
+    element("h2", row.label + "의 비교 근거", detail);
+    element(
+      "p",
+      "CCTV " + row.cctv_percent + "% · 조명 " + row.light_percent + "%",
+      detail,
+    );
+    element(
+      "p",
+      "거리 " + row.distance_m + "m · 추정 " + row.duration_minutes + "분",
+      detail,
+    );
+    const base = view.routes[0];
+    element(
+      "p",
+      "최단 대비 " +
+        (row.distance_m - base.distance_m).toFixed(1) +
+        "m · CCTV " +
+        (row.cctv_percent - base.cctv_percent).toFixed(2) +
+        "%p · 조명 " +
+        (row.light_percent - base.light_percent).toFixed(2) +
+        "%p",
+      detail,
+    );
+  }
+  for (const row of view.routes) {
+    const button = element("button", "", cards, "route-card");
+    button.type = "button";
+    button.dataset.route = row.id;
+    element(
+      "strong",
+      row.label + (row.id === view.recommended_route_id ? " · 추천 후보" : ""),
+      button,
+    );
+    element(
+      "p",
+      row.distance_m +
+        "m · 약 " +
+        row.duration_minutes +
+        "분 · CCTV " +
+        row.cctv_percent +
+        "% · 조명 " +
+        row.light_percent +
+        "%",
+      button,
+    );
+    button.addEventListener("click", () => select(row));
+  }
+  select(
+    view.routes.find((row) => row.id === view.recommended_route_id) ||
+      view.routes[0],
+  );
+  const sources = element("details", "", target);
+  element("summary", "계산식·자료·미확인 범위", sources);
+  element(
+    "p",
+    "도로 조각 비용 = 길이 × [1 + 조명가중치×(1−조명 인접비율) + CCTV가중치×(1−CCTV 인접비율)]",
+    sources,
+  );
+  element(
+    "p",
+    "사용 가중치: 조명 " +
+      view.parameters.weights_used.light +
+      " / CCTV " +
+      view.parameters.weights_used.cctv +
+      " · 거리 상한 " +
+      view.parameters.max_detour +
+      "배",
+    sources,
+  );
+  element(
+    "p",
+    "CCTV 원본 " +
+      view.sources.cctv.source_rows +
+      "행 중 선택 " +
+      view.sources.cctv.selected_rows +
+      "행 · 목적 " +
+      view.sources.cctv.purposes.join(", "),
+    sources,
+  );
+  element(
+    "p",
+    "CCTV 기준일: " +
+      Object.keys(view.sources.cctv.basis_dates).join(", ") +
+      " · 조명: " +
+      view.sources.light.basis_date,
+    sources,
+  );
+  element(
+    "p",
+    "요청 지점에서 도로 노드까지: " + view.endpoint_snap_m.join("m / ") + "m",
+    sources,
+  );
+  for (const limitation of view.limitations)
+    element("p", limitation, sources, "support");
+  for (const [label, url] of [
+    [
+      "OpenStreetMap contributors · ODbL",
+      "https://www.openstreetmap.org/copyright",
+    ],
+    ["지도 오류 수정", "https://www.openstreetmap.org/fixthemap"],
+  ]) {
+    const a = element("a", label, sources);
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    element("br", "", sources);
+  }
+}
+$("facility-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const button = $("facility-button");
+  button.disabled = true;
+  button.textContent = "도로망에서 찾고 있어요…";
+  try {
+    const view = await post("/research/routes/facilities", {
+      region: $("facility-region").value,
+      preference: $("facility-preference").value,
+      cctv_source: $("facility-source").value,
+      light_radius: Number($("facility-light-radius").value),
+      cctv_radius: Number($("facility-cctv-radius").value),
+      weight: Number($("facility-weight").value),
+      max_detour: Number($("facility-detour").value),
+    });
+    if (view) renderFacilityRoutes(view);
+  } catch (error) {
+    message(
+      $("facility-result"),
+      "공개 자료 경로를 계산하지 못했습니다. 데이터 연결과 설정을 확인해 주세요. 합성 경로로 대신하지 않았습니다.",
+      "error",
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = "공개 자료로 자동 경로 찾기";
   }
 });
