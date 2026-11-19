@@ -77,6 +77,22 @@ class ResearchRouter:
             'roads':{'name':'OpenStreetMap contributors','osm_base':osm.get('_collection',{}).get('osm_base'),'source_url':'https://www.openstreetmap.org/copyright','fix_map_url':'https://www.openstreetmap.org/fixthemap'}}
         self.radii=None
 
+    def walk_review(self,route):
+        # 지도 태그는 현장 확인이 아니다. 현재 경로 형상에 대응한 미확인 목록을 반환한다.
+        segments=[]
+        for a,b,index in zip(route['nodes'],route['nodes'][1:],route['edge_indexes']):
+            edge=self.graph['edges'][index]
+            coordinates=[list(self.graph['nodes'][n]['lonlat']) for n in (a,b)]
+            fingerprint=hashlib.sha256(json.dumps(coordinates,separators=(',',':')).encode()).hexdigest()[:16]
+            tags=edge.get('walk_tags',{})
+            segments.append({'segment_id':fingerprint,'coordinates':coordinates,'osm_way':edge['way'],
+                'map_tags':tags,'status':'unavailable','reviewed':False,
+                'needs_check':['통행 가능 여부','보도·횡단보도','출입 제한·장벽','계단·경사'],
+                'map_url':f"https://www.openstreetmap.org/way/{edge['way']}"})
+        return {'status':'unavailable','reviewed_segments':0,'total_segments':len(segments),
+            'message':'현재 경로의 보행 가능 여부를 지도·로드뷰로 대조하지 않았습니다. 시설 인접 비율과 별도로 확인해야 합니다.',
+            'segments':segments}
+
     def route(self,preference='both',light_radius=15,cctv_radius=50,weight=4,max_detour=1.5):
         if preference not in ('fastest','cctv','light','both'):raise ValueError('비교 기준 확인')
         if any(isinstance(v,bool) or not isinstance(v,(int,float)) or not isfinite(v) for v in (light_radius,cctv_radius,weight,max_detour)):raise ValueError('숫자 설정 확인')
@@ -91,6 +107,7 @@ class ResearchRouter:
             if rid=='FACILITY' and result['same_route']:continue
             route=result[name]
             rows.append({'id':rid,'label':label,'distance_m':route['length_m'],'duration_minutes':route['duration_minutes'],
+                'walk_review':self.walk_review(route),
                 'cctv_percent':round(route['cctv_fraction']*100,2),'light_percent':round(route['light_fraction']*100,2),'coordinates':route['coordinates']})
         return {'kind':'facility_routes','synthetic':False,'research_only':True,'region':self.region,'label':self.label,
             'routes':rows,'recommended_route_id':'SHORTEST' if result['same_route'] else 'FACILITY','same_route':result['same_route'],

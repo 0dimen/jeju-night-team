@@ -1,0 +1,8 @@
+﻿region,route_id,segment_id,osm_way,coordinates,map_url,map_tags,status,checked_at,image_date,evidence,reviewer
+seogwipo,SHORTEST,52029ad8759fdcf1,255200232,"[[126.5644666, 33.2526802], [126.564621, 33.2521583]]",https://www.openstreetmap.org/way/255200232,"{""highway"": ""residential""}",미확인,,,,
+seogwipo,SHORTEST,fda5da13e8fbe0e7,255200232,"[[126.564621, 33.2521583], [126.5647693, 33.2516572]]",https://www.openstreetmap.org/way/255200232,"{""highway"": ""residential""}",미확인,,,,
+seogwipo,SHORTEST,617589159f7909a6,255200232,"[[126.5647693, 33.2516572], [126.5647515, 33.2515015]]",https://www.openstreetmap.org/way/255200232,"{""highway"": ""residential""}",미확인,,,,
+seogwipo,SHORTEST,7cd935649e9c4fc7,255200232,"[[126.5647515, 33.2515015], [126.5646976, 33.251231]]",https://www.openstreetmap.org/way/255200232,"{""highway"": ""residential""}",미확인,,,,
+seogwipo,SHORTEST,ea4c6039638c4148,292866706,"[[126.5646976, 33.251231], [126.5643201, 33.2507805]]",https://www.openstreetmap.org/way/292866706,"{""highway"": ""residential""}",미확인,,,,
+seogwipo,SHORTEST,7d8c4c1d4f6de6d7,286041756,"[[126.5643201, 33.2507805], [126.5637726, 33.2504085]]",https://www.openstreetmap.org/way/286041756,"{""highway"": ""residential""}",미확인,,,,
+seogwipo,SHORTEST,fb8596c97965bef9,379890958,"[[126.5637726, 33.2504085], [126.5637815, 33.2502547]]",https://www.openstreetmap.org/way/379890958,"{""highway"": ""residential""}",미확인,,,,

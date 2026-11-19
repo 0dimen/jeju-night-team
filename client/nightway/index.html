@@ -165,6 +165,14 @@
                 공개 자료로 자동 경로 찾기
               </button>
             </form>
+            <form id="research-chat-form">
+              <h3>공개 구간을 대화로 찾기</h3>
+              <p>예: 연동 공개 구간을 CCTV 위주로, 2026-11-20 오후 9시에 출발할게요. 집·임의 주소는 아직 지원하지 않습니다.</p>
+              <label>질문 또는 추가 답변<input id="research-chat-input" maxlength="5000" required autocomplete="off" /></label>
+              <button id="research-chat-send" type="submit">공개 구간 질문 보내기</button>
+              <button id="research-chat-reset" type="button">공개 대화 초기화</button>
+            </form>
+            <div id="research-chat-result" aria-live="polite"></div>
             <div id="facility-result" aria-live="polite"></div>
           </div>
           <h2>합성 경로·대화 시연</h2>

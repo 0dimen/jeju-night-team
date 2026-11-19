@@ -1,3 +1,5 @@
+> 후속 보완: [공개 구간 대화 연결·보행 검토](docs/PUBLIC_ROUTE_CONVERSATION.md)
+
 # 제주밤길: 실행 방법과 다음 개발
 
 **팀 공유 시작 문서: [현재 완성 범위·실행·다음 담당 작업](PROJECT_STATUS.md).** 최신 대화·페이지 모듈은 `feature/conversation-route-comparison` 브랜치에서 검토하며 main에는 아직 합쳐지지 않았습니다.

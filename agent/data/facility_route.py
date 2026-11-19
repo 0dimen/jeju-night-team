@@ -50,7 +50,8 @@ def build_graph(elements, center):
                 continue
             index = len(graph['edges'])
             graph['edges'].append({'a': a, 'b': b, 'length': length, 'way': element['id'],
-                                   'light': 0.0, 'cctv': 0.0})
+                                   'light': 0.0, 'cctv': 0.0,
+                                   'walk_tags': {k:v for k,v in element.get('tags',{}).items() if k in ('highway','access','foot','sidewalk','crossing','surface','lit','wheelchair','incline')}})
             tags=element.get('tags', {})
             direction=tags.get('oneway:foot')
             graph['adjacency'].setdefault(a, [])
@@ -127,7 +128,7 @@ def shortest_path(graph, start, goal, cost):
 def summarize(graph, nodes, edge_indexes):
     edges = [graph['edges'][i] for i in edge_indexes]
     length = sum(e['length'] for e in edges)
-    return {'nodes': nodes, 'coordinates': [list(graph['nodes'][n]['lonlat']) for n in nodes],
+    return {'nodes': nodes, 'edge_indexes': edge_indexes, 'coordinates': [list(graph['nodes'][n]['lonlat']) for n in nodes],
             'length_m': round(length, 1), 'duration_minutes': round(length / WALK_METERS_PER_MINUTE, 2),
             'light_fraction': round(sum(e['length'] * e['light'] for e in edges) / length, 4),
             'cctv_fraction': round(sum(e['length'] * e['cctv'] for e in edges) / length, 4)}

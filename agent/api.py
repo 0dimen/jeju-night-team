@@ -140,3 +140,16 @@ def facility_routes(body: FacilityRouteBody,response: Response):
         raise HTTPException(503,'공개 연구 데이터가 없는 실행 환경입니다. 합성 결과로 대신하지 않습니다. 데이터 폴더를 별도 연결해 주세요.') from exc
     except (ValueError,KeyError,StopIteration) as exc:
         raise HTTPException(422,'연구 설정 또는 공개 데이터 형식을 확인해 주세요.') from exc
+
+
+@app.post('/research/agent/conversation')
+def research_conversation(body: ConversationBody,response: Response):
+    from agent.research_conversation import research_turn
+    response.headers['Cache-Control']='no-store'
+    response.headers['Pragma']='no-cache'
+    try:
+        return research_turn(body.text,body.state)
+    except FileNotFoundError as exc:
+        raise HTTPException(503,'공개 데이터가 없습니다. 합성 경로로 대신하지 않습니다.') from exc
+    except (ValueError,TypeError,KeyError,ValidationError) as exc:
+        raise HTTPException(422,'공개 구간과 날짜·오전·오후 입력을 확인해 주세요.') from exc

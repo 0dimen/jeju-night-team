@@ -2,7 +2,7 @@
 import json,os,socket,subprocess,sys,time
 from pathlib import Path
 from urllib.request import urlopen
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright,expect
 
 
 def run():
@@ -31,6 +31,21 @@ def run():
                     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),(width,screen)
             page.set_viewport_size({'width':390,'height':844});page.click('nav [data-screen=home]');page.screenshot(path='/tmp/jeju-nightway-home.png',full_page=True)
             page.click('.feature-grid [data-screen=route]')
+            page.fill('#research-chat-input','연동 공개 구간을 CCTV 위주로 3시에 갈게요');page.click('#research-chat-send')
+            expect(page.locator('#research-chat-result')).to_contain_text('날짜')
+            page.fill('#research-chat-input','2026-11-20');page.click('#research-chat-send')
+            expect(page.locator('#research-chat-result')).to_contain_text('오전인가요')
+            page.fill('#research-chat-input','오후');page.click('#research-chat-send');page.wait_for_selector('#facility-result .route-card')
+            assert '2026-11-20T15:00' in page.locator('#facility-result').inner_text()
+            assert '보행 검토 0/' in page.locator('#facility-result').inner_text()
+            page.route('**/research/agent/conversation',lambda route:route.fulfill(status=503,body='unavailable'))
+            page.fill('#research-chat-input','조명 위주로');page.click('#research-chat-send');page.wait_for_selector('#research-chat-result .error')
+            assert page.input_value('#research-chat-input')=='조명 위주로'
+            page.unroute('**/research/agent/conversation')
+            page.click('nav [data-screen=data]');page.click('nav [data-screen=route]')
+            page.fill('#research-chat-input','오후');page.click('#research-chat-send')
+            expect(page.locator('#research-chat-result')).to_contain_text('공개 구간 중')
+            assert page.locator('#facility-result .route-card').count()==0
             page.select_option('#facility-preference','cctv');page.click('#facility-button');page.wait_for_selector('#facility-result .route-card')
             assert page.locator('#facility-result .route-card').count()==2
             assert page.locator('#facility-result .route-card[aria-pressed=true]').get_attribute('data-route')=='FACILITY'
@@ -68,7 +83,7 @@ def run():
             assert page.evaluate('localStorage.length+sessionStorage.length')==0
             assert not external and not errors
             browser.close()
-        return {'widths':[320,390,430],'screens':5,'actual_facility_route_search':True,'same_route_no_fake_alternative':True,'missing_dataset_no_synthetic_fallback':True,'route_and_card_selection':True,'preference_changes_order':True,'failure_preserves_input':True,'emergency_clears_location':True,'preview_and_synthetic_submission':True,'ambiguous_report_not_submitted':True,'real_back_and_reload_clear':True,'external_requests':len(external),'javascript_errors':errors,'scope':'로컬 공개자료 연구 경로와 합성 대화·접수 연결. 배경지도·GPS·센터·행정기관 아님'}
+        return {'widths':[320,390,430],'screens':5,'actual_facility_route_search':True,'research_conversation_date_period_actual_route':True,'research_state_cleared_on_navigation':True,'research_failure_preserves_input':True,'same_route_no_fake_alternative':True,'missing_dataset_no_synthetic_fallback':True,'route_and_card_selection':True,'preference_changes_order':True,'failure_preserves_input':True,'emergency_clears_location':True,'preview_and_synthetic_submission':True,'ambiguous_report_not_submitted':True,'real_back_and_reload_clear':True,'external_requests':len(external),'javascript_errors':errors,'scope':'로컬 공개자료 연구 경로와 합성 대화·접수 연결. 배경지도·GPS·센터·행정기관 아님'}
     finally:proc.terminate();proc.wait(timeout=10)
 
 if __name__=='__main__':print(json.dumps(run(),ensure_ascii=False,indent=2))

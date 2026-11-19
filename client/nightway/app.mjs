@@ -37,6 +37,7 @@ const points = {
   동문시장: { lat: 33.5117, lng: 126.526 },
 };
 const controller = createPageConversation();
+let researchState = {};
 let current = "home",
   generation = 0,
   pending = new Set(),
@@ -54,6 +55,10 @@ function message(parent, text, cls) {
   return element("p", text, parent, cls);
 }
 function clearRoute() {
+  researchState = {};
+  $("research-chat-form")?.reset();
+  $("research-chat-result")?.replaceChildren();
+  $("facility-result")?.replaceChildren();
   controller.clear();
   $("route-form").reset();
   $("chat-form").reset();
@@ -474,6 +479,10 @@ function renderFacilityRoutes(view) {
     "notice",
   );
   element("p", view.reason, target);
+  if(view.departure) element("p", "확인한 출발: " + view.departure + " · " + view.time_effect, target);
+  for(const row of view.routes) {
+    if(row.walk_review) element("p", row.label + ": 보행 검토 " + row.walk_review.reviewed_segments + "/" + row.walk_review.total_segments + "구간. " + row.walk_review.message, target, "notice");
+  }
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", "0 0 380 250");
   svg.setAttribute("role", "img");
@@ -669,4 +678,23 @@ $("facility-form").addEventListener("submit", async (event) => {
     button.disabled = false;
     button.textContent = "공개 자료로 자동 경로 찾기";
   }
+});
+
+$("research-chat-reset").addEventListener("click", () => {
+  abortRequests();researchState={};$("research-chat-form").reset();$("research-chat-result").replaceChildren();$("facility-result").replaceChildren();
+});
+$("research-chat-form").addEventListener("submit", async (event) => {
+  event.preventDefault();const button=$("research-chat-send");button.disabled=true;
+  try {
+    const view=await post("/research/agent/conversation", {text:$("research-chat-input").value,state:researchState});
+    if(!view)return;
+    researchState=view.state || {};
+    $("facility-result").replaceChildren();
+    if(view.kind==='facility_routes') {renderFacilityRoutes(view);message($("research-chat-result"),view.message);}
+    else if(view.kind==='data_question') showData(view,$("research-chat-result"));
+    else if(view.kind==='report_preview') showPreview(view,$("research-chat-result"));
+    else message($("research-chat-result"),view.message || '공개 구간 입력을 확인해 주세요.',view.kind==='emergency'?'error':undefined);
+    $("research-chat-input").value='';
+  } catch(error) {message($("research-chat-result"),'공개 자료 대화를 처리하지 못했습니다. 입력은 유지했습니다. 합성 경로로 대신하지 않았습니다.','error');}
+  finally {button.disabled=false;}
 });
