@@ -153,3 +153,30 @@ def research_conversation(body: ConversationBody,response: Response):
         raise HTTPException(503,'공개 데이터가 없습니다. 합성 경로로 대신하지 않습니다.') from exc
     except (ValueError,TypeError,KeyError,ValidationError) as exc:
         raise HTTPException(422,'공개 구간과 날짜·오전·오후 입력을 확인해 주세요.') from exc
+
+
+@app.get('/',include_in_schema=False)
+def landing():
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse('/app',status_code=307,headers={'Cache-Control':'no-store'})
+
+
+@app.get('/runtime/status')
+def runtime_status(response: Response):
+    import json,os
+    from pathlib import Path
+    response.headers['Cache-Control']='no-store'
+    compiled=os.environ.get('JEJU_COMPILED_DATA_DIR')
+    if compiled:
+        folder=Path(compiled)
+        available=all((folder/f'{region}_{source}.json').is_file() for region in ('yeondong','seogwipo') for source in ('standard','datahub'))
+        info=folder/'build_info.json'
+        built_at=json.loads(info.read_text(encoding='utf-8')).get('built_at') if info.exists() else None
+    else:
+        folder=Path(os.environ.get('JEJU_OPEN_DATA_DIR',str(Path(__file__).resolve().parents[1]/'data/open')))
+        available=(folder/'foot_routes/collection_summary.json').is_file()
+        built_at=None
+    return {'facility_data_connected':available,'data_mode':'compiled' if compiled else 'source_files',
+            'agent_mode':'rules_and_templates','external_llm_enabled':False,'built_at':built_at,
+            'scope':'공개 구간 두 곳의 연구 시연. 집·임의 주소·실시간 통행 검증은 미지원.',
+            'report_storage':'시연용 임시 메모리. 실제 민원 접수·영구 보관이 아닙니다.'}

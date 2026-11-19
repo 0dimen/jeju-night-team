@@ -1,3 +1,5 @@
+> 시험 배포: [실제 데이터·에이전트 연결과 배포 방식](docs/VERCEL_PREVIEW.md)
+
 > 후속 보완: [공개 구간 대화 연결·보행 검토](docs/PUBLIC_ROUTE_CONVERSATION.md)
 
 # 제주밤길: 실행 방법과 다음 개발

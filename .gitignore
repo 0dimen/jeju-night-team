@@ -21,3 +21,7 @@ experiments/results/gemini_quota_*.json
 runtime-check.json
 data/raw/
 artifacts/
+
+# 배포 도구 인증·생성물
+.vercel/
+runtime/

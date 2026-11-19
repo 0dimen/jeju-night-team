@@ -1,0 +1,14 @@
+.git
+.venv
+.env
+*.env
+**/__pycache__
+.pytest_cache
+data/open
+data/raw
+experiments
+tests
+review
+docs
+*.pdf
+*.zip

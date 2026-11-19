@@ -698,3 +698,10 @@ $("research-chat-form").addEventListener("submit", async (event) => {
   } catch(error) {message($("research-chat-result"),'공개 자료 대화를 처리하지 못했습니다. 입력은 유지했습니다. 합성 경로로 대신하지 않았습니다.','error');}
   finally {button.disabled=false;}
 });
+
+fetch('/runtime/status',{cache:'no-store'})
+  .then(response=>{if(!response.ok)throw new Error('status');return response.json();})
+  .then(info=>{
+    const status=document.getElementById('runtime-connection');
+    status.textContent=(info.facility_data_connected?'공개 경로 자료 연결됨':'공개 경로 자료 미연결')+' · 규칙형 에이전트 연결됨'+(info.built_at?' · 준비 시각 '+new Date(info.built_at).toLocaleString('ko-KR'): '');
+  }).catch(()=>{document.getElementById('runtime-connection').textContent='연결 상태를 확인하지 못했습니다. 다시 접속해 주세요.';});

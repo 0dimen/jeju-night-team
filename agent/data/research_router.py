@@ -118,6 +118,9 @@ class ResearchRouter:
 
 
 def get_router(region,source='standard'):
+    if os.environ.get('JEJU_COMPILED_DATA_DIR'):
+        from agent.data.compiled_router import get_compiled_router
+        return get_compiled_router(region,source)
     root=Path(os.environ.get('JEJU_OPEN_DATA_DIR',str(ROOT/'data/open')))
     files=[root/'foot_routes/collection_summary.json',root/'osm'/f'{region}_overpass.json',root/REGIONS[region][0],root/('jeju_cctv_mois_standard.csv' if source=='standard' else 'jeju_cctv_20221215.csv'),ROOT/'config/cctv_selection.yaml']
     if region=='yeondong':files.extend([root/'jeju_city_streetlights_20241010.csv',root/'derived/jeju_city_streetlights_20241010_axisfixed.note.json'])
