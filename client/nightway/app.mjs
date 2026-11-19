@@ -998,6 +998,11 @@ $("live-place-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   const target = $("live-route-result"),
     button = $("live-route-button");
+  const criteria = [...document.querySelectorAll('input[name="live-preference"]:checked')].map(input => input.value);
+  if (!criteria.length) {
+    message(target, "비교 기준을 한 가지 이상 선택해 주세요.", "error");
+    return;
+  }
   if (!liveLocations.origin || !liveLocations.destination) {
     message(
       target,
@@ -1032,7 +1037,7 @@ $("live-place-form").addEventListener("submit", async (event) => {
       origin: liveLocations.origin,
       destination: liveLocations.destination,
       departure: $("live-date").value + "T" + $("live-time").value,
-      preference: checkedValue("live-preference"),
+      criteria,
     });
     if (
       view &&

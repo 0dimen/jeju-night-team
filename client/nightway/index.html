@@ -93,6 +93,19 @@
             <details id="route-input" open>
               <summary>이동 조건 입력</summary>
               <form id="live-place-form" autocomplete="off">
+                  <label class="search-mode">검색 방식<select id="live-search-mode">
+                      <option value="place">장소명</option>
+                      <option value="road">도로명 주소</option>
+                      <option value="parcel">지번 주소</option>
+                    </select></label>
+                <details class="privacy-note">
+                  <summary>위치 정보 사용 안내</summary>
+                  <p>
+                    검색어는 VWorld, 선택 좌표는 TMAP에 전달합니다. 앱 서버에는
+                    저장하지 않으며 페이지를 떠나면 지웁니다. 외부 제공사의 처리
+                    정책은 별도입니다. 제주 범위의 직선 5m~20km를 지원합니다.
+                  </p>
+                </details>
                 <div class="field-block">
                   <button type="button" class="field-row" id="live-origin-toggle" aria-expanded="true" aria-controls="live-origin-panel">
                     <svg class="ico" width="20" height="20" aria-hidden="true"><use href="#i-pin" /></svg>
@@ -137,31 +150,19 @@
                   </div>
                 </div>
                 <fieldset class="card chip-card" id="live-preference">
-                  <legend>비교 기준</legend>
+                  <legend>비교 기준 · 여러 개 선택 가능</legend>
                   <div class="chip-row">
-                    <label class="chip"><input type="radio" name="live-preference" value="cctv" checked />CCTV 인접 구간</label>
-                    <label class="chip"><input type="radio" name="live-preference" value="fastest" />이동 시간</label>
-                    <label class="chip"><input type="radio" name="live-preference" value="light" />조명 인접 구간</label>
-                    <label class="chip"><input type="radio" name="live-preference" value="both" />CCTV·조명 함께</label>
+                    <label class="chip"><input type="checkbox" name="live-preference" value="cctv" checked />CCTV 인접 구간</label>
+                    <label class="chip"><input type="checkbox" name="live-preference" value="fastest" />이동 시간</label>
+                    <label class="chip"><input type="checkbox" name="live-preference" value="light" />조명 인접 구간</label>
                   </div>
+                  <p class="support">한 가지 이상 선택해 주세요. 선택한 기준만 같은 비중으로 비교해요.</p>
                 </fieldset>
                 <p class="info-card">
                   <svg class="ico" width="16" height="16" aria-hidden="true"><use href="#i-info" /></svg>
                   <span>출발 시각은 이동 조건으로만 저장됩니다. 시간대별 보행량 자료는 준비 중이에요.</span>
                 </p>
-                <details class="privacy-note">
-                  <summary>검색 방식과 위치 사용</summary>
-                  <label class="search-mode">검색 방식<select id="live-search-mode">
-                      <option value="place">장소명</option>
-                      <option value="road">도로명 주소</option>
-                      <option value="parcel">지번 주소</option>
-                    </select></label>
-                  <p>
-                    검색어는 VWorld, 선택 좌표는 TMAP에 전달합니다. 앱 서버에는
-                    저장하지 않으며 페이지를 떠나면 지웁니다. 외부 제공사의 처리
-                    정책은 별도입니다. 제주 범위의 직선 5m~20km를 지원합니다.
-                  </p>
-                </details>
+
                 <button id="live-clear" class="text-button" type="button">입력 초기화</button>
                 <div class="step-actions">
                   <button id="live-route-button" class="primary" type="submit">두 경로 비교하기</button>

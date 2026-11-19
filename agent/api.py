@@ -291,6 +291,7 @@ class SelectedPoint(BaseModel):
 
 
 class SelectedRouteBody(BaseModel):
+    criteria: list[Literal['fastest','cctv','light']] | None=Field(default=None,min_length=1,max_length=3)
     origin: SelectedPoint
     destination: SelectedPoint
     departure: str=Field(pattern=r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$')
@@ -309,7 +310,7 @@ def selected_routes(body:SelectedRouteBody,response:Response):
     response.headers['Cache-Control']='no-store'
     response.headers['Pragma']='no-cache'
     try:
-        return selected_compare([body.origin.lng,body.origin.lat],[body.destination.lng,body.destination.lat],body.departure,body.cctv_source,body.preference,body.light_radius,body.cctv_radius,body.weight,body.max_detour)
+        return selected_compare([body.origin.lng,body.origin.lat],[body.destination.lng,body.destination.lat],body.departure,body.cctv_source,body.preference,body.light_radius,body.cctv_radius,body.weight,body.max_detour,**({"criteria":body.criteria} if body.criteria is not None else {}))
     except (TmapUnavailable,FileNotFoundError):
         raise HTTPException(503,'선택한 위치의 경로·시설 자료를 확인하지 못했습니다. 키·한도·자료 연결을 확인해 주세요. 합성 경로로 대신하지 않습니다.') from None
     except (ValueError,KeyError,TypeError):
