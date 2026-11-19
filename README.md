@@ -116,3 +116,7 @@ Windows에서는 Python 경로만 `.\.venv\Scripts\python.exe`로 바꿉니다. 
 시설 자료는 [정리 결과와 처리 규칙](docs/FACILITY_CLEANUP.md), 추천 방식은 [기준 후보 비교](docs/RECOMMENDATION_CRITERIA_CANDIDATES.md)를 참고하세요. 기준 후보는 아직 기본 순위에 적용하지 않았습니다.
 
 [세 계산식과 4인30문항 시험](docs/THREE_ROUTE_FORMULAS_AND_USER_STUDY.md)을 준비했습니다. 임시 가중치 비교이며 기본 서비스 순위를 변경하지 않았습니다.
+
+## 디자인 기반 웹앱
+
+서버 실행 후 **같은 기기 브라우저의 `http://127.0.0.1:8000/app`**에서 제주밤길 화면을 사용할 수 있습니다. 홈·경로 비교·에이전트 질문·제보 미리보기·합성 접수를 연결했습니다. 실제 지도·GPS·기관 전달은 연결 전입니다. [실행과 연결 범위](docs/WEBAPP_AGENT_INTEGRATION.md)를 먼저 확인하세요.

@@ -23,6 +23,11 @@ export function createPageConversation({fetchImpl=globalThis.fetch, target=globa
       sequence++;pending?.abort();pending=null;
       state.request={...state.request,...changes};state.awaiting_route=true;
     },
+    setPreferences(values) {
+      assertActive();
+      if(!Array.isArray(values)||!values.length||values.some(value=>!['cctv','streetlight','activity','none'].includes(value))) throw new Error('비교 기준을 확인해 주세요.');
+      sequence++;pending?.abort();pending=null;state.request={...state.request,preferences:[...new Set(values)]};state.awaiting_route=true;
+    },
     async send(text) {
       assertActive();
       if(typeof text!=='string' || !text.trim()) throw new Error('문장을 입력해 주세요.');
