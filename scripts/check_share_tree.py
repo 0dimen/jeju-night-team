@@ -14,11 +14,13 @@ def check(staged=False):
     failed=[];checked=0
     for name in filter(None,names):
         path=PurePosixPath(name)
-        if any(p in path.parts for p in ('raw','cache','models','.venv')) or 'INTERNAL' in name or path.suffix.lower() in ('.env','.sqlite','.sqlite3','.db','.xlsx') or path.name.startswith('.env'):
+        if any(p in path.parts for p in ('raw','cache','models','.venv')) or 'INTERNAL' in name or path.suffix.lower() in ('.env','.sqlite','.sqlite3','.db','.xlsx') or (path.name.startswith('.env') and path.name != '.env.example'):
             failed.append((name,'비공유 파일'));continue
         meta=subprocess.check_output(['git','ls-files','-s','--',name],text=True)
         if meta.startswith(('120000','160000')):failed.append((name,'링크 파일'));continue
         content=subprocess.check_output(['git','show',':'+name])
+        if path.name == '.env.example' and any(line.strip() and not line.lstrip().startswith(b'#') and not re.fullmatch(rb'[A-Z_][A-Z0-9_]*=\s*', line.strip()) for line in content.splitlines()):
+            failed.append((name,'값이 있는 환경 설정 예시'))
         if KEYS.search(content):failed.append((name,'키 형식'))
         if path.suffix=='.pdf':
             try:
