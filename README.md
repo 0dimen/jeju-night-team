@@ -6,6 +6,8 @@
 
 최신 개발 브랜치는 **`feature/open-data-facility-routes`**입니다. main에는 아직 합치지 않았습니다. 공개 배포 주소는 없으며 배포 담당이 Vercel 계정·환경변수를 연결해야 합니다. [현재 상태와 다음 작업](PROJECT_STATUS.md)을 먼저 확인하세요.
 
+맥에서 라즈베리파이 서버를 열려면 [localhost 연결 안내](docs/LOCALHOST_CONNECTION.md)를 따르세요.
+
 ## 설치와 실행
 
 Python 3.13·Linux에서 확인했습니다. macOS·Windows·센터 실기기는 별도 확인이 필요합니다.
