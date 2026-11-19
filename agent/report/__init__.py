@@ -20,7 +20,12 @@ def mask_personal_info(text):
 
 def emergency_check(text):
     spec = load_yaml('registry/emergency_phrases.yaml')
-    return any(normalized(x) in normalized(text) for x in spec['phrases'])
+    value = normalized(text)
+    has = lambda key: any(normalized(x) in value for x in spec.get(key, []))
+    if has('phrases'):
+        return True
+    # 쓰러진 표지판처럼 사물만 말한 경우는 시설 제보로 둔다.
+    return has('fall_phrases') and not (has('object_words') and not has('person_words'))
 
 
 def safe_report_summary(text):
