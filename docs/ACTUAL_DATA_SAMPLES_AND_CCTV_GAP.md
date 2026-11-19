@@ -83,3 +83,5 @@ CCTV 열 순서: 관리기관명, 도로명주소, 지번주소, 설치목적, �
 원본의 행수·두 종류10번째 행은 `scripts/inspect_csv_source.py <원본.csv> --encoding <문자형식>`으로 확인할 수 있습니다. 출력에는 파일명·지문·열 이름·원본 그대로의 표본이 포함되므로 공개 원본만 지정합니다. 이번 작업은 에이전트·화면 계산 코드를 바꾸지 않고 자료 확인 도구와 근거를 추가했습니다. 실제 제공자 파일1회403을 확인하고 우회·반복하지 않았습니다. 공식 문서·표본 확인일2026-11-19.
 
 기존 원본 출처: [제주 CCTV](https://jejudatahub.net/data/view/data/846), [제주시 조명](https://www.data.go.kr/data/15129786/fileData.do), [서귀포 조명](https://www.data.go.kr/data/15129941/fileData.do).
+
+후속: [원본 재다운로드·전처리 재현·CCTV8행 원인 점검](DATA_INTEGRITY_RECHECK.md)에서 세 파일의 동일 지문과 남은 자료 범위를 확인했습니다.
