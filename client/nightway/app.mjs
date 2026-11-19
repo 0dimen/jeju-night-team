@@ -1,5 +1,4 @@
 import { drawVworld } from "/app/vworld.mjs";
-import { createPageConversation } from "/demo/page_conversation.mjs";
 const $ = (id) => document.getElementById(id);
 const iconPaths = {
   home: "M3 11 12 3l9 8M6 9v12h5v-7h3v7h4V9",
@@ -33,6 +32,7 @@ for (const button of document.querySelectorAll(
     if (button.dataset.screen === "route")
       glyph = "M6 18a3 3 0 1 0 0 .01M18 6a3 3 0 1 0 0 .01M6 15V9h12";
     else if (label.includes("지역 데이터")) glyph = iconPaths.route;
+    else if (label.includes("유동인구")) glyph = iconPaths.data;
     else if (label.includes("시설 이슈"))
       glyph = "M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4";
   }
@@ -40,14 +40,6 @@ for (const button of document.querySelectorAll(
   svg.append(path);
   span.replaceChildren(svg);
 }
-const points = {
-  제주시청: { lat: 33.4996, lng: 126.5312 },
-  탑동광장: { lat: 33.517, lng: 126.525 },
-  제주공항: { lat: 33.5104, lng: 126.4913 },
-  동문시장: { lat: 33.5117, lng: 126.526 },
-};
-const controller = createPageConversation();
-let researchState = {};
 let activeRoutePhase = "input",
   activeRouteTarget = null;
 let liveLocations = {},
@@ -56,7 +48,19 @@ let current = "home",
   generation = 0,
   pending = new Set(),
   lastPreview = null,
-  reportSnapshot = null;
+  reportSnapshot = null,
+  reportPlace = null,
+  reportRevision = 0;
+const soonCopy = {
+  population: [
+    "유동인구 분석",
+    "시간대별 보행량 자료를 연결하고 있어요. 월별 방문 통계를 지금 걷는 사람 수처럼 보여 주지 않도록 확인한 뒤 열어요.",
+  ],
+  issues: [
+    "시설 이슈",
+    "검토를 마친 제보를 지역별로 모아 보여 줄 예정이에요. 지금은 이번 페이지에서 접수한 제보를 마이 탭에서 볼 수 있어요.",
+  ],
+};
 function element(tag, text, parent, cls) {
   const node = document.createElement(tag);
   if (text !== undefined) node.textContent = text;
@@ -127,18 +131,13 @@ function clearRoute() {
   routePhase("input");
   activeRouteTarget = null;
   $("route-input").open = true;
-  $("research-tools").open = false;
-  $("synthetic-tools").open = false;
   clearLive();
-  researchState = {};
-  $("research-chat-form")?.reset();
-  $("research-chat-result")?.replaceChildren();
-  $("facility-result")?.replaceChildren();
-  controller.clear();
-  $("route-form").reset();
-  $("chat-form").reset();
-  $("route-result").replaceChildren();
-  $("chat-result").replaceChildren();
+}
+function clearReportPlace() {
+  reportPlace = null;
+  reportRevision++;
+  $("report-place-candidates").replaceChildren();
+  $("report-place-selected").textContent = "문제 위치를 선택해 주세요.";
 }
 function abortRequests() {
   generation++;
@@ -146,11 +145,10 @@ function abortRequests() {
   pending.clear();
 }
 function wipe() {
-  document.getElementById("facility-form")?.reset();
-  document.getElementById("facility-result")?.replaceChildren();
   abortRequests();
   clearRoute();
   $("report-form").reset();
+  clearReportPlace();
   reportStep(1);
   $("report-result").replaceChildren();
   $("report-confirm").hidden = true;
@@ -158,7 +156,7 @@ function wipe() {
   lastPreview = null;
   reportSnapshot = null;
   $("data-result").replaceChildren();
-  message($("receipt"), "이번 페이지에서 확인한 접수 내역이 없습니다.");
+  message($("receipt"), "이번 페이지에서 접수한 제보가 없어요.");
   for (const button of document.querySelectorAll("button"))
     button.disabled = false;
 }
@@ -181,6 +179,7 @@ function navigate(screen) {
           report: "보행환경 제보",
           data: "지역 데이터",
           my: "이번 페이지의 제보",
+          soon: $("soon-title").textContent,
         }[screen] || "";
   for (const section of document.querySelectorAll(".screen"))
     section.hidden = section.id !== screen;
@@ -197,7 +196,13 @@ function navigate(screen) {
 }
 document.addEventListener("click", (event) => {
   const target = event.target.closest("[data-screen]");
-  if (target) navigate(target.dataset.screen);
+  if (!target) return;
+  const copy = soonCopy[target.dataset.soon];
+  if (copy) {
+    $("soon-title").textContent = copy[0];
+    $("soon-text").textContent = copy[1];
+  }
+  navigate(target.dataset.screen);
 });
 $("brand-home").addEventListener("click", () => navigate("home"));
 $("clear-page").addEventListener("click", () => {
@@ -272,194 +277,16 @@ function showPreview(view, target) {
   }
   for (const q of view.questions || []) element("p", q.message, target);
 }
-function showConversation(view) {
-  if (view.kind === "route") {
-    renderRoutes(view);
-    message($("chat-result"), "비교 결과를 위에 표시했습니다.");
-  } else if (view.kind === "data_question") showData(view, $("chat-result"));
-  else if (view.kind === "report_preview") showPreview(view, $("chat-result"));
+function showConversation(view, target) {
+  if (view.kind === "data_question") showData(view, target);
+  else if (view.kind === "report_preview") showPreview(view, target);
   else
     message(
-      $("chat-result"),
+      target,
       view.message || "입력을 확인해 주세요.",
       view.kind === "emergency" ? "error" : undefined,
     );
 }
-function renderRoutes(view) {
-  const target = $("route-result");
-  target.replaceChildren();
-  element("h2", "같은 목적지, 경로 비교", target);
-  element("p", view.message || "합성 경로·시설 비교입니다.", target, "notice");
-  const comparison = view.comparison_table;
-  const map = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  map.setAttribute("viewBox", "0 0 380 170");
-  map.classList.add("route-map");
-  map.setAttribute("role", "img");
-  map.setAttribute(
-    "aria-label",
-    "합성 경로 A 보라 실선과 B 청록 점선 도식. 실제 지도가 아닙니다.",
-  );
-  const svgNode = (tag, attrs, text) => {
-    const n = document.createElementNS(map.namespaceURI, tag);
-    for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
-    if (text) n.textContent = text;
-    map.append(n);
-    return n;
-  };
-  svgNode(
-    "text",
-    { x: 18, y: 28, fill: "#c4bcd9", "font-size": 13 },
-    "합성 경로 도식 · 실제 지도 아님",
-  );
-  svgNode("path", {
-    "data-route": "A",
-    d: "M45 65 H310",
-    stroke: "#af86ff",
-    "stroke-width": 5,
-    fill: "none",
-  });
-  svgNode("text", { x: 18, y: 70, fill: "#af86ff", "font-size": 16 }, "A");
-  svgNode("path", {
-    "data-route": "B",
-    d: "M45 120 H350",
-    stroke: "#89e3dd",
-    "stroke-width": 5,
-    "stroke-dasharray": "7 6",
-    fill: "none",
-  });
-  svgNode("text", { x: 18, y: 125, fill: "#89e3dd", "font-size": 16 }, "B");
-  if (
-    view.synthetic === true &&
-    comparison.rows.every((row) => ["A", "B"].includes(row.id))
-  )
-    target.append(map);
-  else
-    element(
-      "p",
-      "경로 좌표를 표시할 지도는 연결 전입니다. 아래 수치와 출처를 확인해 주세요.",
-      target,
-      "notice",
-    );
-  element("p", comparison.value_meaning, target, "support");
-  const cards = element("div", "", target);
-  const detail = element("div", "", target, "card");
-  function select(row) {
-    map.dataset.selected = row.id;
-    for (const button of cards.children)
-      button.setAttribute(
-        "aria-pressed",
-        String(button.dataset.route === row.id),
-      );
-    map.setAttribute(
-      "aria-label",
-      "선택한 합성 경로 " + row.id + " 도식. 실제 지도가 아닙니다.",
-    );
-    detail.replaceChildren();
-    element("h2", "경로 " + row.id + "의 비교 근거", detail);
-    const metrics = element("div", "", detail, "details-grid");
-    for (const [label, value] of [
-      ["거리", row.distance],
-      ["예상 시간", row.duration],
-      [
-        "CCTV 인접 비율",
-        row.cctv_comparison_value == null
-          ? "자료 없음"
-          : row.cctv_comparison_value + "%",
-      ],
-      ["조명", "자료 없음"],
-    ]) {
-      const box = element("div", label, metrics, "metric");
-      element("strong", value, box);
-    }
-    element("p", comparison.rank_reason, detail);
-    element("p", comparison.tradeoff, detail);
-    for (const source of comparison.sources)
-      element(
-        "p",
-        "출처: " + source.name + " / 기준: " + source.observed_at,
-        detail,
-        "support",
-      );
-    for (const limitation of comparison.limitations)
-      element("p", limitation, detail, "support");
-  }
-  for (const row of comparison.rows) {
-    const button = element("button", "", cards, "route-card");
-    button.type = "button";
-    button.dataset.route = row.id;
-    element(
-      "strong",
-      row.id + " · " + row.distance + " · " + row.duration,
-      button,
-    );
-    element(
-      "p",
-      "CCTV 인접 " +
-        (row.cctv_comparison_value == null
-          ? "자료 없음"
-          : row.cctv_comparison_value + "%") +
-        " · 비교 순위 " +
-        row.rank,
-      button,
-    );
-    button.addEventListener("click", () => select(row));
-  }
-  if (comparison.rows.length) select(comparison.rows[0]);
-}
-$("route-form").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const button = $("compare-button");
-  button.disabled = true;
-  button.textContent = "비교하고 있어요…";
-  const epoch = generation;
-  try {
-    if ($("origin").value === $("destination").value)
-      throw new Error("출발지와 도착지를 다르게 선택해 주세요.");
-    controller.clear();
-    controller.setLocations({
-      origin: { name: $("origin").value, ...points[$("origin").value] },
-      destination: {
-        name: $("destination").value,
-        ...points[$("destination").value],
-      },
-    });
-    controller.setPreferences([
-      document.querySelector("[name=preference]:checked").value,
-    ]);
-    const view = await controller.send(
-      $("departure-date").value + "T" + $("departure-time").value,
-    );
-    if (view && epoch === generation) showConversation(view);
-  } catch (error) {
-    if (epoch === generation)
-      message($("route-result"), error.message, "error");
-  } finally {
-    button.disabled = false;
-    button.textContent = "두 경로 비교하기";
-  }
-});
-$("chat-form").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const button = $("chat-send"),
-    epoch = generation;
-  button.disabled = true;
-  try {
-    const view = await controller.send($("chat-input").value);
-    if (view && epoch === generation) {
-      showConversation(view);
-      if (view.kind === "emergency") {
-        clearRoute();
-        $("synthetic-tools").open = true;
-        message($("chat-result"), view.message, "error");
-        $("chat-result").scrollIntoView({ block: "start" });
-      }
-    }
-  } catch (error) {
-    if (epoch === generation) message($("chat-result"), error.message, "error");
-  } finally {
-    button.disabled = false;
-  }
-});
 $("source-button").addEventListener("click", async () => {
   try {
     const view = await post("/agent/conversation", {
@@ -478,7 +305,7 @@ function reportInput() {
       facility: $("report-facility").value,
       problem: $("report-problem").value,
     },
-    location: $("report-location").value,
+    location: reportPlace,
   };
 }
 $("report-form").addEventListener("input", () => {
@@ -489,6 +316,15 @@ $("report-form").addEventListener("input", () => {
 });
 $("report-form").addEventListener("submit", async (event) => {
   event.preventDefault();
+  if (!reportPlace) {
+    message(
+      $("report-result"),
+      "문제 위치를 검색해 결과에서 선택해 주세요.",
+      "error",
+    );
+    reportStep(1);
+    return;
+  }
   const button = $("report-preview-button");
   button.disabled = true;
   $("report-confirm").hidden = true;
@@ -527,7 +363,7 @@ $("report-submit").addEventListener("click", async () => {
   if (!lastPreview || !reportSnapshot || !$("report-consent").checked) {
     element(
       "p",
-      "위치·유형·내용과 시연 동의를 확인해 주세요.",
+      "위치·유형·내용과 확인 항목을 체크해 주세요.",
       $("report-result"),
     );
     return;
@@ -536,27 +372,32 @@ $("report-submit").addEventListener("click", async () => {
   const button = $("report-submit");
   button.disabled = true;
   try {
-    const point = points[reportSnapshot.location];
+    const { lat, lng } = reportSnapshot.location;
     const view = await post("/agent/chat", {
       text: reportSnapshot.text,
-      context: { ...point, user_choice: reportSnapshot.user_choice },
+      context: { lat, lng, user_choice: reportSnapshot.user_choice },
     });
     if (view?.stored && view.report) {
       const receipt = $("receipt");
       receipt.replaceChildren();
-      element("h2", "합성 제보가 접수됐어요", receipt);
+      element("h2", "제보가 접수됐어요", receipt);
       element("p", "접수번호: " + view.report.id, receipt);
+      element("p", "위치: " + reportSnapshot.location.name, receipt);
       element("span", "검토 대기", receipt, "badge");
       element(
         "p",
-        "행정기관에 수리 요청한 것이 아니며 경로 계산에 아직 반영하지 않습니다.",
+        "검토를 마치기 전까지는 경로 분석에 반영하지 않아요. 시범 운영 중이라 기관에는 전달되지 않아요.",
         receipt,
       );
       $("report-confirm").hidden = true;
       lastPreview = null;
       reportSnapshot = null;
       navigate("my");
-    } else if (view) showConversation(view);
+      $("report-form").reset();
+      clearReportPlace();
+      $("report-result").replaceChildren();
+      reportStep(1);
+    } else if (view) showConversation(view, $("report-result"));
   } catch (error) {
     message($("report-result"), error.message, "error");
   } finally {
@@ -564,7 +405,7 @@ $("report-submit").addEventListener("click", async () => {
   }
 });
 
-function renderFacilityRoutes(view, target = $("facility-result")) {
+function renderFacilityRoutes(view, target) {
   activeRouteTarget = target;
   target.replaceChildren();
   routePhase("compare");
@@ -587,7 +428,7 @@ function renderFacilityRoutes(view, target = $("facility-result")) {
   element("p", view.label, target, "support");
   element(
     "p",
-    "실제 공개 좌표·도로망으로 계산한 연구 후보입니다. 실시간 시설 상태나 안전을 보증하지 않습니다.",
+    "공개된 시설 위치로 계산한 비교예요. 지금 불이 켜져 있는지, 현장을 지나갈 수 있는지는 확인하지 않았어요.",
     target,
     "notice",
   );
@@ -643,7 +484,7 @@ function renderFacilityRoutes(view, target = $("facility-result")) {
   }
   const mapButton = element(
     "button",
-    "VWorld 배경지도·시설 위치 불러오기",
+    "지도에서 경로·시설 보기",
     target,
   );
   mapButton.type = "button";
@@ -708,13 +549,8 @@ function renderFacilityRoutes(view, target = $("facility-result")) {
   let selected;
   function changeConditions() {
     routePhase("input");
-    if (view.region === "custom") {
-      $("route-input").open = true;
-      $("route-input").scrollIntoView({ block: "start" });
-    } else {
-      $("research-tools").open = true;
-      $("facility-form").scrollIntoView({ block: "start" });
-    }
+    $("route-input").open = true;
+    $("route-input").scrollIntoView({ block: "start" });
   }
   function select(row) {
     selected = row;
@@ -922,129 +758,6 @@ function renderFacilityRoutes(view, target = $("facility-result")) {
   }
   target.scrollIntoView({ block: "start" });
 }
-$("facility-form").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const button = $("facility-button");
-  button.disabled = true;
-  button.textContent = "도로망에서 찾고 있어요…";
-  try {
-    const view = await post("/research/routes/facilities", {
-      region: $("facility-region").value,
-      preference: $("facility-preference").value,
-      cctv_source: $("facility-source").value,
-      light_radius: Number($("facility-light-radius").value),
-      cctv_radius: Number($("facility-cctv-radius").value),
-      weight: Number($("facility-weight").value),
-      max_detour: Number($("facility-detour").value),
-    });
-    if (view) renderFacilityRoutes(view);
-  } catch (error) {
-    message(
-      $("facility-result"),
-      "공개 자료 경로를 계산하지 못했습니다. 데이터 연결과 설정을 확인해 주세요. 합성 경로로 대신하지 않았습니다.",
-      "error",
-    );
-  } finally {
-    button.disabled = false;
-    button.textContent = "공개 자료로 자동 경로 찾기";
-  }
-});
-
-$("research-chat-reset").addEventListener("click", () => {
-  abortRequests();
-  researchState = {};
-  $("research-chat-form").reset();
-  $("research-chat-result").replaceChildren();
-  $("facility-result").replaceChildren();
-});
-$("research-chat-form").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const button = $("research-chat-send");
-  button.disabled = true;
-  try {
-    const view = await post("/research/agent/conversation", {
-      text: $("research-chat-input").value,
-      state: researchState,
-    });
-    if (!view) return;
-    researchState = view.state || {};
-    $("facility-result").replaceChildren();
-    if (view.kind === "facility_routes") {
-      renderFacilityRoutes(view);
-      message($("research-chat-result"), view.message);
-    } else if (view.kind === "data_question")
-      showData(view, $("research-chat-result"));
-    else if (view.kind === "report_preview")
-      showPreview(view, $("research-chat-result"));
-    else {
-      if (view.kind === "emergency") {
-        clearRoute();
-        $("research-tools").open = true;
-      }
-      message(
-        $("research-chat-result"),
-        view.message || "공개 구간 입력을 확인해 주세요.",
-        view.kind === "emergency" ? "error" : undefined,
-      );
-    }
-    $("research-chat-input").value = "";
-  } catch (error) {
-    message(
-      $("research-chat-result"),
-      "공개 자료 대화를 처리하지 못했습니다. 입력은 유지했습니다. 합성 경로로 대신하지 않았습니다.",
-      "error",
-    );
-  } finally {
-    button.disabled = false;
-  }
-});
-
-fetch("/runtime/status", { cache: "no-store" })
-  .then((response) => {
-    if (!response.ok) throw new Error("status");
-    return response.json();
-  })
-  .then((info) => {
-    const status = document.getElementById("runtime-connection");
-    status.textContent =
-      (info.facility_data_connected
-        ? "공개 경로 자료 연결됨"
-        : "공개 경로 자료 미연결") +
-      " · 규칙형 에이전트 연결됨" +
-      (info.built_at
-        ? " · 준비 시각 " + new Date(info.built_at).toLocaleString("ko-KR")
-        : "");
-  })
-  .catch(() => {
-    document.getElementById("runtime-connection").textContent =
-      "연결 상태를 확인하지 못했습니다. 다시 접속해 주세요.";
-  });
-
-$("tmap-button").addEventListener("click", async () => {
-  const button = $("tmap-button");
-  button.disabled = true;
-  try {
-    const view = await post("/research/routes/tmap", {
-      region: $("facility-region").value,
-      preference: $("facility-preference").value,
-      cctv_source: $("facility-source").value,
-      light_radius: Number($("facility-light-radius").value),
-      cctv_radius: Number($("facility-cctv-radius").value),
-      weight: Number($("facility-weight").value),
-      max_detour: Number($("facility-detour").value),
-    });
-    if (view) renderFacilityRoutes(view);
-  } catch {
-    message(
-      $("facility-result"),
-      "TMAP 보행 후보를 불러오지 못했습니다. 키·이용 권한·한도·시설 자료 연결을 확인해 주세요. 합성 경로로 대신하지 않았습니다.",
-      "error",
-    );
-  } finally {
-    button.disabled = false;
-  }
-});
-
 for (const field of ["origin", "destination"]) {
   const input = $("live-" + field + "-query");
   input.addEventListener("input", () => {
@@ -1155,7 +868,7 @@ $("live-place-form").addEventListener("submit", async (event) => {
     )
       message(
         target,
-        "선택한 위치의 경로·시설 비교를 처리하지 못했습니다. 위치·시각·키·한도를 확인해 주세요. 입력은 유지했습니다. 합성 경로로 대신하지 않았습니다.",
+        "경로를 비교하지 못했어요. 입력은 그대로 두었으니 위치와 시각을 확인한 뒤 다시 시도해 주세요.",
         "error",
       );
   } finally {
@@ -1172,13 +885,11 @@ for (const id of ["live-date", "live-time", "live-preference"])
 $("live-place-form").addEventListener("input", () => routePhase("input"));
 $("report-form").addEventListener("focusin", (event) => {
   const id = event.target.id;
-  if (id === "report-location") reportStep(1);
+  if (id === "report-place-query") reportStep(1);
   else if (id === "report-facility" || id === "report-problem") reportStep(2);
   else if (id === "report-text") reportStep(3);
 });
 $("report-form").addEventListener("submit", () => reportStep(4));
-for (const id of ["research-chat-send", "research-chat-reset", "tmap-button"])
-  $(id).classList.add("secondary");
 for (const field of ["origin", "destination"])
   $("live-" + field + "-query").addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
@@ -1207,13 +918,65 @@ $("screen-back").addEventListener("click", (event) => {
       activeRouteTarget.scrollIntoView({ block: "start" });
     } else {
       routePhase("input");
-      if (activeRouteTarget.id === "live-route-result") {
-        $("route-input").open = true;
-        $("route-input").scrollIntoView({ block: "start" });
-      } else {
-        $("research-tools").open = true;
-        $("facility-form").scrollIntoView({ block: "start" });
-      }
+      $("route-input").open = true;
+      $("route-input").scrollIntoView({ block: "start" });
     }
   } else navigate("home");
 });
+
+async function searchReportPlace() {
+  const button = $("report-place-search"),
+    target = $("report-place-candidates"),
+    revision = ++reportRevision;
+  reportPlace = null;
+  $("report-place-selected").textContent =
+    "검색 결과에서 위치를 선택해 주세요.";
+  button.disabled = true;
+  try {
+    const view = await post("/maps/places/search", {
+      query: $("report-place-query").value,
+      mode: "place",
+    });
+    if (!view || revision !== reportRevision) return;
+    target.replaceChildren();
+    element("p", view.message, target);
+    for (const place of view.candidates) {
+      const address = place.road_address || place.parcel_address;
+      const choice = element(
+        "button",
+        place.name + " · " + address,
+        target,
+        "route-card",
+      );
+      choice.type = "button";
+      choice.addEventListener("click", () => {
+        reportPlace = { name: place.name, lat: place.lat, lng: place.lng };
+        $("report-place-selected").textContent =
+          "선택: " + place.name + " · " + address;
+        target.replaceChildren();
+        $("report-confirm").hidden = true;
+        $("report-consent").checked = false;
+        lastPreview = null;
+        reportSnapshot = null;
+        reportStep(2);
+      });
+    }
+  } catch {
+    if (revision === reportRevision)
+      message(
+        target,
+        "위치를 찾지 못했어요. 입력은 그대로 두었으니 다시 시도해 주세요.",
+        "error",
+      );
+  } finally {
+    button.disabled = false;
+  }
+}
+$("report-place-search").addEventListener("click", searchReportPlace);
+$("report-place-query").addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    searchReportPlace();
+  }
+});
+$("report-place-query").addEventListener("input", clearReportPlace);
