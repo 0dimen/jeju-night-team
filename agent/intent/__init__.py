@@ -14,6 +14,12 @@ def out_of_scope_action(text):
     return any(term in compact for term in targets) and bool(action or re.search(r'(?:예약|예매)해$',compact))
 
 
+def outside_service_action(text):
+    compact=normalized(text)
+    authority=any(term in compact for term in ('시청','구청','관리사무소'))
+    return authority and '대신' in compact and any(term in compact for term in ('요청해','요청해줄','연락해','접수해'))
+
+
 def asks_source(text):
     compact=normalized(text)
     topic=any(term in compact for term in ('정보','자료','데이터','통계','기준'))
@@ -23,7 +29,7 @@ def asks_source(text):
 
 def parse(text):
     text, _ = mask_personal_info(text)
-    if out_of_scope_action(text):
+    if out_of_scope_action(text) or outside_service_action(text):
         kind = 'unsupported'
     elif asks_source(text):
         kind = 'data_question'
@@ -31,6 +37,8 @@ def parse(text):
         kind = 'report'
     elif any(w in text for w in ['데이터', '통계', '출처', '기준일', '방문객']):
         kind = 'data_question'
+    elif any(w in normalized(text) for w in ['보도블록','보도에박스','비상벨안내판']):
+        kind = 'report'
     elif any(w in text for w in ['에서', '까지', '경로', '가려', '가는', '길로', '밤길', '데로']):
         kind = 'route'
     else:
