@@ -550,6 +550,14 @@ function renderFacilityRoutes(view, target) {
     target,
     "support result-sub",
   );
+  if (view.recommendation_explanation) {
+    const explanation = element("div", "", target, "info-card");
+    explanation.dataset.recommendationReason = "true";
+    const index = view.routes.findIndex(row => row.id === view.recommended_route_id);
+    element("h3", "경로 " + routeLetter(index) + "를 추천한 이유", explanation);
+    element("p", view.recommendation_explanation.summary, explanation);
+    element("p", view.recommendation_explanation.scope, explanation, "support");
+  }
   const frame = element("div", "", target, "map-frame");
   const svg = svgNode(frame, "svg", {
     viewBox: "0 0 380 250",
@@ -811,6 +819,10 @@ function renderFacilityRoutes(view, target) {
           : ""),
       content,
     );
+    if (row.recommendation_status_reason)
+      element("p", row.recommendation_status_reason, content, "support");
+    if (view.selected_criteria?.length > 1 && Number.isFinite(row.criteria_score))
+      element("p", "선택 기준 비교 점수 " + row.criteria_score.toFixed(1) + "점 · 안전 점수 아님", content, "support");
     const short = element(
       "span",
       distanceLabel(row.distance_m) + " · " + minutesLabel(row),
@@ -855,14 +867,18 @@ function renderFacilityRoutes(view, target) {
 
   element(
     "p",
-    view.provider === "tmap"
+    view.selected_criteria?.length
+      ? "선택 기준 점수 = 선택한 값의 평균 × 100. 이동 시간 값은 가장 빠른 적격 후보 시간 ÷ 해당 후보 시간, 시설 값은 인접 길이 비율입니다. 높은 점수를 추천하며 동점은 짧은 거리, 경로 식별자 순입니다. 시설 수치와 우회 한도는 공개 자료 기준이며 안전을 보장하지 않습니다."
+      : view.provider === "tmap"
       ? "TMAP 옵션별 경로를 받은 뒤 비교합니다. 시설 우선 조건은 제공사 경로 생성에 쓰이지 않습니다. 비교 비용 = 형상 길이 × [1 + 조명가중치×(1−조명 인접비율) + CCTV가중치×(1−CCTV 인접비율)]. 빠른 길은 제공 예상 시간 기준입니다."
       : "도로 조각 비용 = 길이 × [1 + 조명가중치×(1−조명 인접비율) + CCTV가중치×(1−CCTV 인접비율)]",
     sources,
   );
   element(
     "p",
-    "사용 가중치: 조명 " +
+    view.selected_criteria?.length
+      ? "선택한 기준은 같은 비중 · 거리 상한 " + view.parameters.max_detour + "배"
+      : "사용 가중치: 조명 " +
       view.parameters.weights_used.light +
       " / CCTV " +
       view.parameters.weights_used.cctv +

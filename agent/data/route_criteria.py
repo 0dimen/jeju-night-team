@@ -40,6 +40,33 @@ def rank_selected_criteria(result, criteria):
         row['criteria_score'] = sum(selected.values()) / len(criteria) * 100
     best = min(eligible, key=lambda r: (-r['criteria_score'], r['distance_m'], r['id']))
     result['recommended_route_id'] = best['id']
+    tied = [r for r in eligible if r['criteria_score'] == best['criteria_score']]
+    if len(routes) == 1:
+        summary = '서로 다른 경로가 한 개뿐이라 이 후보를 표시했어요. 다른 길보다 우수하다고 비교한 결과는 아니에요.'
+    elif len(eligible) == 1:
+        summary = '허용 우회 거리 안의 후보가 한 개뿐이라 추천했어요.'
+    elif criteria == ['cctv']:
+        summary = f"CCTV 인접 비율이 {best['cctv_percent']:g}%로, 허용 우회 거리 안의 후보 중 가장 높아 추천했어요. 이동 시간은 이 순위에 넣지 않았어요."
+    elif criteria == ['light']:
+        summary = f"조명 인접 비율이 {best['light_percent']:g}%로, 허용 우회 거리 안의 후보 중 가장 높아 추천했어요. 이동 시간은 이 순위에 넣지 않았어요."
+    elif criteria == ['fastest']:
+        summary = f"예상 이동 시간이 {best['duration_minutes']:g}분으로, 허용 우회 거리 안에서 가장 짧아 추천했어요. 시설 비율은 이 순위에 넣지 않았어요."
+    else:
+        summary = ' · '.join(LABELS[c] for c in criteria) + f"을 같은 비중으로 비교한 점수가 {best['criteria_score']:.1f}점으로 가장 높아 추천했어요. 안전 점수는 아니에요."
+    if len(tied) > 1:
+        summary += ' 같은 점수는 더 짧은 거리를 먼저 고르고, 거리도 같으면 경로 식별자 순으로 정해요.'
+    excluded = [r for r in routes if not r['eligible_for_recommendation']]
+    maximum = result['parameters'].get('max_detour')
+    scope = (f'최단 거리의 {maximum:g}배 이내 후보에서 추천해요.' if maximum is not None
+             else '허용 우회 거리 안의 후보에서 추천해요.')
+    if excluded:
+        scope += f' 한도를 넘은 {len(excluded)}개 후보는 시설 비율이 높아도 추천에서 제외했어요.'
+    result['recommendation_explanation'] = {'summary': summary, 'scope': scope,
+        'eligible_count': len(eligible), 'excluded_count': len(excluded), 'tied_count': len(tied)}
+    for row in routes:
+        row['recommendation_status_reason'] = (
+            '허용 우회 거리를 넘어 추천에서 제외했어요.' if not row['eligible_for_recommendation']
+            else summary if row['id'] == best['id'] else '선택 기준 점수 또는 동점 처리 순서에 따라 다른 후보를 추천했어요.')
     result['selected_criteria'] = criteria
     result['parameters'].update(criteria_weights={c: 1 / len(criteria) for c in criteria},
         ranking_method='selected_criteria_equal_mean', legacy_comparison_cost_used_for_ranking=False)

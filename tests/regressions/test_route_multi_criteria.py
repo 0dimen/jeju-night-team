@@ -82,3 +82,35 @@ def test_selected_route_integration_ranks_combination(monkeypatch):
     result=selected.selected_compare([126.49,33.49],[126.491,33.49],'2026-11-20T22:00',criteria=['fastest','cctv'])
     assert result['recommended_route_id']=='B'
     assert result['selected_criteria']==['fastest','cctv']
+
+
+def test_cctv_priority_over_shorter_distance_regression():
+    # 기존식: 100*(1+4*.9)=460, 120*(1+4*.8)=504 → A.
+    # CCTV 단독 선택의 새 계약은 20%인 B를 고른다.
+    data=baseline();data['routes']=data['routes'][:2]
+    data['routes'][0].update(cctv_percent=10,distance_m=100)
+    data['routes'][1].update(cctv_percent=20,distance_m=120)
+    result=rank_selected_criteria(data,['cctv'])
+    assert result['recommended_route_id']=='B'
+    summary=result['recommendation_explanation']['summary']
+    assert '20%' in summary and '이동 시간은 이 순위에 넣지 않았어요' in summary
+
+
+def test_higher_coverage_but_detour_exclusion_is_explained():
+    data=baseline();data['parameters']['max_detour']=1.5
+    data['routes'][1]['eligible_for_recommendation']=False
+    result=rank_selected_criteria(data,['cctv'])
+    assert result['recommended_route_id']=='A'
+    explanation=result['recommendation_explanation']
+    assert explanation['excluded_count']==1 and '1.5배' in explanation['scope']
+    assert '시설 비율이 높아도 추천에서 제외' in explanation['scope']
+    assert '추천에서 제외' in result['routes'][1]['recommendation_status_reason']
+
+
+def test_only_candidate_is_not_claimed_superior_and_tie_disclosed():
+    data=baseline();data['routes']=data['routes'][:1]
+    explanation=rank_selected_criteria(data,['cctv'])['recommendation_explanation']
+    assert '다른 길보다 우수하다고 비교한 결과는 아니에요' in explanation['summary']
+    result=rank_selected_criteria(baseline(),['cctv','light'])
+    assert result['recommendation_explanation']['tied_count']==2
+    assert '같은 점수' in result['recommendation_explanation']['summary']
