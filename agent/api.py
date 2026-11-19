@@ -110,7 +110,7 @@ def demo_page(asset: str = 'demo.html'):
 def nightway_app(asset: str = 'index.html'):
     from pathlib import Path
     from fastapi.responses import FileResponse
-    if asset not in {'index.html','style.css','tokens.css','app.mjs'}:
+    if asset not in {'index.html','style.css','tokens.css','app.mjs','vworld.mjs'}:
         raise HTTPException(404, '파일이 없습니다.')
     return FileResponse(Path(__file__).resolve().parents[1]/'client'/'nightway'/asset, headers={
         'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
@@ -180,3 +180,39 @@ def runtime_status(response: Response):
             'agent_mode':'rules_and_templates','external_llm_enabled':False,'built_at':built_at,
             'scope':'공개 구간 두 곳의 연구 시연. 집·임의 주소·실시간 통행 검증은 미지원.',
             'report_storage':'시연용 임시 메모리. 실제 민원 접수·영구 보관이 아닙니다.'}
+
+
+@app.get('/maps/vworld/status')
+def vworld_status(response: Response):
+    import os
+    response.headers['Cache-Control']='no-store'
+    return {'configured':bool(os.environ.get('VWORLD_API_KEY','').strip()),'provider':'VWorld',
+            'attribution':'공간정보 오픈플랫폼 VWorld · 국토교통부',
+            'notice':'배경지도이며 보행 가능 여부·시설 작동·밝기의 확인 근거가 아닙니다.'}
+
+
+@app.get('/maps/vworld/tiles/{z}/{x}/{y}.png')
+def vworld_tile(z:int,x:int,y:int):
+    from agent.maps.vworld import fetch_tile,MapUnavailable
+    try:
+        content=fetch_tile(z,x,y)
+        return Response(content,media_type='image/png',headers={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'})
+    except ValueError as exc:
+        raise HTTPException(422,'지원하는 제주 지도 타일 범위가 아닙니다.') from None
+    except MapUnavailable as exc:
+        raise HTTPException(503,'배경지도를 불러오지 못했습니다. 키·도메인·제공사 연결을 확인해 주세요. 경로 수치는 유지됩니다.') from None
+
+
+@app.post('/research/maps/facilities')
+def facility_map_points(body:FacilityRouteBody,response:Response):
+    from agent.maps.vworld import public_points
+    from agent.data.research_router import get_router
+    response.headers['Cache-Control']='no-store'
+    try:
+        router=get_router(body.region,body.cctv_source)
+        view=router.route(body.preference,body.light_radius,body.cctv_radius,body.weight,body.max_detour)
+        return public_points(router,view['routes'])
+    except FileNotFoundError:
+        raise HTTPException(503,'공개 시설 자료가 없습니다.') from None
+    except (ValueError,KeyError,StopIteration):
+        raise HTTPException(422,'공개 지도 구간·연구 설정을 확인해 주세요.') from None

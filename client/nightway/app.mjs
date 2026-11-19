@@ -1,3 +1,4 @@
+import {drawVworld} from "/app/vworld.mjs";
 import { createPageConversation } from "/demo/page_conversation.mjs";
 const $ = (id) => document.getElementById(id);
 const iconPaths = {
@@ -526,6 +527,20 @@ function renderFacilityRoutes(view) {
     line.dataset.route = row.id;
     svg.append(line);
   }
+  const mapButton=element('button','VWorld 배경지도·시설 위치 불러오기',target);
+  mapButton.type='button';
+  const mapHost=element('div','',target);
+  const mapEpoch=generation;
+  mapButton.addEventListener('click',async()=>{
+    mapButton.disabled=true;
+    const isCurrent=()=>mapEpoch===generation && mapHost.isConnected;
+    try {
+      await drawVworld(view,mapHost,isCurrent);
+      const selected=target.querySelector('.route-card[aria-pressed=true]')?.dataset.route;
+      for(const line of mapHost.querySelectorAll('polyline[data-route]'))line.setAttribute('opacity',line.dataset.route===selected?'1':'.35');
+    }catch {if(isCurrent())message(mapHost,'VWorld 배경지도를 불러오지 못했습니다. 키·도메인·연결을 확인해 주세요. 좌표 도식과 경로 수치는 유지됩니다.','error');}
+    finally {mapButton.disabled=false;}
+  });
   target.append(svg);
   element(
     "p",
@@ -541,7 +556,7 @@ function renderFacilityRoutes(view) {
         "aria-pressed",
         String(button.dataset.route === row.id),
       );
-    for (const line of svg.querySelectorAll("polyline"))
+    for (const line of target.querySelectorAll("polyline[data-route]"))
       line.setAttribute("opacity", line.dataset.route === row.id ? "1" : ".35");
     detail.replaceChildren();
     element("h2", row.label + "의 비교 근거", detail);

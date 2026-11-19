@@ -1,3 +1,5 @@
+> 지도 연결: [VWorld 배경지도·공개 시설 표시](docs/VWORLD_CONNECTION.md)
+
 > 시험 배포: [실제 데이터·에이전트 연결과 배포 방식](docs/VERCEL_PREVIEW.md)
 
 > 후속 보완: [공개 구간 대화 연결·보행 검토](docs/PUBLIC_ROUTE_CONVERSATION.md)
