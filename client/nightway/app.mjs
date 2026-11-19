@@ -74,6 +74,15 @@ const reportStepCopy = {
   5: ["접수 완료", "", ""],
 };
 let activeReportStep = 1;
+function straightMeters(a, b) {
+  const rad = Math.PI / 180,
+    dLat = (b.lat - a.lat) * rad,
+    dLng = (b.lng - a.lng) * rad;
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(dLng / 2) ** 2;
+  return 2 * 6371000 * Math.asin(Math.sqrt(h));
+}
 function checkedValue(name) {
   return document.querySelector(`input[name="${name}"]:checked`)?.value;
 }
@@ -282,10 +291,17 @@ async function post(endpoint, body) {
       signal: aborter.signal,
     });
     if (epoch !== generation) return null;
-    if (!response.ok)
-      throw new Error(
+    if (!response.ok) {
+      const error = new Error(
         "처리하지 못했습니다. 입력을 유지했으니 확인 후 다시 시도해 주세요.",
       );
+      error.status = response.status;
+      try {
+        const detail = (await response.json()).detail;
+        if (typeof detail === "string") error.detail = detail;
+      } catch {}
+      throw error;
+    }
     const result = await response.json();
     return epoch === generation ? result : null;
   } catch (error) {
@@ -993,6 +1009,23 @@ $("live-place-form").addEventListener("submit", async (event) => {
     );
     return;
   }
+  const meters = straightMeters(liveLocations.origin, liveLocations.destination);
+  if (meters < 5 || meters > 20000) {
+    message(
+      target,
+      meters < 5
+        ? "출발지와 도착지가 너무 가까워요. 다른 장소를 골라 주세요."
+        : "직선거리 약 " +
+            (meters / 1000).toFixed(1) +
+            "km예요. 걸어서 비교할 수 있는 거리(20km 이내)로 골라 주세요.",
+      "error",
+    );
+    return;
+  }
+  if (!$("live-date").value || !$("live-time").value) {
+    message(target, "출발 날짜와 시각을 골라 주세요.", "error");
+    return;
+  }
   const originRevision = liveRevision.origin,
     destinationRevision = liveRevision.destination,
     settingsRevision = liveRevision.settings;
@@ -1011,7 +1044,7 @@ $("live-place-form").addEventListener("submit", async (event) => {
       settingsRevision === liveRevision.settings
     )
       renderFacilityRoutes(view, target);
-  } catch {
+  } catch (error) {
     if (
       originRevision === liveRevision.origin &&
       destinationRevision === liveRevision.destination &&
@@ -1019,7 +1052,10 @@ $("live-place-form").addEventListener("submit", async (event) => {
     )
       message(
         target,
-        "경로를 비교하지 못했어요. 입력은 그대로 두었으니 위치와 시각을 확인한 뒤 다시 시도해 주세요.",
+        "경로를 비교하지 못했어요. " +
+          (error.detail ||
+            "잠시 뒤 다시 시도해 주세요.") +
+          " 입력은 그대로 두었어요.",
         "error",
       );
   } finally {
