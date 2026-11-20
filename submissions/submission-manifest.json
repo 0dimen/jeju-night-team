@@ -1,0 +1,23 @@
+{
+  "archive": "jeju-night-submission-2026-11-20.zip",
+  "sha256": "70f44c5afa13530af0b021bb151d41b527e64b15d7c774939039c59f60a1abea",
+  "bytes": 6691529,
+  "entries": 753,
+  "source_commit": "f91c14580c0a9c1f48fd9a9daee5a75c6820972f",
+  "excluded_count": 27,
+  "runtime_json_files": 6,
+  "original_data_included": false,
+  "actual_secrets_included": false,
+  "verification": {
+    "archive_integrity": true,
+    "file_hashes_verified": 753,
+    "tests_passed": 347,
+    "raw_data_tests_skipped": 12,
+    "warnings": 1,
+    "fresh_venv_base_install": true,
+    "fresh_venv_app_and_regions": 200,
+    "raw_keys_runtime_paths": 404,
+    "missing_key_search": 503,
+    "external_api_calls": 0
+  }
+}
