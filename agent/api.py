@@ -50,7 +50,7 @@ def routes(body: RouteBody):
 
 @app.get('/health')
 def health():
-    return {'status':'ok','synthetic':True,'level':'L0','review_api':'제공 안 함; 시연용 SQLite 대역에서만 검증'}
+    return {'status':'ok','synthetic':getattr(agent.engine,'synthetic',True) is not False,'level':'L0','review_api':'제공 안 함; 시연용 SQLite 대역에서만 검증'}
 
 
 class ReportPreviewBody(BaseModel):
@@ -79,9 +79,39 @@ def conversation(body: ConversationBody,response: Response):
     response.headers['Pragma']='no-cache'
     try:
         result=page_turn(body.text,body.state)
+        if result['kind']=='route_ready':
+            from agent.comparison import comparison_table
+            calculated=agent.route(result['request'])
+            return {'kind':'route',**calculated,'comparison_table':comparison_table(calculated['analysis']),
+                    'state':result['state'],'page_location_stored':False,
+                    'message':('현재 결과는 합성 시설·경로 시연입니다. 입력한 실제 위치의 길찾기가 아닙니다.' if calculated['synthetic'] else '등록된 파일 경로를 계산했습니다. 현재 시설 상태를 보증하지 않습니다.')}
         if result['kind']=='delegate':
             # 시간과 무관한 요청은 기존 응답을 바로 돌려준다. 페이지 위치는 전달하지 않는다.
             return {**agent.run(body.text),'state':{},'page_location_stored':False}
         return result
     except (ValidationError,ValueError,TypeError,KeyError) as exc:
         raise HTTPException(422,'페이지 위치와 날짜·오전·오후 입력을 확인해 주세요.') from exc
+
+
+@app.get('/demo', include_in_schema=False)
+@app.get('/demo/{asset}', include_in_schema=False)
+def demo_page(asset: str = 'demo.html'):
+    from pathlib import Path
+    from fastapi.responses import FileResponse
+    if asset not in {'demo.html','demo.css','demo.mjs','page_conversation.mjs'}:
+        raise HTTPException(404, '파일이 없습니다.')
+    return FileResponse(Path(__file__).resolve().parents[1]/'client'/asset,headers={
+        'Cache-Control':'no-store', 'X-Content-Type-Options':'nosniff',
+        'Content-Security-Policy':"default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"})
+
+
+@app.get('/app', include_in_schema=False)
+@app.get('/app/{asset}', include_in_schema=False)
+def nightway_app(asset: str = 'index.html'):
+    from pathlib import Path
+    from fastapi.responses import FileResponse
+    if asset not in {'index.html','style.css','tokens.css','app.mjs'}:
+        raise HTTPException(404, '파일이 없습니다.')
+    return FileResponse(Path(__file__).resolve().parents[1]/'client'/'nightway'/asset, headers={
+        'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
+        'Content-Security-Policy':"default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"})

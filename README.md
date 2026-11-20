@@ -1,5 +1,7 @@
 # 제주밤길: 실행 방법과 다음 개발
 
+**팀 공유 시작 문서: [현재 완성 범위·실행·다음 담당 작업](PROJECT_STATUS.md).** 최신 대화·페이지 모듈은 `feature/conversation-route-comparison` 브랜치에서 검토하며 main에는 아직 합쳐지지 않았습니다.
+
 **현재는 개발자 컴퓨터에서 실행하는 보행 경로 비교·시설 제보 시연 프로그램입니다.** 공개 웹사이트나 완성된 지도 앱은 없습니다. 기본 실행은 AI 모델 없이 규칙과 문장 틀을 사용하며 키가 필요 없습니다.
 
 ## 어디에서 사용할 수 있나요?
@@ -54,7 +56,7 @@ Windows에서는 Python 경로만 `.\.venv\Scripts\python.exe`로 바꿉니다. 
 | `POST /agent/conversation` | `{"text":"집으로 갈거야","state":{}}` | 필요한 위치·날짜·오전/오후 확인 |
 | `POST /routes/compare` | `contracts/examples/SYNTHETIC_route_request.json` 내용을 `request`에 넣음 | 합성 경로 비교 |
 
-대화 API는 응답의 `state`를 같은 페이지의 다음 요청에 넣어 이어갑니다. 서버는 집 위치를 저장하지 않습니다. 실제 화면은 페이지를 떠날 때 메모리를 지우고 진행 중인 요청을 중단해야 합니다. 브라우저 저장소·URL·로그에는 집 위치를 넣지 않습니다. `route_ready`는 입력 준비이며 실제 길찾기 완료가 아닙니다.
+대화 API는 응답의 `state`를 같은 페이지의 다음 요청에 넣어 이어갑니다. 서버는 집 위치를 저장하지 않습니다. 실제 화면은 페이지를 떠날 때 메모리를 지우고 진행 중인 요청을 중단해야 합니다. 브라우저 저장소·URL·로그에는 집 위치를 넣지 않습니다. 입력이 모이면 합성 비교표·추천 이유를 반환합니다. 실제 위치의 길찾기 결과는 아니며 응답에 합성 시연임을 표시합니다. `초기화` 또는 `취소`를 보내면 페이지 상태를 비웁니다.
 
 ## 3. 지금까지 구현한 범위
 
@@ -83,11 +85,11 @@ Windows에서는 Python 경로만 `.\.venv\Scripts\python.exe`로 바꿉니다. 
 `agent/`는 요청 처리, `agent/data/`는 자료 검사, `stubs/`는 합성 계산·제보 저장 대역, `contracts/`는 주고받는 형식, `config/`는 교체 설정, `tests/`는 검사입니다. 기본 실행 의존성에는 pytest가 없으므로 검사는 별도로 설치합니다.
 
 ```bash
-.venv/bin/python -m pip install pytest
+.venv/bin/python -m pip install -r requirements-test.txt
 .venv/bin/python -m pytest -q
 ```
 
-현재 Linux 검사 207개가 통과했습니다. 선택 모델·벡터·외부 뉴스의 추가 기능은 전체 의존성과 파일 준비가 별도이며 공유본의 내부 목록 탐색은 사용할 수 없습니다.
+현재 기본 기능과 파일 엔진 검사를 수행했습니다. 최신 수치는 PROJECT_STATUS.md를 따릅니다. 선택 모델·벡터·외부 뉴스의 추가 기능은 전체 의존성과 파일 준비가 별도이며 공유본의 내부 목록 탐색은 사용할 수 없습니다.
 
 ## 5. 팀 참고 문서
 
@@ -102,3 +104,23 @@ Windows에서는 Python 경로만 `.\.venv\Scripts\python.exe`로 바꿉니다. 
 이 저장소는 팀 개발용으로 선별한 코드에서 새 이력을 시작했습니다. 다음 변경은 SHARING_POLICY.md의 사전 검사와 검토 절차를 따릅니다.
 
 커밋 전 점검 도구: `python -m pip install -r requirements-share-check.txt` 후 `git config core.hooksPath .githooks`. 자세한 변경·검토 규칙은 [SHARING_POLICY.md](SHARING_POLICY.md)를 따릅니다.
+
+페이지 연결 모듈: [사용 방법](docs/PAGE_CLIENT_INTEGRATION.md). 실제 화면은 아직 없으며, 지도·페이지 이동 연결 후 브라우저에서 통합 확인해야 합니다.
+
+경로·CCTV 파일 계산기: [설치와 연결](docs/FILE_ROUTE_ENGINE.md). 선택 의존성을 설치한 뒤 합성 파일로 먼저 확인하며, 실제 자료 채택을 대신하지 않습니다.
+
+최신 후속: 공개 연구 구간의 지도 보행 경로4개를 확보하고, 출처·예약·모호한 제보 분기를 보완했습니다. [자료 수집 범위](docs/REAL_ROUTE_COLLECTION.md)와 [평가·보완 내용](docs/AGENT_INPUT_EVALUATION.md)을 확인하세요.
+
+대화 화면은 로컬 서버의 `/demo`에서 열 수 있습니다. [화면 사용법·현장 확인표 준비](docs/DEMO_PAGE_AND_FIELD_REVIEW.md)를 참고하세요. 실제 지도 길찾기 없이 합성 위치만 사용합니다.
+
+시설 자료는 [정리 결과와 처리 규칙](docs/FACILITY_CLEANUP.md), 추천 방식은 [기준 후보 비교](docs/RECOMMENDATION_CRITERIA_CANDIDATES.md)를 참고하세요. 기준 후보는 아직 기본 순위에 적용하지 않았습니다.
+
+[세 계산식과 4인30문항 시험](docs/THREE_ROUTE_FORMULAS_AND_USER_STUDY.md)을 준비했습니다. 임시 가중치 비교이며 기본 서비스 순위를 변경하지 않았습니다.
+
+## 디자인 기반 웹앱
+
+서버 실행 후 **같은 기기 브라우저의 `http://127.0.0.1:8000/app`**에서 제주밤길 화면을 사용할 수 있습니다. 홈·경로 비교·에이전트 질문·제보 미리보기·합성 접수를 연결했습니다. 실제 지도·GPS·기관 전달은 연결 전입니다. [실행과 연결 범위](docs/WEBAPP_AGENT_INTEGRATION.md)를 먼저 확인하세요.
+
+실제 원본의 행수·10번째 줄과 CCTV 부족 문제는 [실제 데이터 표본·대체 후보](docs/ACTUAL_DATA_SAMPLES_AND_CCTV_GAP.md)에 정리했습니다. 생활방범8행은 기재37대이며 제주 전체 수가 아닙니다. 최신 대체 원본은 아직 확보하지 못했고 기본 화면은 합성 계산입니다.
+
+실제 CCTV API 인증이 성공했고 확인한 제주 기관 범위의1,043행을 수집했습니다. 생활방범은71행·기재248대이며 모두 서귀포입니다. 기본 앱의 합성 계산은 유지합니다. [연결·재실행·자료 한계](docs/CCTV_API_CONNECTION.md).

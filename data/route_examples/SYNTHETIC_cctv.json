@@ -1,0 +1,4 @@
+{
+  "metadata": {"synthetic":true,"coordinate_system":"WGS84","source_name":"SYNTHETIC CCTV 위치","source_url":"urn:synthetic:cctv-file-example","license_note":"가상 계산 예시, 실제 시설 아님","observed_at":"2025-07-25"},
+  "rows": [{"id":"SYNTHETIC-F1","type":"cctv","lat":33.25,"lng":126.561,"basis_date":"2025-07-25"}]
+}

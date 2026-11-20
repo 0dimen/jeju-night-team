@@ -1,0 +1,92 @@
+[
+  {
+    "id": "01",
+    "text": "오늘 밤 11시에 제주시청에서 탑동광장까지 걸어갈건데 몇 분 걸려? 다른 길로 가면 얼마나 더 걸리는지도 보여줘.",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  },
+  {
+    "id": "02",
+    "text": "동문시장까지 걸어가고 싶은데 어케 가?",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  },
+  {
+    "id": "03",
+    "text": "제주목 관아에서 동문시장까지 안전하게 걸어가려면 어떻게 가야 돼?",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  },
+  {
+    "id": "04",
+    "text": "내일 새벽에 용두암 보러 갈 건데, 탑동광장에서 걸어가려면 어느 쪽으로 가면 돼?",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  },
+  {
+    "id": "05",
+    "text": "오늘 밤 10시 반에 동문시장에서 탑동광장까지 갈 건데, 지름길 말고 CCTV 있는 쪽으로 갈 수 있어? 좀 돌아가도 돼.",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  },
+  {
+    "id": "06",
+    "text": "어젯밤에 탑동광장 들어가는데 입구 바로 옆 가로등 하나가 꺼져 있더라. 이거 여기다 제보하면 돼?",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  },
+  {
+    "id": "07",
+    "text": "밤에 제주목 관아 앞을 지나는데 비상벨 안내판 글씨가 거의 지워져 있더라. 벨은 안 눌러봤는데 이것도 제보돼?",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  },
+  {
+    "id": "08",
+    "text": "동문시장 입구 쪽 가로등은 잘 켜져 있었는데, 보도에 박스가 쌓여서 차도로 내려가야 했어. 이런 것도 올려도 돼?",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  },
+  {
+    "id": "09",
+    "text": "탑동광장 입구에 가로등 하나 꺼져 있었고, 좀 더 가니까 비상벨 안내판도 바닥에 떨어져 있던데 두 개 다 한 번에 올려도 돼?",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  },
+  {
+    "id": "10",
+    "text": "아까 골목에서 튀어나온 보도블록에 발이 걸렸어. 이미 지나와서 어딘지 잘 모르겠는데 그래도 제보할 수 있어?",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  },
+  {
+    "id": "11",
+    "text": "나 지금 혼자 걷는데 아까부터 같은 사람이 계속 따라와. 골목을 바꿔도 또 따라오는데 어떡해?",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  },
+  {
+    "id": "12",
+    "text": "동문시장에서 탑동광장 가는 길 좀 봐줘. 아 잠깐, 모르는 사람이 앞을 막고 계속 소리 질러. 나 지금 어떡해?",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  },
+  {
+    "id": "13",
+    "text": "나 이따 이쪽으로 걸어갈까 하는데, 지도에 뜨는 CCTV는 어디서 가져온 거야? 언제 자료야? 지금도 작동하는지 알 수 있어?",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  },
+  {
+    "id": "14",
+    "text": "아까 지도 보고 이쪽으로 걸어왔는데, 밤에 혼자 걷기엔 좀 그렇더라. 이런 것도 제보돼?",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  },
+  {
+    "id": "15",
+    "text": "탑동광장 쪽 가로등 꺼졌다고 여기다 제보했는데 아직 검토 중이거든. 시청에 수리해 달라고 대신 요청해 줄 수 있어?",
+    "source_label": "사용자 제공 PDF·AI 보조 초안·공개 장소의 가상 상황",
+    "human_semantic_approval": null
+  }
+]

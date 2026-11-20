@@ -1,0 +1,219 @@
+{
+  "scope": "사용자 제공 AI 보조 초안15문장 관찰. 최종 사람 정답·정확도 평가 아님",
+  "rows": [
+    {
+      "id": "01",
+      "before_kind": "clarification",
+      "after_kind": "clarification",
+      "after_missing": [
+        "date"
+      ],
+      "after_classification_candidate": null,
+      "after_question_fields": [],
+      "human_semantic_approval": null
+    },
+    {
+      "id": "02",
+      "before_kind": "clarification",
+      "after_kind": "clarification",
+      "after_missing": [
+        "origin"
+      ],
+      "after_classification_candidate": null,
+      "after_question_fields": [],
+      "human_semantic_approval": null
+    },
+    {
+      "id": "03",
+      "before_kind": "clarification",
+      "after_kind": "clarification",
+      "after_missing": [
+        "origin"
+      ],
+      "after_classification_candidate": null,
+      "after_question_fields": [],
+      "human_semantic_approval": null
+    },
+    {
+      "id": "04",
+      "before_kind": "clarification",
+      "after_kind": "clarification",
+      "after_missing": [
+        "destination"
+      ],
+      "after_classification_candidate": null,
+      "after_question_fields": [],
+      "human_semantic_approval": null
+    },
+    {
+      "id": "05",
+      "before_kind": "clarification",
+      "after_kind": "clarification",
+      "after_missing": [
+        "date"
+      ],
+      "after_classification_candidate": null,
+      "after_question_fields": [],
+      "human_semantic_approval": null
+    },
+    {
+      "id": "06",
+      "before_kind": "report_preview",
+      "after_kind": "report_preview",
+      "after_missing": null,
+      "after_classification_candidate": {
+        "facility": "streetlight",
+        "problem": "not_working",
+        "summary": "어젯밤에 탑동광장 들어가는데 입구 바로 옆 가로등 하나가 꺼져 있더라. 이거 여기다 제보하면 돼?",
+        "confidence": 0.85,
+        "conflict_with_user_choice": false,
+        "personal_info_masked": false,
+        "emergency": false
+      },
+      "after_question_fields": [
+        "location"
+      ],
+      "human_semantic_approval": null
+    },
+    {
+      "id": "07",
+      "before_kind": "report_preview",
+      "after_kind": "report_preview",
+      "after_missing": null,
+      "after_classification_candidate": {
+        "facility": "other",
+        "problem": "other",
+        "summary": "밤에 제주목 관아 앞을 지나는데 비상벨 안내판 글씨가 거의 지워져 있더라. 벨은 안 눌러봤는데 이것도 제보돼?",
+        "confidence": 0.5,
+        "conflict_with_user_choice": false,
+        "personal_info_masked": false,
+        "emergency": false
+      },
+      "after_question_fields": [
+        "facility",
+        "problem",
+        "facility",
+        "location"
+      ],
+      "human_semantic_approval": null
+    },
+    {
+      "id": "08",
+      "before_kind": "unsupported",
+      "after_kind": "report_preview",
+      "after_missing": null,
+      "after_classification_candidate": {
+        "facility": "walkway",
+        "problem": "obstructed",
+        "summary": "동문시장 입구 쪽 가로등은 잘 켜져 있었는데, 보도에 박스가 쌓여서 차도로 내려가야 했어. 이런 것도 올려도 돼?",
+        "confidence": 0.5,
+        "conflict_with_user_choice": false,
+        "personal_info_masked": false,
+        "emergency": false
+      },
+      "after_question_fields": [
+        "meaning",
+        "facility",
+        "location"
+      ],
+      "human_semantic_approval": null
+    },
+    {
+      "id": "09",
+      "before_kind": "report_preview",
+      "after_kind": "report_preview",
+      "after_missing": null,
+      "after_classification_candidate": {
+        "facility": "streetlight",
+        "problem": "not_working",
+        "summary": "탑동광장 입구에 가로등 하나 꺼져 있었고, 좀 더 가니까 비상벨 안내판도 바닥에 떨어져 있던데 두 개 다 한 번에 올려도 돼?",
+        "confidence": 0.85,
+        "conflict_with_user_choice": false,
+        "personal_info_masked": false,
+        "emergency": false
+      },
+      "after_question_fields": [
+        "facility",
+        "location"
+      ],
+      "human_semantic_approval": null
+    },
+    {
+      "id": "10",
+      "before_kind": "report_preview",
+      "after_kind": "report_preview",
+      "after_missing": null,
+      "after_classification_candidate": {
+        "facility": "walkway",
+        "problem": "damaged",
+        "summary": "아까 골목에서 튀어나온 보도블록에 발이 걸렸어. 이미 지나와서 어딘지 잘 모르겠는데 그래도 제보할 수 있어?",
+        "confidence": 0.5,
+        "conflict_with_user_choice": false,
+        "personal_info_masked": false,
+        "emergency": false
+      },
+      "after_question_fields": [
+        "meaning",
+        "location"
+      ],
+      "human_semantic_approval": null
+    },
+    {
+      "id": "11",
+      "before_kind": "emergency",
+      "after_kind": "emergency",
+      "after_missing": null,
+      "after_classification_candidate": null,
+      "after_question_fields": [],
+      "human_semantic_approval": null
+    },
+    {
+      "id": "12",
+      "before_kind": "clarification",
+      "after_kind": "emergency",
+      "after_missing": null,
+      "after_classification_candidate": null,
+      "after_question_fields": [],
+      "human_semantic_approval": null
+    },
+    {
+      "id": "13",
+      "before_kind": "data_question",
+      "after_kind": "data_question",
+      "after_missing": null,
+      "after_classification_candidate": null,
+      "after_question_fields": [],
+      "human_semantic_approval": null
+    },
+    {
+      "id": "14",
+      "before_kind": "report_preview",
+      "after_kind": "report_preview",
+      "after_missing": null,
+      "after_classification_candidate": {
+        "facility": "other",
+        "problem": "other",
+        "summary": "아까 지도 보고 이쪽으로 걸어왔는데, 밤에 혼자 걷기엔 좀 그렇더라. 이런 것도 제보돼?",
+        "confidence": 0.5,
+        "conflict_with_user_choice": false,
+        "personal_info_masked": false,
+        "emergency": false
+      },
+      "after_question_fields": [
+        "facility",
+        "problem",
+        "location"
+      ],
+      "human_semantic_approval": null
+    },
+    {
+      "id": "15",
+      "before_kind": "report_preview",
+      "after_kind": "unsupported",
+      "after_missing": null,
+      "after_classification_candidate": null,
+      "after_question_fields": [],
+      "human_semantic_approval": null
+    }
+  ]
+}

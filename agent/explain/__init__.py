@@ -22,7 +22,7 @@ def template_explanation(analysis, mode='route_compare'):
             elif indicator['status'] == 'pending':
                 parts.append(f'{label}: 검토 중; 경로 지표에 반영하지 않음')
             elif indicator['status']=='historical':
-                parts.append('과거 통계: '+indicator.get('display',name))
+                parts.append(('과거 통계: ' if name=='activity' else '과거 기준일 자료: ')+indicator.get('display',name))
             else:
                 parts.append(indicator.get('display', name))
         texts.append({'id': route['id'], 'text': '. '.join(parts)})

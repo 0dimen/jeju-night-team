@@ -1,0 +1,8 @@
+# 모델·가중치 없이 실행하는 전체 오프라인 검사 프로필
+-r requirements-base.txt
+-r requirements-geo.txt
+-r requirements-share-check.txt
+numpy==2.5.5
+pyarrow==26.0.1
+pytest==9.2.0
+psutil==7.2.2

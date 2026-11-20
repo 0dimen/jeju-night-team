@@ -1,0 +1,782 @@
+[
+  {
+    "id": "Q01",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 10,
+        "cctv_percent": 70,
+        "light_percent": 45
+      },
+      {
+        "label": "B",
+        "minutes": 11,
+        "cctv_percent": 35,
+        "light_percent": 90
+      },
+      {
+        "label": "C",
+        "minutes": 8,
+        "cctv_percent": 20,
+        "light_percent": 40
+      }
+    ]
+  },
+  {
+    "id": "Q02",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 11,
+        "cctv_percent": 90,
+        "light_percent": 30
+      },
+      {
+        "label": "B",
+        "minutes": 10,
+        "cctv_percent": 60,
+        "light_percent": 20
+      },
+      {
+        "label": "C",
+        "minutes": 13,
+        "cctv_percent": 65,
+        "light_percent": 85
+      }
+    ]
+  },
+  {
+    "id": "Q03",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 14,
+        "cctv_percent": 70,
+        "light_percent": 85
+      },
+      {
+        "label": "B",
+        "minutes": 13,
+        "cctv_percent": 35,
+        "light_percent": 95
+      },
+      {
+        "label": "C",
+        "minutes": 12,
+        "cctv_percent": 15,
+        "light_percent": 80
+      }
+    ]
+  },
+  {
+    "id": "Q04",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 6,
+        "cctv_percent": 70,
+        "light_percent": 25
+      },
+      {
+        "label": "B",
+        "minutes": 9,
+        "cctv_percent": 75,
+        "light_percent": 95
+      },
+      {
+        "label": "C",
+        "minutes": 7,
+        "cctv_percent": 90,
+        "light_percent": 35
+      }
+    ]
+  },
+  {
+    "id": "Q05",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 18,
+        "cctv_percent": 30,
+        "light_percent": 90
+      },
+      {
+        "label": "B",
+        "minutes": 15,
+        "cctv_percent": 20,
+        "light_percent": 30
+      },
+      {
+        "label": "C",
+        "minutes": 16,
+        "cctv_percent": 75,
+        "light_percent": 40
+      }
+    ]
+  },
+  {
+    "id": "Q06",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 12,
+        "cctv_percent": 95,
+        "light_percent": 60
+      },
+      {
+        "label": "B",
+        "minutes": 9,
+        "cctv_percent": 80,
+        "light_percent": 35
+      },
+      {
+        "label": "C",
+        "minutes": 10,
+        "cctv_percent": 50,
+        "light_percent": 85
+      }
+    ]
+  },
+  {
+    "id": "Q07",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 11,
+        "cctv_percent": 55,
+        "light_percent": 65
+      },
+      {
+        "label": "B",
+        "minutes": 10,
+        "cctv_percent": 30,
+        "light_percent": 90
+      },
+      {
+        "label": "C",
+        "minutes": 12,
+        "cctv_percent": 85,
+        "light_percent": 35
+      }
+    ]
+  },
+  {
+    "id": "Q08",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 14,
+        "cctv_percent": 40,
+        "light_percent": 40
+      },
+      {
+        "label": "B",
+        "minutes": 17,
+        "cctv_percent": 50,
+        "light_percent": 95
+      },
+      {
+        "label": "C",
+        "minutes": 15,
+        "cctv_percent": 85,
+        "light_percent": 50
+      }
+    ]
+  },
+  {
+    "id": "Q09",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 10,
+        "cctv_percent": 90,
+        "light_percent": 90
+      },
+      {
+        "label": "B",
+        "minutes": 8,
+        "cctv_percent": 65,
+        "light_percent": 75
+      },
+      {
+        "label": "C",
+        "minutes": 7,
+        "cctv_percent": 25,
+        "light_percent": 70
+      }
+    ]
+  },
+  {
+    "id": "Q10",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 16,
+        "cctv_percent": 70,
+        "light_percent": 20
+      },
+      {
+        "label": "B",
+        "minutes": 18,
+        "cctv_percent": 90,
+        "light_percent": 40
+      },
+      {
+        "label": "C",
+        "minutes": 17,
+        "cctv_percent": 45,
+        "light_percent": 85
+      }
+    ]
+  },
+  {
+    "id": "Q11",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 9,
+        "cctv_percent": 80,
+        "light_percent": 30
+      },
+      {
+        "label": "B",
+        "minutes": 10,
+        "cctv_percent": 50,
+        "light_percent": 95
+      },
+      {
+        "label": "C",
+        "minutes": 8,
+        "cctv_percent": 15,
+        "light_percent": 60
+      }
+    ]
+  },
+  {
+    "id": "Q12",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 14,
+        "cctv_percent": 55,
+        "light_percent": 90
+      },
+      {
+        "label": "B",
+        "minutes": 12,
+        "cctv_percent": 85,
+        "light_percent": 55
+      },
+      {
+        "label": "C",
+        "minutes": 11,
+        "cctv_percent": 45,
+        "light_percent": 35
+      }
+    ]
+  },
+  {
+    "id": "Q13",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 11,
+        "cctv_percent": 50,
+        "light_percent": 85
+      },
+      {
+        "label": "B",
+        "minutes": 13,
+        "cctv_percent": 95,
+        "light_percent": 70
+      },
+      {
+        "label": "C",
+        "minutes": 10,
+        "cctv_percent": 90,
+        "light_percent": 25
+      }
+    ]
+  },
+  {
+    "id": "Q14",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 13,
+        "cctv_percent": 80,
+        "light_percent": 60
+      },
+      {
+        "label": "B",
+        "minutes": 12,
+        "cctv_percent": 35,
+        "light_percent": 90
+      },
+      {
+        "label": "C",
+        "minutes": 15,
+        "cctv_percent": 95,
+        "light_percent": 95
+      }
+    ]
+  },
+  {
+    "id": "Q15",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 7,
+        "cctv_percent": 60,
+        "light_percent": 90
+      },
+      {
+        "label": "B",
+        "minutes": 8,
+        "cctv_percent": 90,
+        "light_percent": 50
+      },
+      {
+        "label": "C",
+        "minutes": 6,
+        "cctv_percent": 50,
+        "light_percent": 40
+      }
+    ]
+  },
+  {
+    "id": "Q16",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 20,
+        "cctv_percent": 80,
+        "light_percent": 50
+      },
+      {
+        "label": "B",
+        "minutes": 19,
+        "cctv_percent": 40,
+        "light_percent": 95
+      },
+      {
+        "label": "C",
+        "minutes": 18,
+        "cctv_percent": 10,
+        "light_percent": 70
+      }
+    ]
+  },
+  {
+    "id": "Q17",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 11,
+        "cctv_percent": 55,
+        "light_percent": 95
+      },
+      {
+        "label": "B",
+        "minutes": 10,
+        "cctv_percent": 90,
+        "light_percent": 40
+      },
+      {
+        "label": "C",
+        "minutes": 9,
+        "cctv_percent": 65,
+        "light_percent": 25
+      }
+    ]
+  },
+  {
+    "id": "Q18",
+    "synthetic": true,
+    "design_type": "tradeoff",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 13,
+        "cctv_percent": 30,
+        "light_percent": 75
+      },
+      {
+        "label": "B",
+        "minutes": 16,
+        "cctv_percent": 95,
+        "light_percent": 90
+      },
+      {
+        "label": "C",
+        "minutes": 14,
+        "cctv_percent": 75,
+        "light_percent": 65
+      }
+    ]
+  },
+  {
+    "id": "Q19",
+    "synthetic": true,
+    "design_type": "dominance_check",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 12,
+        "cctv_percent": 40,
+        "light_percent": 40
+      },
+      {
+        "label": "B",
+        "minutes": 8,
+        "cctv_percent": 80,
+        "light_percent": 80
+      },
+      {
+        "label": "C",
+        "minutes": 10,
+        "cctv_percent": 60,
+        "light_percent": 60
+      }
+    ]
+  },
+  {
+    "id": "Q20",
+    "synthetic": true,
+    "design_type": "dominance_check",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 15,
+        "cctv_percent": 60,
+        "light_percent": 60
+      },
+      {
+        "label": "B",
+        "minutes": 13,
+        "cctv_percent": 80,
+        "light_percent": 80
+      },
+      {
+        "label": "C",
+        "minutes": 12,
+        "cctv_percent": 90,
+        "light_percent": 90
+      }
+    ]
+  },
+  {
+    "id": "Q21",
+    "synthetic": true,
+    "design_type": "dominance_check",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 6,
+        "cctv_percent": 60,
+        "light_percent": 70
+      },
+      {
+        "label": "B",
+        "minutes": 7,
+        "cctv_percent": 50,
+        "light_percent": 60
+      },
+      {
+        "label": "C",
+        "minutes": 8,
+        "cctv_percent": 40,
+        "light_percent": 50
+      }
+    ]
+  },
+  {
+    "id": "Q22",
+    "synthetic": true,
+    "design_type": "dominance_check",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 19,
+        "cctv_percent": 55,
+        "light_percent": 55
+      },
+      {
+        "label": "B",
+        "minutes": 17,
+        "cctv_percent": 75,
+        "light_percent": 75
+      },
+      {
+        "label": "C",
+        "minutes": 15,
+        "cctv_percent": 95,
+        "light_percent": 95
+      }
+    ]
+  },
+  {
+    "id": "Q23",
+    "synthetic": true,
+    "design_type": "tie_or_near",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 10,
+        "cctv_percent": 50,
+        "light_percent": 50
+      },
+      {
+        "label": "B",
+        "minutes": 10,
+        "cctv_percent": 50,
+        "light_percent": 50
+      },
+      {
+        "label": "C",
+        "minutes": 10,
+        "cctv_percent": 50,
+        "light_percent": 50
+      }
+    ]
+  },
+  {
+    "id": "Q24",
+    "synthetic": true,
+    "design_type": "tie_or_near",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 9,
+        "cctv_percent": 76,
+        "light_percent": 81
+      },
+      {
+        "label": "B",
+        "minutes": 8,
+        "cctv_percent": 75,
+        "light_percent": 80
+      },
+      {
+        "label": "C",
+        "minutes": 10,
+        "cctv_percent": 77,
+        "light_percent": 82
+      }
+    ]
+  },
+  {
+    "id": "Q25",
+    "synthetic": true,
+    "design_type": "tie_or_near",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 12,
+        "cctv_percent": 50,
+        "light_percent": 85
+      },
+      {
+        "label": "B",
+        "minutes": 13,
+        "cctv_percent": 70,
+        "light_percent": 70
+      },
+      {
+        "label": "C",
+        "minutes": 12,
+        "cctv_percent": 85,
+        "light_percent": 50
+      }
+    ]
+  },
+  {
+    "id": "Q26",
+    "synthetic": true,
+    "design_type": "tie_or_near",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 10,
+        "cctv_percent": 60,
+        "light_percent": 60
+      },
+      {
+        "label": "B",
+        "minutes": 10,
+        "cctv_percent": 80,
+        "light_percent": 40
+      },
+      {
+        "label": "C",
+        "minutes": 10,
+        "cctv_percent": 40,
+        "light_percent": 80
+      }
+    ]
+  },
+  {
+    "id": "Q27",
+    "synthetic": true,
+    "design_type": "repeat",
+    "repeat_of": "Q01",
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 8,
+        "cctv_percent": 20,
+        "light_percent": 40
+      },
+      {
+        "label": "B",
+        "minutes": 11,
+        "cctv_percent": 35,
+        "light_percent": 90
+      },
+      {
+        "label": "C",
+        "minutes": 10,
+        "cctv_percent": 70,
+        "light_percent": 45
+      }
+    ]
+  },
+  {
+    "id": "Q28",
+    "synthetic": true,
+    "design_type": "repeat",
+    "repeat_of": "Q06",
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 10,
+        "cctv_percent": 50,
+        "light_percent": 85
+      },
+      {
+        "label": "B",
+        "minutes": 12,
+        "cctv_percent": 95,
+        "light_percent": 60
+      },
+      {
+        "label": "C",
+        "minutes": 9,
+        "cctv_percent": 80,
+        "light_percent": 35
+      }
+    ]
+  },
+  {
+    "id": "Q29",
+    "synthetic": true,
+    "design_type": "missing_data",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 11,
+        "cctv_percent": null,
+        "light_percent": 80
+      },
+      {
+        "label": "B",
+        "minutes": 12,
+        "cctv_percent": null,
+        "light_percent": 90
+      },
+      {
+        "label": "C",
+        "minutes": 10,
+        "cctv_percent": null,
+        "light_percent": 70
+      }
+    ]
+  },
+  {
+    "id": "Q30",
+    "synthetic": true,
+    "design_type": "missing_data",
+    "repeat_of": null,
+    "routes": [
+      {
+        "label": "A",
+        "minutes": 9,
+        "cctv_percent": 70,
+        "light_percent": null
+      },
+      {
+        "label": "B",
+        "minutes": 10,
+        "cctv_percent": 90,
+        "light_percent": null
+      },
+      {
+        "label": "C",
+        "minutes": 8,
+        "cctv_percent": 50,
+        "light_percent": null
+      }
+    ]
+  }
+]
