@@ -18,6 +18,10 @@
     "fresh_venv_app_and_regions": 200,
     "raw_keys_runtime_paths": 404,
     "missing_key_search": 503,
-    "external_api_calls": 0
+    "external_api_calls": 0,
+    "archive_shared_files_checked": 753,
+    "repository_shared_files_checked": 776,
+    "repository_tests_after_archive_tool_update": 365,
+    "github_download_sha256_matches": true
   }
 }
